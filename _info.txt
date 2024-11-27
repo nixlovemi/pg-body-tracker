@@ -1,0 +1,31 @@
+[TEMPLATE]
+
+
+[LARAVEL]
+- docker exec "php_audio_video" php artisan migrate:fresh --seed --database=pgsql_test
+- docker exec "php_audio_video" php artisan make:component Alert --inline
+- php artisan make:mail OrderShipped
+- php artisan make:table:row:action MyNewRowAction
+- php artisan make:model Employee -mfsc (model/factory/seeder/controller)
+- php artisan key:generate (csrf token)
+- php artisan storage:link --relative
+
+[TABLE]
+- https://packagist.org/packages/okipa/laravel-table
+- docker exec "php_audio_video" php artisan make:table UsersTable [--model=App/Models/User]
+- Okipa\LaravelTable\Livewire\Table::refresh (error sometimes)
+
+[IN CASE OF ERROR]
+- php artisan config:clear; php artisan cache:clear; composer dump-autoload; php artisan view:clear; php artisan route:clear
+
+[HTTP Codes]
+- 200: OK. The standard success code and default option.
+- 201: Object created. Useful for the store actions.
+- 204: No content. When an action was executed successfully, but there is no content to return.
+- 206: Partial content. Useful when you have to return a paginated list of resources.
+- 400: Bad request. The standard option for requests that fail to pass validation.
+- 401: Unauthorized. The user needs to be authenticated.
+- 403: Forbidden. The user is authenticated, but does not have the permissions to perform an action.
+- 404: Not found. This will be returned automatically by Laravel when the resource is not found.
+- 500: Internal server error. Ideally you're not going to be explicitly returning this, but if something unexpected breaks, this is what your user is going to receive.
+- 503: Service unavailable. Pretty self explanatory, but also another code that is not going to be returned explicitly by the application.
