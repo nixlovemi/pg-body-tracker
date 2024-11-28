@@ -27,6 +27,7 @@ class CreateClientsTable extends Migration
             $table->string('phone', 35)->nullable();
             $table->enum('gender', array_keys(Client::fGetGenders()));
             $table->date('birthdate');
+            $table->smallInteger('weight', false, true); # in kg
             $table->smallInteger('height', false, true); # in cm
             $table->timestamps();
 

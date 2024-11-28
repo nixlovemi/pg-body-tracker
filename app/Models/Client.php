@@ -30,7 +30,8 @@ class Client extends Model
         'phone',
         'gender',
         'birthdate',
-        'height'
+        'weight',
+        'height',
     ];
 
     /**
