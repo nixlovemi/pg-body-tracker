@@ -45,7 +45,9 @@ class ModelValidation
                 }
 
                 if (false === $modelClass::find($value)?->exists()) {
-                    $fail("{$modelLabel} não encontrado!");
+                    $fail(
+                        __('messages.helpers.modelValidation.idFieldNotFound', ['modelLabel' => $modelLabel])
+                    );
                 }
             }
         ], $customRules), $attributeLabel);
@@ -61,7 +63,9 @@ class ModelValidation
             }
 
             if (1 !== preg_match(Constants::REGEX_PHONE_NUMBER, $phone) ) {
-                $fail("O campo {$label} é inválido!");
+                $fail(
+                    __('messages.helpers.modelValidation.invalidField', ['attribute' => $label])
+                );
             }
         }], $customRules), $attributeLabel);
     }
@@ -91,7 +95,9 @@ class ModelValidation
             }
 
             if (false === $found) {
-                $fail("O campo {$label} contém um valor inválido!");
+                $fail(
+                    __('messages.helpers.modelValidation.invalidField', ['attribute' => $label])
+                );
             }
         }], $customRules), $attributeLabel);
     }
@@ -106,7 +112,9 @@ class ModelValidation
 
             $countries = Country::getCountries();
             if (false === array_search($value, $countries)) {
-                $fail("O campo {$label} contém um valor inválido!");
+                $fail(
+                    __('messages.helpers.modelValidation.invalidField', ['attribute' => $label])
+                );
             }
         }], $customRules), $attributeLabel);
     }
@@ -116,15 +124,15 @@ class ModelValidation
         $validator = Validator::make(
             $this->_validationData,
             $this->getRulesArray(),
-            $this->getDefaultMessages(),
+            /*$this->getDefaultMessages()*/ [],
             $this->getCustomAttrArray()
         );
 
         $error = $validator->fails();
-        $message = $error ? 'Verifique antes de salvar!': 'Dados validados com sucesso!';
+        $message = $error ? __('messages.helpers.modelValidation.verifyBeforeSave'): __('messages.helpers.modelValidation.validateSuccess');
         $data = [
             'validator' => $validator,
-            'messages' => 'Verifique antes de continuar!<br />* ' . implode('<br />* ', $validator->errors()->all()),
+            'messages' => __('messages.helpers.modelValidation.verifyBeforeSave') . '<br />* ' . implode('<br />* ', $validator->errors()->all()),
         ];
 
         return new ApiResponse(
@@ -156,6 +164,7 @@ class ModelValidation
         return $customAttr;
     }
 
+    /*
     private function getDefaultMessages(): array
     {
         return [
@@ -170,6 +179,7 @@ class ModelValidation
             'between' => 'O campo ":attribute" deve ser entre :min e :max.',
         ];
     }
+    */
 
     private function getLabel(string $fieldName, string $attributeLabel = ''): string
     {
