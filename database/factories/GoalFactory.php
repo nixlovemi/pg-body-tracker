@@ -17,11 +17,10 @@ class GoalFactory extends Factory
     {
         return [
             'client_id' => function() {
-                return Client::inRandomOrder()
-                    ->first();
+                return Client::inRandomOrder()->first();
             },
             'objective' => $this->faker->randomElement(array_keys(Goal::fGetObjectivies())),
-            'target_weight' => $this->faker->numberBetween(50, 110),
+            'target_weight_kg' => $this->faker->numberBetween(50, 110),
             'deadline' => $this->faker->dateTimeBetween('now', '+6 months')->format('Y-m-d'),
         ];
     }

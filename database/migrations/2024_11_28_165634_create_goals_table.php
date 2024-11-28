@@ -22,7 +22,7 @@ class CreateGoalsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
             $table->enum('objective', array_keys(Goal::fGetObjectivies()))->nullable();
-            $table->smallInteger('target_weight', false, true); # in kg
+            $table->float('target_weight_kg', 8, 2, true);
             $table->date('deadline');
             $table->timestamps();
 

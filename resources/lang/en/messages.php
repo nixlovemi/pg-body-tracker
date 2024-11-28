@@ -57,5 +57,22 @@ return [
                 'health' => 'Health',
             ]
         ],
+
+        'Avaliation' => [
+            'name' => 'Avaliation',
+            'fields' => [
+                'date' => 'Date',
+                'body_fat_perc' => 'Body Fat Percentage',
+                'skeletal_muscle_mass_kg' => 'Skeletal Muscle Mass',
+                'muscle_rate_perc' => 'Muscle Rate',
+                'subcutaneous_fat_perc' => 'Subcutaneous Fat Percentage',
+                'visceral_fat_perc' => 'Visceral Fat Percentage',
+                'body_water_perc' => 'Body Water Percentage',
+                'skeletal_muscle_perc' => 'Skeletal Muscle Percentage',
+                'muscle_mass_kg' => 'Muscle Mass',
+                'bone_mass_kg' => 'Bone Mass',
+                'protein_perc' => 'Protein Percentage',
+            ],
+        ],
     ]
 ];

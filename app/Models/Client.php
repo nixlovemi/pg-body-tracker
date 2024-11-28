@@ -30,8 +30,8 @@ class Client extends Model
         'phone',
         'gender',
         'birthdate',
-        'weight',
-        'height',
+        'weight_kg',
+        'height_cm',
     ];
 
     /**
@@ -73,6 +73,14 @@ class Client extends Model
             'id'
         );
     }
+
+    public function avaliations()
+    {
+        return $this->hasMany(
+            Avaliation::class, 'client_id',
+            'id'
+        );
+    }
     // =========
 
     // class functions
@@ -96,8 +104,8 @@ class Client extends Model
             }
         }], __('messages.models.Client.fields.gender'));
         $validation->addField('birthdate', ['required', 'date', 'date_format:Y-m-d'], __('messages.models.Client.fields.birthdate'));
-        $validation->addField('weight', ['required', 'numeric', 'min:30', 'max:400'], __('messages.models.Client.fields.weight'));
-        $validation->addField('height', ['required', 'integer', 'min:60', 'max:250'], __('messages.models.Client.fields.height'));
+        $validation->addField('weight_kg', ['required', 'numeric', 'min:30', 'max:400'], __('messages.models.Client.fields.weight'));
+        $validation->addField('height_cm', ['required', 'integer', 'min:60', 'max:250'], __('messages.models.Client.fields.height'));
 
         return $validation->validate();
     }

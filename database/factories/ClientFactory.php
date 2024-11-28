@@ -37,8 +37,8 @@ class ClientFactory extends Factory
                 }
             },
             'birthdate' => $this->faker->date('Y-m-d', '-18 years'),
-            'weight' => $this->faker->numberBetween(40, 150),
-            'height' => $this->faker->numberBetween(150, 200),
+            'weight_kg' => $this->faker->numberBetween(40, 150),
+            'height_cm' => $this->faker->numberBetween(150, 200),
         ];
     }
 }

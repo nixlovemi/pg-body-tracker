@@ -26,7 +26,7 @@ class Goal extends Model
     protected $fillable = [
         'client_id',
         'objective',
-        'target_weight',
+        'target_weight_kg',
         'deadline',
     ];
 
@@ -79,7 +79,7 @@ class Goal extends Model
                 );
             }
         }], __('messages.models.Goal.fields.objective'));
-        $validation->addField('target_weight', ['required', 'numeric', 'min:30', 'max:400'], __('messages.models.Goal.fields.target_weight'));
+        $validation->addField('target_weight_kg', ['required', 'numeric', 'min:30', 'max:400'], __('messages.models.Goal.fields.target_weight'));
         $validation->addField('deadline', ['required', 'date', 'date_format:Y-m-d'], __('messages.models.Goal.fields.deadline'));
 
         return $validation->validate();

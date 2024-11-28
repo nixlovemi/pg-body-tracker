@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\Goal;
+use App\Models\Avaliation;
 
 class ClientSeeder extends Seeder
 {
@@ -33,8 +34,24 @@ class ClientSeeder extends Seeder
                 Goal::factory()
                     ->create([
                         'client_id' => $Client->id,
-                        'target_weight' => number_format($Client->weight * (1 - random_int(10, 20) / 100), 2, '.', ''),
+                        'target_weight_kg' => number_format($Client->weight * (1 - random_int(10, 20) / 100), 2, '.', ''),
                     ]);
+                Avaliation::factory()
+                    ->create(array_merge(
+                        [
+                            'client_id' => $Client->id,
+                            'height_cm' => $Client->height_cm,
+                        ],
+                        (1 === rand(0, 1)) ? ['skeletal_muscle_mass_kg' => null]: [],
+                        (1 === rand(0, 1)) ? ['muscle_rate_perc' => null]: [],
+                        (1 === rand(0, 1)) ? ['subcutaneous_fat_perc' => null]: [],
+                        (1 === rand(0, 1)) ? ['visceral_fat_perc' => null]: [],
+                        (1 === rand(0, 1)) ? ['body_water_perc' => null]: [],
+                        (1 === rand(0, 1)) ? ['skeletal_muscle_perc' => null]: [],
+                        (1 === rand(0, 1)) ? ['muscle_mass_kg' => null]: [],
+                        (1 === rand(0, 1)) ? ['bone_mass_kg' => null]: [],
+                        (1 === rand(0, 1)) ? ['protein_perc' => null]: []
+                    ));
             }
         }
     }

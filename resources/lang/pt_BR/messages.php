@@ -57,5 +57,22 @@ return [
                 'health' => 'Saúde',
             ]
         ],
+
+        'Avaliation' => [
+            'name' => 'Avaliação',
+            'fields' => [
+                'date' => 'Data',
+                'body_fat_perc' => 'Percentual de Gordura Corporal',
+                'skeletal_muscle_mass_kg' => 'Massa Muscular Esquelética',
+                'muscle_rate_perc' => 'Percentual de Músculos',
+                'subcutaneous_fat_perc' => 'Percentual de Gordura Subcutânea',
+                'visceral_fat_perc' => 'Percentual de Gordura Visceral',
+                'body_water_perc' => 'Percentual de Água Corporal',
+                'skeletal_muscle_perc' => 'Percentual de Músculo Esquelético',
+                'muscle_mass_kg' => 'Massa Muscular',
+                'bone_mass_kg' => 'Massa Óssea',
+                'protein_perc' => 'Percentual de Proteína',
+            ],
+        ],
     ]
 ];
