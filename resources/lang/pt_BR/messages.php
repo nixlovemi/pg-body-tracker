@@ -40,6 +40,21 @@ return [
                 'gender' => 'Gênero',
                 'birthdate' => 'Data de Nascimento',
                 'height' => 'Altura',
+                'weight' => 'Peso',
+            ]
+        ],
+
+        'Goal' => [
+            'name' => 'Objetivo',
+            'fields' => [
+                'objective' => 'Objetivo',
+                'target_weight' => 'Peso Alvo',
+                'deadline' => 'Prazo',
+            ],
+            'objective' => [
+                'weight' => 'Perda de Peso',
+                'muscle' => 'Ganho de Massa Muscular',
+                'health' => 'Saúde',
             ]
         ],
     ]

@@ -40,6 +40,21 @@ return [
                 'gender' => 'Gender',
                 'birthdate' => 'Birthdate',
                 'height' => 'Height',
+                'weight' => 'Weight',
+            ]
+        ],
+
+        'Goal' => [
+            'name' => 'Goal',
+            'fields' => [
+                'objective' => 'Objective',
+                'target_weight' => 'Target Weight',
+                'deadline' => 'Deadline',
+            ],
+            'objective' => [
+                'weight' => 'Weight Loss',
+                'muscle' => 'Muscle Gain',
+                'health' => 'Health',
             ]
         ],
     ]
