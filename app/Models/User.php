@@ -19,10 +19,6 @@ class User extends Authenticatable
     public const ROLE_ROOT = 'ROOT';
     public const ROLE_MANAGER = 'MANAGER';
     public const ROLE_CLIENT = 'CLIENT';
-    public const USER_ROLES = [
-        self::ROLE_MANAGER => 'Gerenciador',
-        self::ROLE_CLIENT => 'Cliente',
-    ];
 
     /**
      * The attributes that are mass assignable.
@@ -67,6 +63,13 @@ class User extends Authenticatable
     ];
 
     // relations
+    public function clients()
+    {
+        return $this->hasMany(
+            Client::class, 'user_id',
+            'id'
+        );
+    }
     // =========
 
     // class functions
@@ -90,7 +93,7 @@ class User extends Authenticatable
         }], __('messages.models.User.fields.password'));
         $validation->addField('password_reset_token', ['nullable', 'filled', 'string', 'min:20', 'max:255'], __('messages.models.User.fields.passwordToken'));
         $validation->addField('role', ['required', 'string', function ($attribute, $value, $fail) {
-            if (false === array_key_exists($value, self::USER_ROLES)) {
+            if (false === array_key_exists($value, self::fGetRoles())) {
                 $fail(
                     __('messages.helpers.modelValidation.invalidField', ['attribute' => __('messages.models.User.fields.role')])
                 );
@@ -112,6 +115,20 @@ class User extends Authenticatable
     {
         // return bcrypt($password);
         return Hash::make($password);
+    }
+
+    public static function fGetRoles(bool $hideRoot = true): array
+    {
+        $roles = [];
+
+        if (false === $hideRoot) {
+            $roles[self::ROLE_ROOT] = __('messages.models.User.roles.root');
+        }
+
+        $roles[self::ROLE_MANAGER] = __('messages.models.User.roles.manager');
+        $roles[self::ROLE_CLIENT] = __('messages.models.User.roles.client');
+
+        return $roles;
     }
     // ================
 }

@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
 
         // user roles
         for ($i = 0; $i <= 8; $i++) {
-            foreach (array_keys(User::USER_ROLES) as $role) {
+            foreach (array_keys(User::fGetRoles()) as $role) {
                 $createArray = [
                     'password_reset_token' => null,
                     'role' => $role,

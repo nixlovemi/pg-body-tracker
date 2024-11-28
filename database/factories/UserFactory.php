@@ -48,7 +48,7 @@ class UserFactory extends Factory
             },
             'password' => User::fPasswordHash('Mudar123'),
             'password_reset_token' => null,
-            'role' => $this->faker->randomElement(array_keys(User::USER_ROLES)),
+            'role' => $this->faker->randomElement(array_keys(User::fGetRoles())),
             'active' => $this->faker->randomElement([true, false]),
         ];
     }

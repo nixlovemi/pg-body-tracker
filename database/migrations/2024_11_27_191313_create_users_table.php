@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('picture_url')->nullable();
             $table->string('password');
             $table->string('password_reset_token')->nullable();
-            $table->enum('role', array_keys(array_merge(User::USER_ROLES, [User::ROLE_ROOT => 'Root'])));
+            $table->enum('role', array_keys(User::fGetRoles(false)));
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

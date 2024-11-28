@@ -13,6 +13,11 @@ return [
     'models' => [
         'User' => [
             'name' => 'User',
+            'roles' => [
+                'root' => 'Root',
+                'manager' => 'Manager',
+                'client' => 'Client',
+            ],
             'fields' => [
                 'name' => 'First Name',
                 'lastName' => 'Last Name',
@@ -22,6 +27,20 @@ return [
                 'role' => 'Role',
                 'active' => 'Active',
             ]
-        ]
+        ],
+
+        'Client' => [
+            'name' => 'Cliente',
+            'gender' => [
+                'male' => 'Masculino',
+                'female' => 'Feminino',
+            ],
+            'fields' => [
+                'phone' => 'Phone',
+                'gender' => 'Gender',
+                'birthdate' => 'Birthdate',
+                'height' => 'Height',
+            ]
+        ],
     ]
 ];
