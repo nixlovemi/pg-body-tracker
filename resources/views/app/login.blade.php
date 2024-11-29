@@ -13,7 +13,15 @@ View variables:
 @section('CORE_HEADER_CUSTOM_CSS')
     <style>
         body {
-            background-color: #eaeaea !important;
+            background-color: var(--main-bg-color) !important;
+        }
+        .bg-login-image {
+            background: url("/images/login-bg.jpg") !important;
+            background-position: center !important;
+            background-size: cover !important;
+        }
+        #login-info-holder {
+            background-color: var(--secondary-bg-color) !important;
         }
     </style>
 @endsection
@@ -22,30 +30,71 @@ View variables:
     <div class="container">
         <!-- Outer Row -->
         <div class="row justify-content-center">
-            <div class="col-9 col-lg-6">
+            <div class="col-xl-10 col-lg-12 col-md-9">
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="p-5">
-                                    <div class="text-center text-gray-900">
-                                        <h1 class="h2">Login</h1>
-                                        <h3 class="h4 mb-4">Áudio e Vídeo Esperança</h3>
-                                    </div>
-                                    @include('layout.partials.alert-return-messages')
-                                    <form action="" class="user" method="POST">
-                                        @csrf
+                        <div class="row" id="login-info-holder">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
 
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">{{ env('FULL_DISPLAY_NAME') }}</h1>
+                                    </div>
+
+                                    @include('layout.partials.alert-return-messages')
+
+                                    <form action="{{ route('app.doLogin') }}" class="user" method="post">
+                                        @csrf
                                         <div class="form-group">
-                                            <input type="password" id="f-password" name="f-password" class="form-control form-control-user" placeholder="Senha" />
+                                            <input type="email" class="form-control form-control-user"
+                                                id="f-email" name="f-email" aria-describedby="emailHelp"
+                                                placeholder="{{ __('messages.pages.login.emailPlaceholder') }}"
+                                            />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user"
+                                                id="f-password" name="f-password" placeholder="{{ __('messages.pages.login.passwordPlaceholder') }}"
+                                            />
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Entrar
+                                        @php
+                                        /*
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <label class="custom-control-label" for="customCheck">Remember
+                                                    Me</label>
+                                            </div>
+                                        </div>
+                                        */
+                                        @endphp
+
+                                        <button type="submit" class="btn primary btn-user btn-block">
+                                            {{ __('messages.pages.login.loginButton') }}
                                         </button>
+                                        <hr />
+                                        <a href="#" class="btn btn-google btn-user btn-block">
+                                            <i class="fab fa-google fa-fw"></i>
+                                            {{ __('messages.pages.login.loginGoogle') }}
+                                        </a>
                                     </form>
-                                    <hr>
+
+                                    <hr />
+                                    <div class="text-center">
+                                        <a class="small" href="#">
+                                            {{ __('messages.pages.login.forgotPassword') }}
+                                        </a>
+                                    </div>
+
+                                    @php
+                                    /*
+                                    <div class="text-center">
+                                        <a class="small" href="register.html">Create an Account!</a>
+                                    </div>
+                                    */
+                                    @endphp
                                 </div>
                             </div>
                         </div>

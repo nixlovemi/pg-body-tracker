@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'dontHavePermission' => 'Você não tem acesso a esse conteúdo! Faça o login novamente.',
+    'userNameDash' => 'Usuário',
+    'logout' => 'Sair',
+
     'helpers' => [
         'modelValidation' => [
             'idFieldNotFound' => ':modelLabel não encontrado!',
@@ -26,7 +30,14 @@ return [
                 'passwordToken' => 'Token de Redefinição de Senha',
                 'role' => 'Função',
                 'active' => 'Ativo',
-            ]
+            ],
+            'fLogin' => [
+                'invalidEmail' => 'Informe um e-mail válido!',
+                'emptyPassword' => 'Preencha a senha!',
+                'invalidCredentials' => 'Usuário ou senha inválido(s)!',
+                'loginUserError' => 'Erro ao tentar logar o usuário!',
+                'loginSuccess' => 'Usuário logado com sucesso!',
+            ],
         ],
 
         'Client' => [
@@ -74,5 +85,15 @@ return [
                 'protein_perc' => 'Percentual de Proteína',
             ],
         ],
-    ]
+    ],
+
+    'pages' => [
+        'login' => [
+            'emailPlaceholder' => 'Digite seu e-mail',
+            'passwordPlaceholder' => 'Digite sua senha',
+            'loginButton' => 'Entrar',
+            'loginGoogle' => 'Entrar com Google',
+            'forgotPassword' => 'Esqueceu a senha?',
+        ],
+    ],
 ];

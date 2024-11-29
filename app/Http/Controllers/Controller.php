@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\View\Components\Notification;
 use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -41,20 +40,17 @@ class Controller extends BaseController
         return ApiResponse::getValidateMessage($validate);
     }
 
-    protected function setNotificationRedirect(
-        ApiResponse $response,
-        string $routeName,
-        array $routeParams = []
-    ): \Illuminate\Http\RedirectResponse {
-        $notifMethod = ($response->isError()) ? 'setWarning': 'setSuccess';
-        $notifTitle = ($response->isError()) ? 'Aviso!': 'Sucesso!';
-
-        Notification::{$notifMethod}($notifTitle, $response->getMessage());
-        return redirect()->route($routeName, $routeParams);
+    protected function redirectWithError(string $routeName, string $errorMsg, array $routeParams=[]): \Illuminate\Http\RedirectResponse
+    {
+        return redirect()
+            ->route($routeName, $routeParams)
+            ->withErrors(['msg' => $errorMsg]);
     }
 
-    protected function redirectWithError(string $routeName, string $errorMsg): \Illuminate\Http\RedirectResponse
+    protected function redirectSuccess(string $routeName, string $message, array $routeParams=[]): \Illuminate\Http\RedirectResponse
     {
-        return redirect()->route($routeName)->withErrors(['msg' => $errorMsg]);
+        return redirect()
+            ->route($routeName, $routeParams)
+            ->withSuccess($message);
     }
 }

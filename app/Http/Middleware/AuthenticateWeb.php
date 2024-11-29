@@ -23,7 +23,8 @@ class AuthenticateWeb
 
     private function redirectNoPermission()
     {
-        Notification::setWarning('Atenção!', 'Você não tem acesso a esse conteúdo! Faça o login novamente.');
-        return redirect()->route('site.login');
+        return redirect()
+            ->route('app.login')
+            ->withErrors(['msg' => __('messages.dontHavePermission')]);
     }
 }

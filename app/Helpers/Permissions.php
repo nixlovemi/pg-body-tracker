@@ -6,8 +6,9 @@ use App\Models\User;
 use App\Helpers\SysUtils;
 
 final class Permissions {
-    public const ACL_DASHBOARD_VIEW = 'dashboard/view';
+    public const ACL_DASHBOARD_INDEX = 'dashboard/view';
 
+    /*
     public const ACL_CLIENT_VIEW = 'client/view';
     public const ACL_CLIENT_EDIT = 'client/edit';
 
@@ -25,10 +26,12 @@ final class Permissions {
 
     public const ACL_SERVICE_ITEM_VIEW = 'serviceItem/view';
     public const ACL_SERVICE_ITEM_EDIT = 'serviceItem/edit';
+    */
 
     private const ACL = [
-        self::ACL_DASHBOARD_VIEW => [User::ROLE_MANAGER, User::ROLE_CREATIVE, User::ROLE_EDITOR, User::ROLE_CUSTOMER],
+        self::ACL_DASHBOARD_INDEX => [User::ROLE_MANAGER],
 
+        /*
         self::ACL_CLIENT_VIEW => [User::ROLE_MANAGER, User::ROLE_CUSTOMER],
         self::ACL_CLIENT_EDIT => [User::ROLE_MANAGER, User::ROLE_CUSTOMER],
 
@@ -46,10 +49,13 @@ final class Permissions {
 
         self::ACL_SERVICE_ITEM_VIEW => [User::ROLE_MANAGER, User::ROLE_CUSTOMER],
         self::ACL_SERVICE_ITEM_EDIT => [User::ROLE_MANAGER, User::ROLE_CUSTOMER],
+        */
     ];
 
     private const ROUTE_ACL = [
-        'site.dashboard' => self::ACL_DASHBOARD_VIEW,
+        'app.dashboard.index' => self::ACL_DASHBOARD_INDEX,
+
+        /*
         'site.showJobs' => self::ACL_DASHBOARD_VIEW,
 
         'client.index' => self::ACL_CLIENT_VIEW,
@@ -104,12 +110,13 @@ final class Permissions {
 
         'quoteItem.add' => self::ACL_QUOTE_EDIT,
         'quoteItem.doAdd' => self::ACL_QUOTE_EDIT,
+        */
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool
     {
         $User = $User ?? SysUtils::getLoggedInUser();
-        if ($User?->isAdmin()) {
+        if ($User?->isRoot()) {
             return true;
         }
 

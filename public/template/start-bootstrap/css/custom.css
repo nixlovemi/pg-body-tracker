@@ -1,3 +1,203 @@
+:root {
+    --main-bg-color: #207CC6;
+    --secondary-bg-color: #F5F5F5;
+}
+
+/* Estilo Global para Botões */
+button,
+a.button {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+/* Botão Principal */
+button.primary,
+a.button.primary {
+    background-color: #2196F3; /* Azul Principal */
+    color: #FFFFFF; /* Texto Branco */
+}
+button.primary:hover,
+a.button.primary:hover {
+    background-color: #1976D2; /* Azul Mais Escuro */
+    color: #FFFFFF; /* Texto Branco */
+}
+button.primary:active,
+a.button.primary:active {
+    background-color: #1565C0; /* Azul Ainda Mais Escuro */
+    color: #FFFFFF; /* Texto Branco */
+}
+button.primary:disabled,
+a.button.primary:disabled {
+    background-color: #BDBDBD; /* Cinza Claro */
+    color: #E0E0E0; /* Texto Cinza Mais Claro */
+    cursor: not-allowed;
+}
+/* Botão Secundário */
+button.secondary,
+a.button.secondary {
+    background-color: #E0E0E0; /* Cinza Claro */
+    color: #1E88E5; /* Azul Secundário */
+}
+button.secondary:hover,
+a.button.secondary:hover {
+    background-color: #B0BEC5; /* Cinza Médio */
+    color: #1E88E5; /* Azul Secundário */
+}
+button.secondary:active,
+a.button.secondary:active {
+    background-color: #78909C; /* Cinza Escuro */
+    color: #1E88E5; /* Azul Secundário */
+}
+button.secondary:disabled,
+a.button.secondary:disabled {
+    background-color: #F5F5F5; /* Fundo Desativado */
+    color: #9E9E9E; /* Texto Desativado */
+}
+/* Botão de Confirmação */
+button.confirm,
+a.button.confirm {
+    background-color: #00E676; /* Verde Neon */
+    color: #FFFFFF; /* Texto Branco */
+}
+button.confirm:hover,
+a.button.confirm:hover {
+    background-color: #00C853; /* Verde Escuro */
+    color: #FFFFFF; /* Texto Branco */
+}
+button.confirm:active,
+a.button.confirm:active {
+    background-color: #009624; /* Verde Ainda Mais Escuro */
+    color: #FFFFFF; /* Texto Branco */
+}
+/* Botão de Atenção/Cancelamento */
+button.danger,
+a.button.danger {
+    background-color: #F44336; /* Vermelho */
+    color: #FFFFFF; /* Texto Branco */
+}
+button.danger:hover,
+a.button.danger:hover {
+    background-color: #D32F2F; /* Vermelho Mais Escuro */
+    color: #FFFFFF; /* Texto Branco */
+}
+button.danger:active,
+a.button.danger:active {
+    background-color: #B71C1C; /* Vermelho Profundo */
+    color: #FFFFFF; /* Texto Branco */
+}
+/* Botão de Ajustes/Filtros */
+button.filter,
+a.button.filter {
+    background-color: #E3F2FD; /* Azul Claro */
+    color: #2196F3; /* Azul Médio */
+}
+button.filter:hover,
+a.button.filter:hover {
+    background-color: #BBDEFB; /* Azul Médio */
+    color: #2196F3; /* Azul Médio */
+}
+button.filter:active,
+a.button.filter:active {
+    background-color: #90CAF9; /* Azul Mais Escuro */
+    color: #2196F3; /* Azul Médio */
+}
+
+/* Estilo Básico para Links */
+a {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    text-decoration: none; /* Remove o sublinhado por padrão */
+    color: #2196F3; /* Azul primário */
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+/* Hover: Quando o mouse passa sobre o link */
+a:hover {
+    color: #1976D2; /* Azul mais escuro */
+    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
+}
+/* Active: Quando o link está sendo clicado */
+a:active {
+    color: #1565C0; /* Azul ainda mais escuro */
+}
+/* Visited: Quando o link já foi visitado */
+a:visited {
+    color: #1E88E5; /* Azul secundário */
+}
+/* Disabled: Para links desativados */
+a.disabled, a[disabled] {
+    color: #BDBDBD; /* Cinza claro */
+    pointer-events: none; /* Desativa cliques no link */
+    cursor: not-allowed;
+}
+/* Links de Destaque */
+a.highlight {
+    color: #00E676; /* Verde neon */
+    font-weight: bold; /* Dá mais ênfase */
+}
+a.highlight:hover {
+    color: #00C853; /* Verde escuro */
+}
+/* Links de Alerta */
+a.alert {
+    color: #F44336; /* Vermelho de alerta */
+    font-weight: bold;
+}
+a.alert:hover {
+    color: #D32F2F; /* Vermelho mais escuro */
+    text-decoration: underline;
+}
+/* Links de Pequenos Controles */
+a.control {
+    font-size: 14px;
+    color: #E3F2FD; /* Azul claro */
+}
+a.control:hover {
+    color: #BBDEFB; /* Azul mais destacado */
+}
+
+/* Mensagem de Sucesso */
+.alert-message.success {
+    background-color: #E8F5E9; /* Verde Claro */
+    color: #388E3C; /* Verde Escuro */
+    border: 1px solid #C8E6C9; /* Borda Verde Suave */
+}
+.alert-message.success svg {
+    color: #4CAF50; /* Verde para o ícone */
+}
+/* Mensagem de Erro */
+.alert-message.error {
+    background-color: #FFEBEE; /* Vermelho Claro */
+    color: #D32F2F; /* Vermelho Escuro */
+    border: 1px solid #FFCDD2; /* Borda Vermelha Suave */
+}
+.alert-message.error svg {
+    color: #F44336; /* Vermelho para o ícone */
+}
+/* Mensagem de Alerta */
+.alert-message.warning {
+    background-color: #FFF8E1; /* Amarelo Claro */
+    color: #F57C00; /* Laranja Escuro */
+    border: 1px solid #FFE0B2; /* Borda Laranja Suave */
+}
+.alert-message.warning svg {
+    color: #FF9800; /* Laranja para o ícone */
+}
+/* Mensagem de Informação */
+.alert-message.info {
+    background-color: #E3F2FD; /* Azul Claro */
+    color: #1976D2; /* Azul Escuro */
+    border: 1px solid #BBDEFB; /* Borda Azul Suave */
+}
+.alert-message.info svg {
+    color: #2196F3; /* Azul para o ícone */
+}
+
 .spinner-border span {
     display: none;
 }
@@ -10,4 +210,10 @@
     background-size: 16px 16px;
     background-image: url("data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAB2AAAAdgB+lymcgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANpSURBVHic7ZvLS1RhGIef1OyColRkjWabNm2CCCLoJnbZtwhB6j+Ibv9ItOgCUdANL0FmrSo1taSQAhEyCIIiWhkqlZW3mRbvDIz2nTkz53w3Z/zBuzmLed/nN9/5zneFFZW2VlnIUQ0cAHYDu4DGdKwHaoE5YBqYBMaBD8BH4C0wBPy2UKN21QMXgJcIYCpizAADwDlgs1WCiDoKPAEWiA4dFLNAN9KavFMz8Br90EHRDxyyARamrcAd7IEvjU6gzjhlgFqBqZACbcQEcMIw6yKtAW5phogbSeAyUGmQG4CNSM/uGjgongFVpuDrgFEPIMNiGNikG34D8N4DuEJM0NYS1gKDHkAVGk/R1Cfc8AAmalyKC3/aA4g4kSTGJzKBTFBcQ8SNCSIOlh56ULyuuF0o/GEPitYZSQqcRL0xUMRzoAF5tbocmNCXL3yToQIasnJUAO0OTNifjwGPDSWvX5LHhQldYfBbiLeCE5a8wrEJs4QMky8aLqDdAxPO5DKg30IBrk3oDYKvQZqIjSJcmvAHWKcy4LgleB9MOJJJWJaVfK/KFYNqAe6x2IR54BTQYTj3HtXDNuy2gEw84P+WUA7cNZjzpsoAE6M/X1+HVyoDvjo0wLYJn1QG/HRsQC4TdM8dxlUGJD0wIMiEBs05/mZ+OPsrsKByxRPp3sUuUz2cxs9/38QrMKUy4Iun8CY6wc8qA4ZLBD5FwGfwfonAp9KswOLOYEzlimF1IEPf+axnFcgQucVg3lHVw1KaDB1TGVCN/BPFDj9Djn1DG3uArhdEBoLgQU52mUzeqYAvR955G/Ap4GwuA+op7kXReWThN6e6DSVPOIZPIdt9oWo2lLzRMXwK2fTJS0MGkvcA24FtwCMH8IP5wkPxbY6mgIOFGADSY7suWle0FQoP0mlNeFB83JhETrRGUqsHAHHjZFT4jK55ABE1rsaFBzlqthyPyfUCq3UYAHKzY8QDqHzjXbpmrapbJiaMIGeajagWvw9L9yG73EZVCVx3DKqKK8hRfmtqxY9xwnfMLp/lVAK3I8YOHF6ZyVYTZiZQQTFEnkfebKsZmemZWFSZQ9YqvLgtFqYEcB54QfyLkz3IxUkjTd3G1dkqYB9yBGcnsANZlqpJRxkyYfkBfEP27seQnaph4JeFGldUsvoHnFDQwaFy7C4AAAAASUVORK5CYII=") !important;
     background-position: 0px 0px !important;
+}
+#accordionSidebar {
+    background-color: var(--main-bg-color);
+}
+#wrapper {
+    background-color: var(--secondary-bg-color);
 }

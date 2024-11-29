@@ -15,19 +15,31 @@ $USER = $mSysUtils::getLoggedInUser();
     'PAGE_TITLE' => $PAGE_TITLE ?? ''
 ])
 
+@section('CORE_HEADER_CUSTOM_CSS')
+    <style>
+        .sidebar-dark #sidebarToggle::after {
+            color: rgba(255,255,255,.5);
+            position: relative;
+            font-size: 1.7em;
+            top: -11px;
+            left: -7px;
+        }
+    </style>
+@endsection
+
 @section('CORE_BODY_CONTENT')
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <!-- Sidebar (bg-gradient-primary) -->
+        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('site.dashboard') }}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('app.dashboard.index') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-headphones-alt"></i>
+                    <i class="fas fa-weight"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Áudio e Vídeo</div>
+                <div class="sidebar-brand-text mx-3">{{ env('SHORT_DISPLAY_NAME') }}</div>
             </a>
 
             <!-- Divider -->
@@ -322,8 +334,8 @@ $USER = $mSysUtils::getLoggedInUser();
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             >
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ $USER->getName() }}</span>
-                                <img class="img-profile rounded-circle" src="{{ url('/') }}/template/start-bootstrap/img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ $USER->first_name ?? __('messages.userNameDash') }}</span>
+                                <img class="img-profile rounded-circle" src="{{ url('/') . $USER->getPictureUrl() }}" />
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -345,9 +357,9 @@ $USER = $mSysUtils::getLoggedInUser();
                                     */
                                 @endphp
 
-                                <a class="dropdown-item" href="{{ route('site.login') }}">
+                                <a class="dropdown-item" href="{{ route('app.login') }}">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Sair
+                                    {{ __('messages.logout') }}
                                 </a>
                             </div>
                         </li>

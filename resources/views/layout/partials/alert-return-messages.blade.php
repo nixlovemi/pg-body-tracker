@@ -1,7 +1,7 @@
 @if(session('success'))
     <div class="row">
         <div class="col">
-            <div class="alert alert-success alert-dismissible fade show">
+            <div class="alert alert-message success alert-dismissible fade show">
                 {!!  session('success')  !!}
 
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">

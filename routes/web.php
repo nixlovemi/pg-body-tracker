@@ -24,9 +24,14 @@ Route::group([], function(){
     })->name('site.404');
 });
 
-Route::get('/', 'App\Http\Controllers\Login@index')->name('site.login');
+Route::prefix('app')->group(function () {
+    Route::get('/', 'App\Http\Controllers\Login@index')->name('app.login');
+    Route::post('/doLogin', 'App\Http\Controllers\Login@doLogin')->name('app.doLogin');
 
-// ================================================
-// ADD ROUTE PERMISSIONS ON App\Helpers\Permissions
-// ================================================
-Route::middleware(['authWeb'])->group(function () { });
+    // ================================================
+    // ADD ROUTE PERMISSIONS ON App\Helpers\Permissions
+    // ================================================
+    Route::middleware(['authWeb'])->group(function () {
+        Route::get('/dashboard', 'App\Http\Controllers\Dashboard@index')->name('app.dashboard.index');
+    });
+});

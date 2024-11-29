@@ -1,25 +1,28 @@
 @php
 $arrMenu = [
     'dashboard' => [
-        'route' => route('site.dashboard'),
+        'route' => route('app.dashboard.index'),
         'icon' => 'fas fa-fw fa-tachometer-alt',
         'label' => 'Dashboard',
     ],
+
+    /*
     'people' => [
-        'route' => route('people.index'),
+        'route' => route('app.dashboard.index'),
         'icon' => 'fas fa-users',
         'label' => 'Pessoas',
     ],
     'attendance' => [
-        'route' => route('attendance.index'),
+        'route' => route('app.dashboard.index'),
         'icon' => 'fas fa-tasks',
         'label' => 'Presença',
     ],
     'attendanceReport' => [
-        'route' => route('attendance.report'),
+        'route' => route('app.dashboard.index'),
         'icon' => 'fas fa-print',
         'label' => 'Relatório',
     ],
+    */
 ];
 @endphp
 

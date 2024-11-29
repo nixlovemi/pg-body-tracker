@@ -16,7 +16,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            Notification::setWarning('Atenção!', 'Faça o login antes de acessar esse conteúdo!');
+            # Notification::setWarning('Atenção!', 'Faça o login antes de acessar esse conteúdo!'); // TODO: Fix this
             return route('site.login');
         }
     }

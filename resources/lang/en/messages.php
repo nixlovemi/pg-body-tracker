@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'dontHavePermission' => 'You do not have permission to access this page! Please login again!',
+    'userNameDash' => 'User',
+    'logout' => 'Logout',
+
     'helpers' => [
         'modelValidation' => [
             'idFieldNotFound' => ':modelLabel not found!',
@@ -26,7 +30,14 @@ return [
                 'passwordToken' => 'Password Token',
                 'role' => 'Role',
                 'active' => 'Active',
-            ]
+            ],
+            'fLogin' => [
+                'invalidEmail' => 'Enter a valid e-mail!',
+                'emptyPassword' => 'Fill in the password!',
+                'invalidCredentials' => 'Invalid user or password!',
+                'loginUserError' => 'Error trying to log in the user!',
+                'loginSuccess' => 'User logged in successfully!',
+            ],
         ],
 
         'Client' => [
@@ -74,5 +85,15 @@ return [
                 'protein_perc' => 'Protein Percentage',
             ],
         ],
-    ]
+    ],
+
+    'pages' => [
+        'login' => [
+            'emailPlaceholder' => 'Type your e-mail',
+            'passwordPlaceholder' => 'Type your password',
+            'loginButton' => 'Login',
+            'loginGoogle' => 'Login with Google',
+            'forgotPassword' => 'Forgot your password?',
+        ],
+    ],
 ];

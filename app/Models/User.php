@@ -10,6 +10,7 @@ use App\Helpers\ModelValidation;
 use App\Helpers\ValidatePassword;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\Constants;
+use App\Helpers\SysUtils;
 
 class User extends Authenticatable
 {
@@ -108,6 +109,30 @@ class User extends Authenticatable
     {
         return Hash::check($password, $this->password);
     }
+
+    public function getPictureUrl(): string
+    {
+        if (empty($this->picture_url)) {
+            return Constants::USER_DEFAULT_IMAGE_PATH;
+        }
+
+        return $this->picture_url;
+    }
+
+    public function isRoot(): bool
+    {
+        return $this->role === User::ROLE_ROOT;
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === User::ROLE_MANAGER;
+    }
+
+    public function isClient(): bool
+    {
+        return $this->role === User::ROLE_CLIENT;
+    }
     // ===============
 
     // static functions
@@ -129,6 +154,42 @@ class User extends Authenticatable
         $roles[self::ROLE_CLIENT] = __('messages.models.User.roles.client');
 
         return $roles;
+    }
+
+    public static function fLogin(string $email, string $password): ApiResponse
+    {
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return new ApiResponse(true, __('messages.models.User.fLogin.invalidEmail'));
+        }
+
+        if (empty($password)) {
+            return new ApiResponse(true, __('messages.models.User.fLogin.emptyPassword'));
+        }
+
+        $User = User::where('email', $email)
+            ->where('active', true)
+            ->first();
+        if (
+            !$User ||
+            false === $User->checkPassword($password) ||
+            (!$User->isManager() && !$User->isRoot())
+        ) {
+            return new ApiResponse(true, __('messages.models.User.fLogin.invalidCredentials'));
+        }
+
+        // all good, register everything
+        if (false === SysUtils::loginUser($User)) {
+            return new ApiResponse(true, __('messages.models.User.fLogin.loginUserError'));
+        }
+
+        // clean reset token
+        $User->password_reset_token = null;
+        $User->update();
+        $User->refresh();
+
+        return new ApiResponse(false, __('messages.models.User.fLogin.loginSuccess'), [
+            'User' => $User
+        ]);
     }
     // ================
 }
