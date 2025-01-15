@@ -33,5 +33,9 @@ Route::prefix('app')->group(function () {
     // ================================================
     Route::middleware(['authWeb'])->group(function () {
         Route::get('/dashboard', 'App\Http\Controllers\Dashboard@index')->name('app.dashboard.index');
+
+        Route::prefix('client')->group(function () {
+            Route::get('/', 'App\Http\Controllers\Client@index')->name('app.client.index');
+        });
     });
 });
