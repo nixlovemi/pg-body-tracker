@@ -154,6 +154,9 @@ div.table-responsive thead a[title="Resetar filtros"] {
 div.table-responsive tbody i {
     font-size: 1.15em !important;
 }
+div.table-responsive tfoot .page-link {
+    border-radius: 0px;
+}
 .table td, .table th {
     padding: .45rem .75rem;
 }
