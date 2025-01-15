@@ -95,5 +95,17 @@ return [
             'loginGoogle' => 'Login with Google',
             'forgotPassword' => 'Forgot your password?',
         ],
+
+        'client' => [
+            'index' => [
+                'title' => 'Clients',
+                'addButton' => 'Add Client',
+            ],
+            'table' => [
+                'colName' => 'Name',
+                'colEmail' => 'Email',
+                'colPhone' => 'Phone',
+            ]
+        ]
     ],
 ];

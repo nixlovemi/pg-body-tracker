@@ -125,10 +125,6 @@ a:hover {
 a:active {
     color: #1565C0; /* Azul ainda mais escuro */
 }
-/* Visited: Quando o link já foi visitado */
-a:visited {
-    color: #1E88E5; /* Azul secundário */
-}
 /* Disabled: Para links desativados */
 a.disabled, a[disabled] {
     color: #BDBDBD; /* Cinza claro */

@@ -36,6 +36,8 @@ Route::prefix('app')->group(function () {
 
         Route::prefix('client')->group(function () {
             Route::get('/', 'App\Http\Controllers\Client@index')->name('app.client.index');
+            Route::get('/add', 'App\Http\Controllers\Client@add')->name('app.client.add');
+            Route::get('/edit', 'App\Http\Controllers\Client@edit')->name('app.client.edit');
         });
     });
 });
