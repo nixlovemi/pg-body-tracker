@@ -5,13 +5,12 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\SessionGuard;
 use App\Models\User;
+use DateTime;
 
 final class SysUtils {
 
     private const ENCODE_FROM_CHARS = '+/=';
     private const ENCODE_TO_CHARS = '-;$';
-    private const SESSION_USER_ID = 'USER_ID';
-    private const SESSION_USER_NAME = 'USER_NAME';
 
     public static function getWebAuth(): SessionGuard
     {
@@ -115,11 +114,11 @@ final class SysUtils {
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    public static function formatNumberToDb(string $number, int $decimals): float
+    public static function formatNumberToDb(string $number, int $decimals, string $decimalSep, string $thousandSep): float
     {
-        $newNumber = str_replace(['R$', '$', '.'], '', $number);
+        $newNumber = str_replace(['R$', '$', '€', '£', '¥', $thousandSep], '', $number);
         $newNumber = trim($newNumber);
-        $newNumber = str_replace(',', '.', $newNumber);
+        $newNumber = str_replace($decimalSep, '.', $newNumber);
 
         return (float) number_format((float) $newNumber, $decimals, '.', '');
     }
@@ -128,5 +127,11 @@ final class SysUtils {
     {
         $result = $currency . ' ' . number_format($value, $decimals, ',', '.');
         return trim($result);
+    }
+
+    public static function reformatDate(string $date, string $fromFormat, string $toFormat): string
+    {
+        $dateObj = DateTime::createFromFormat($fromFormat, $date);
+        return $dateObj->format($toFormat);
     }
 }

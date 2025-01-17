@@ -380,6 +380,7 @@ $USER = $mSysUtils::getLoggedInUser();
                     @endif
 
                     <!-- Content Row -->
+                    @include('layout.partials.alert-return-messages')
                     @yield('DASH_BODY_CONTENT')
 
                 </div>

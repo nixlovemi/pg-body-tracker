@@ -33,7 +33,7 @@ class CreateAvaliationsTable extends Migration
             $table->foreignId('client_id')
                 ->constrained('clients')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             $table->date('date');
             $table->float('weight_kg', 8, 2, true);
             $table->smallInteger('height_cm', false, true);

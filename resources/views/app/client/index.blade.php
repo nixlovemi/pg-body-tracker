@@ -1,4 +1,5 @@
 @inject('Permissions', 'App\Helpers\Permissions')
+@inject('SysUtils', 'App\Helpers\SysUtils')
 
 @php
 /*
@@ -6,6 +7,7 @@ View variables:
 ===============
     - $PAGE_TITLE: string
 */
+$userId = $SysUtils::getLoggedInUser()?->id ?? 0;
 @endphp
 
 @extends('layout.dashboard', [
@@ -26,6 +28,7 @@ View variables:
                 <div class="card-body px-2 py-0">
                     <livewire:table
                         :config="App\Tables\ClientsTable::class"
+                        :configParams="['userId' => $userId]"
                     />
                 </div>
             </div>

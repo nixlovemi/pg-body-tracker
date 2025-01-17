@@ -63,7 +63,7 @@
     function loadJqueryComponents()
     {
         setTimeout(function(){
-            // loadMaskMoney();
+            loadMaskMoney();
             // loadBootstrapSelect();
             loadDatePicker();
         }, 250);
@@ -71,6 +71,7 @@
 
     function loadDatePicker()
     {
+        // TODO: create eng version
         $(".jq-datepicker").datepicker({
             dateFormat: 'dd/mm/yy',
             closeText:"Fechar",
@@ -84,6 +85,20 @@
             dayNamesMin:["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],
             weekHeader:"Sm",
             firstDay:1
+        });
+    }
+
+    function loadMaskMoney()
+    {
+        $(".jq-mask-money").maskMoney({
+            // prefix: the prefix to be displayed before(aha!) the value entered by the user(example: "US$ 1234.23"). default: ''
+            // suffix: the prefix to be displayed after the value entered by the user(example: "1234.23 €"). default: ''
+            // affixesStay: set if the prefix and suffix will stay in the field's value after the user exits the field. default: true
+            // thousands: the thousands separator. default: ','
+            // decimal: the decimal separator. default: '.'
+            // precision: how many decimal places are allowed. default: 2
+            // allowZero: use this setting to prevent users from inputing zero. default: false
+            // allowNegative: use this setting to prevent users from inputing negative values. default: false
         });
     }
 

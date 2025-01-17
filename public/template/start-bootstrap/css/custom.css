@@ -213,3 +213,9 @@ a.control:hover {
 #wrapper {
     background-color: var(--secondary-bg-color);
 }
+a#userDropdown span {
+    font-size: 92%;
+}
+.card-header {
+    background-color: #f3f9ff !important;
+}

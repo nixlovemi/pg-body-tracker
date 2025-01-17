@@ -1,9 +1,15 @@
 <?php
 
 return [
+    'thousandSeparator' => '.',
+    'decimalSeparator' => ',',
+    'dateFormat' => 'd/m/Y',
+    'selectEmptyOption' => 'Selecione...',
     'dontHavePermission' => 'Você não tem acesso a esse conteúdo! Faça o login novamente.',
     'userNameDash' => 'Usuário',
     'logout' => 'Sair',
+    'buttonSave' => 'Salvar',
+    'buttonBackToList' => 'Voltar para lista',
 
     'helpers' => [
         'modelValidation' => [
@@ -47,12 +53,19 @@ return [
                 'female' => 'Feminino',
             ],
             'fields' => [
+                'first_name' => 'Nome',
+                'last_name' => 'Sobrenome',
                 'phone' => 'Telefone',
-                'gender' => 'Gênero',
+                'gender' => 'Sexo Biológico',
                 'birthdate' => 'Data de Nascimento',
                 'height' => 'Altura',
                 'weight' => 'Peso',
-            ]
+            ],
+            'clientNotFound' => 'Cliente não encontrado para edição!',
+            'errorSavingClient' => 'Ocorreu um problema ao salvar o Cliente, tente novamente.',
+            'errorSavingOtherClient' => 'Você não tem permissão para salvar este cliente!',
+            'successAddingClient' => 'Cliente adicionado com sucesso!',
+            'successEditingClient' => 'Cliente editado com sucesso!',
         ],
 
         'Goal' => [
@@ -100,6 +113,14 @@ return [
             'index' => [
                 'title' => 'Clientes',
                 'addButton' => 'Adicionar Cliente',
+                'editButton' => 'Editar Cliente',
+                'deleteConfirmation' => 'Tem certeza que deseja excluir o cliente :clientName? Essa operação é permanente e não pode ser desfeita!',
+                'deleteSuccess' => 'Cliente excluído com sucesso!',
+            ],
+            'register' => [
+                'title' => 'Cadastrar Cliente',
+                'cardInfo' => 'Informações do Cliente',
+                'cardMeasures' => 'Medidas',
             ],
             'table' => [
                 'colName' => 'Nome',

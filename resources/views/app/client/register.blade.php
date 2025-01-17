@@ -1,0 +1,159 @@
+@inject('mClient', 'App\Models\Client')
+@inject('Constants', 'App\Helpers\Constants')
+@inject('Permissions', 'App\Helpers\Permissions')
+@inject('SysUtils', 'App\Helpers\SysUtils')
+
+@php
+/*
+View variables:
+===============
+    - $PAGE_TITLE: string
+    - $TYPE: App\Helpers\Constants::FORM_ACTIONS
+    - $ACTION: string
+    - $CLIENT: App\Models\Client|null
+*/
+
+$canEdit = ($Constants::FORM_VIEW !== $TYPE && $Permissions::checkPermission($Permissions::ACL_CLIENT_EDIT));
+@endphp
+
+@extends('layout.dashboard', [
+    'PAGE_TITLE' => $PAGE_TITLE ?? ''
+])
+
+@section('DASH_BODY_CONTENT')
+    <h4>{{ $PAGE_TITLE }}</h4>
+
+    <form id="client-form" action="{{ $ACTION }}" method="POST">
+        @csrf
+        <input type="hidden" name="f-cid" value="{{ $CLIENT?->codedId }}" />
+
+        <x-card title="{{ __('messages.pages.client.register.cardInfo') }}">
+            <div class="form-row">
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">* {{ __('messages.models.Client.fields.first_name') }}</label>
+                        <input type="text" class="form-control form-control-user"
+                            id="f-name" name="f-name" maxlength="60" value="{{ old('f-name') ?: $CLIENT?->first_name }}"
+                        />
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">* {{ __('messages.models.Client.fields.last_name') }}</label>
+                        <input type="text" class="form-control form-control-user"
+                            id="f-surname" name="f-surname" maxlength="80" value="{{ old('f-surname') ?: $CLIENT?->last_name }}"
+                        />
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">* {{ __('messages.models.Client.fields.birthdate') }}</label>
+                        @php
+                        $birthdate = old('f-birth') ?: ($CLIENT?->birthdate ? $SysUtils::reformatDate($CLIENT?->birthdate, 'Y-m-d', __('messages.dateFormat')) : '');
+                        @endphp
+                        <input type="text" class="form-control form-control-user jq-datepicker"
+                            id="f-birth" name="f-birth" maxlength="10" value="{{ $birthdate }}"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">* {{ __('messages.models.Client.fields.gender') }}</label>
+                        <select
+                            class="form-control form-control-user"
+                            id="f-bsex"
+                            name="f-bsex"
+                        >
+                            @php
+                            $clientGender = old("f-bsex") ?: $CLIENT?->gender;
+                            @endphp
+
+                            @foreach (array_merge(
+                                ['' => __('messages.selectEmptyOption') ],
+                                $mClient::fGetGenders()
+                            ) as $gender => $display)
+                                <option
+                                    value="{{ $gender }}"
+                                    {{ $gender !== $clientGender ? '': 'selected' }}
+                                >{{ $display }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="text" class="form-control form-control-user"
+                            id="f-email" name="f-email" maxlength="255"
+                            value="{{ old('f-email') ?: $CLIENT?->email }}"
+                        />
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">{{ __('messages.models.Client.fields.phone') }}</label>
+                        <input type="text" class="form-control form-control-user"
+                            id="f-phone" name="f-phone" maxlength="35" value="{{ old('f-phone') ?: $CLIENT?->phone }}"
+                        />
+                    </div>
+                </div>
+            </div>
+        </x-card>
+
+        <x-card title="{{ __('messages.pages.client.register.cardMeasures') }}">
+            <div class="form-row">
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">* {{ __('messages.models.Client.fields.height') }} (cm)</label>
+                        <select
+                            class="form-control form-control-user"
+                            id="f-height"
+                            name="f-height"
+                        >
+                            @php
+                            $clientHeight = old("f-height") ?: $CLIENT?->height_cm;
+                            @endphp
+
+                            @for ($i = 50; $i <= 300; $i++)
+                                @if ($i === 50)
+                                    <option value="">{{ __('messages.selectEmptyOption') }}</option>
+                                @endif
+
+                                <option
+                                    value="{{ $i }}"
+                                    {{ $i == $clientHeight ? 'selected': '' }}
+                                >{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">* {{ __('messages.models.Client.fields.weight') }} (kg)</label>
+                        @php
+                        $clientWeight = old("f-weight") ?: number_format($CLIENT?->weight_kg, 3, __('messages.decimalSeparator'), __('messages.thousandSeparator'));
+                        @endphp
+                        <input type="text" class="form-control form-control-user jq-mask-money"
+                            id="f-weight" name="f-weight" maxlength="6"
+                            data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
+                            data-precision="3" value="{{ $clientWeight }}"
+                        />
+                    </div>
+                </div>
+            </div>
+        </x-card>
+
+        <div class="form-actions">
+            <div class="text-right">
+                @if ($canEdit)
+                    <button type="submit" class="btn primary btn-user">{{ __('messages.buttonSave') }}</button>
+                @endif
+
+                <a href="{{ route('app.client.index') }}" class="btn btn-light">{{ __('messages.buttonBackToList') }}</a>
+            </div>
+        </div>
+    </form>
+@endsection

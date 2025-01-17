@@ -3,21 +3,43 @@
 namespace App\Tables;
 
 use App\Models\Client;
+use App\Models\User;
+use App\Helpers\Permissions;
 use Okipa\LaravelTable\Abstracts\AbstractTableConfiguration;
 use Okipa\LaravelTable\Column;
-use Okipa\LaravelTable\Formatters\DateFormatter;
 use Okipa\LaravelTable\RowActions\DestroyRowAction;
 use Okipa\LaravelTable\RowActions\EditRowAction;
 use Okipa\LaravelTable\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ClientsTable extends AbstractTableConfiguration
 {
+    public int $userId;
+    private User $User;
+
+    private function init(): void
+    {
+        $this->User = User::find($this->userId);
+    }
+
     protected function table(): Table
     {
-        return Table::make()->model(Client::class)
+        $this->init();
+
+        return Table::make()
+            ->model(Client::class)
+            ->query(function(Builder $query) {
+                return $query->where('user_id', '=', $this->User->id ?? 0);
+            })
             ->rowActions(fn(Client $client) => [
-                new EditRowAction(route('app.client.edit', $client)),
-                new DestroyRowAction(),
+                (new EditRowAction(route('app.client.edit', ['codedId' => $client->codedId])))
+                    ->when(Permissions::checkPermission(Permissions::ACL_CLIENT_EDIT, $this->User)),
+                (new DestroyRowAction())
+                    ->when(Permissions::checkPermission(Permissions::ACL_CLIENT_EDIT, $this->User))
+                    ->confirmationQuestion(__('messages.pages.client.index.deleteConfirmation', [
+                        'clientName' => $client->first_name . ' ' . $client->last_name
+                    ]))
+                    ->feedbackMessage(__('messages.pages.client.index.deleteSuccess')),
             ]);
     }
 

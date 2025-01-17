@@ -23,6 +23,7 @@ final class Permissions {
 
         'app.client.index' => self::ACL_CLIENT_INDEX,
         'app.client.add' => self::ACL_CLIENT_EDIT,
+        'app.client.doSave' => self::ACL_CLIENT_EDIT,
         'app.client.edit' => self::ACL_CLIENT_EDIT,
     ];
 

@@ -1,9 +1,15 @@
 <?php
 
 return [
+    'thousandSeparator' => ',',
+    'decimalSeparator' => '.',
+    'dateFormat' => 'm/d/Y',
+    'selectEmptyOption' => 'Select...',
     'dontHavePermission' => 'You do not have permission to access this page! Please login again!',
     'userNameDash' => 'User',
     'logout' => 'Logout',
+    'buttonSave' => 'Save',
+    'buttonBackToList' => 'Back to list',
 
     'helpers' => [
         'modelValidation' => [
@@ -47,12 +53,19 @@ return [
                 'female' => 'Feminino',
             ],
             'fields' => [
+                'first_name' => 'Name',
+                'last_name' => 'Last Name',
                 'phone' => 'Phone',
-                'gender' => 'Gender',
+                'gender' => 'Biological Sex',
                 'birthdate' => 'Birthdate',
                 'height' => 'Height',
                 'weight' => 'Weight',
-            ]
+            ],
+            'clientNotFound' => 'Client not found for editing!',
+            'errorSavingClient' => 'There was a problem saving the Client, try again.',
+            'errorSavingOtherClient' => 'You don\'t have permission to save this client!',
+            'successAddingClient' => 'Client added successfully!',
+            'successEditingClient' => 'Client edited successfully!',
         ],
 
         'Goal' => [
@@ -100,6 +113,14 @@ return [
             'index' => [
                 'title' => 'Clients',
                 'addButton' => 'Add Client',
+                'editButton' => 'Edit Client',
+                'deleteConfirmation' => 'Are you sure you want to delete the client :clientName? This operation is permanent and cannot be undone!',
+                'deleteSuccess' => 'Client deleted successfully!',
+            ],
+            'register' => [
+                'title' => 'Register Client',
+                'cardInfo' => 'Client Information',
+                'cardMeasures' => 'Measures',
             ],
             'table' => [
                 'colName' => 'Name',

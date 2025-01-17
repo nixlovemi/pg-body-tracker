@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helpers\ApiResponse;
 use App\Helpers\ModelValidation;
+use App\Helpers\SysUtils;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
@@ -94,8 +95,8 @@ class Client extends Model
         $validation->addIdField(User::class, __('messages.models.User.name'), 'id', 'ID');
         $validation->addField('first_name', ['required', 'string', 'min:2', 'max:60'], __('messages.models.User.fields.name'));
         $validation->addField('last_name', ['required', 'string', 'min:2', 'max:80'], __('messages.models.User.fields.lastName'));
-        $validation->addEmailField('email', 'E-mail', ['nullable', 'filled', 'string', 'min:3', 'max:255']);
-        $validation->addPhoneField('phone', __('messages.models.Client.fields.phone'), ['nullable', 'filled', 'max:35']);
+        $validation->addEmailField('email', 'E-mail', ['nullable', 'string', 'min:3', 'max:255']);
+        $validation->addPhoneField('phone', __('messages.models.Client.fields.phone'), ['nullable', 'max:35']);
         $validation->addField('gender', ['required', 'string', function ($attribute, $value, $fail) {
             if (false === array_key_exists($value, self::fGetGenders())) {
                 $fail(
@@ -118,6 +119,75 @@ class Client extends Model
             self::GENDER_MALE => __('messages.models.Client.gender.male'),
             self::GENDER_FEMALE => __('messages.models.Client.gender.female'),
         ];
+    }
+
+    public static function fSave(array $form, ?string $codedId = null): ApiResponse
+    {
+        // get model for insert or update
+        if (!empty($codedId)) {
+            $Client = self::getModelByCodedId($codedId);
+            if ($Client === null) {
+                return new ApiResponse(true, __('messages.models.Client.clientNotFound'));
+            }
+        } else {
+            $Client = new self();
+        }
+        $isEdit = ($Client->id > 0);
+
+        // check if user can save
+        if (!self::fHasAccess($Client)) {
+            return new ApiResponse(true, __('messages.models.Client.errorSavingOtherClient'));
+        }
+
+        // fill model
+        $Client->fill($form);
+
+        // validate model
+        $validation = $Client->validateModel();
+        if ($validation->isError()) {
+            return $validation;
+        }
+
+        // save model
+        try {
+            $Client->save();
+            $Client->refresh();
+        } catch (\Exception $e) {
+            return new ApiResponse(true, __('messages.models.Client.errorSavingClient'));
+        }
+
+        // all good, return success
+        $msg = $isEdit ? __('messages.models.Client.successEditingClient') : __('messages.models.Client.successAddingClient');
+        return new ApiResponse(false, $msg, [
+            'Client' => $Client,
+            'isEdit' => $isEdit,
+        ]);
+    }
+
+    public static function fHasAccess(self $Client): bool
+    {
+        // adding user is ok
+        if (!$Client->id > 0) {
+            return true;
+        }
+
+        // check logged user
+        $lggdUser = SysUtils::getLoggedInUser();
+        if (null === $lggdUser) {
+            return false;
+        }
+
+        // root can save any client
+        if ($lggdUser->role === User::ROLE_ROOT) {
+            return true;
+        }
+
+        // check if user is trying to edit a client that is not his
+        if ($Client->id > 0 && $Client->user_id !== $lggdUser->id) {
+            return false;
+        }
+
+        return true;
     }
     // ================
 }

@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Helpers\Constants;
+use App\Models\Client as mClient;
+use App\Helpers\SysUtils;
+use App\Helpers\ApiResponse;
 
 class Client extends Controller
 {
@@ -20,11 +24,104 @@ class Client extends Controller
 
     public function add()
     {
-        return 'ADD CLIENT';
+        return view('app.client.register', [
+            'PAGE_TITLE' => __('messages.pages.client.index.addButton'),
+            'TYPE' => Constants::FORM_ADD,
+            'ACTION' => route('app.client.doSave'),
+            'CLIENT' => null,
+        ]);
     }
 
-    public function edit()
+    public function doSave(Request $request)
     {
-        return 'EDIT CLIENT';
+        $form = $this->formatSaveRequest($request);
+        $codedId = $form['cid'] ?? null;
+        $response = mClient::fSave($form, $codedId);
+
+        if ($response->isError()) {
+            if ($codedId) {
+                return $this->redirectToEditWithError($response, $codedId);
+            }
+
+            return $this->redirectToAddWithError($response);
+        }
+
+        $Client = $response->getValueFromResponse('Client');
+        return redirect()
+            ->route('app.client.edit', [
+                'codedId' => $Client->codedId,
+            ])
+            ->withSuccess($response->getMessage());
+    }
+
+    public function edit(string $codedId)
+    {
+        $Client = mClient::getModelByCodedId($codedId);
+        if (null === $Client) {
+            return redirect()
+                ->route('app.client.index')
+                ->withErrors(['msg' => __('messages.models.Client.clientNotFound')]);
+
+        }
+
+        // if its not your client, redirect to index
+        if (!mClient::fHasAccess($Client)) {
+            return redirect()
+                ->route('app.client.index')
+                ->withErrors(['msg' => __('messages.models.Client.errorSavingOtherClient')]);
+        }
+
+        return view('app.client.register', [
+            'PAGE_TITLE' => __('messages.pages.client.index.editButton'),
+            'TYPE' => Constants::FORM_EDIT,
+            'ACTION' => route('app.client.doSave'),
+            'CLIENT' => $Client,
+        ]);
+    }
+
+    private function formatSaveRequest(Request $request): array
+    {
+        $form = [];
+        $form['cid'] = $request->input('f-cid') ?? null;
+        $form['user_id'] = SysUtils::getLoggedInUser()?->id ?? null;
+        $form['first_name'] = $request->input('f-name');
+        $form['last_name'] = $request->input('f-surname');
+        $form['email'] = $request->input('f-email');
+        $form['phone'] = $request->input('f-phone');
+        $form['gender'] = $request->input('f-bsex');
+        $form['birthdate'] = $request->input('f-birth');
+        $form['height_cm'] = $request->input('f-height') ?? 0;
+        $form['weight_kg'] = $request->input('f-weight') ?? 0;
+
+        // format birthdate from d/m/Y to Y-m-d
+        if (null !== $form['birthdate']) {
+            $form['birthdate'] = SysUtils::reformatDate($form['birthdate'], __('messages.dateFormat'), 'Y-m-d');
+        }
+
+        // format weight from kg
+        $form['weight_kg'] = SysUtils::formatNumberToDb(
+            $form['weight_kg'],
+            3,
+            __('messages.decimalSeparator'),
+            __('messages.thousandSeparator')
+        );
+
+        return $form;
+    }
+
+    private function redirectToAddWithError(ApiResponse $response): \Illuminate\Http\RedirectResponse
+    {
+        return redirect()
+            ->route('app.client.add')
+            ->withInput()
+            ->withErrors(['msg' => ApiResponse::getValidateMessage($response)]);
+    }
+
+    private function redirectToEditWithError(ApiResponse $response, string $codedId): \Illuminate\Http\RedirectResponse
+    {
+        return redirect()
+            ->route('app.client.edit', ['codedId' => $codedId])
+            ->withInput()
+            ->withErrors(['msg' => ApiResponse::getValidateMessage($response)]);
     }
 }

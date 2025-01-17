@@ -20,7 +20,7 @@ class CreateGoalsTable extends Migration
             $table->foreignId('client_id')
                 ->constrained('clients')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             $table->enum('objective', array_keys(Goal::fGetObjectivies()))->nullable();
             $table->float('target_weight_kg', 8, 2, true);
             $table->date('deadline');
