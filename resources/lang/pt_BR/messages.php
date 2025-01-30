@@ -10,6 +10,11 @@ return [
     'logout' => 'Sair',
     'buttonSave' => 'Salvar',
     'buttonBackToList' => 'Voltar para lista',
+    'saveModelNotFound' => ':modelName não encontrado para salvar!',
+    'saveModelErrorSavingOther' => 'Você não tem permissão para salvar este :modelName!',
+    'saveModelErrorSaving' => 'Ocorreu um problema ao salvar o :modelName, tente novamente.',
+    'saveModelSuccessAdding' => ':modelName adicionado com sucesso!',
+    'saveModelSuccessEditing' => ':modelName editado com sucesso!',
 
     'helpers' => [
         'modelValidation' => [
@@ -61,11 +66,6 @@ return [
                 'height' => 'Altura',
                 'weight' => 'Peso',
             ],
-            'clientNotFound' => 'Cliente não encontrado para edição!',
-            'errorSavingClient' => 'Ocorreu um problema ao salvar o Cliente, tente novamente.',
-            'errorSavingOtherClient' => 'Você não tem permissão para salvar este cliente!',
-            'successAddingClient' => 'Cliente adicionado com sucesso!',
-            'successEditingClient' => 'Cliente editado com sucesso!',
         ],
 
         'Goal' => [
@@ -79,7 +79,10 @@ return [
                 'weight' => 'Perda de Peso',
                 'muscle' => 'Ganho de Massa Muscular',
                 'health' => 'Saúde',
-            ]
+            ],
+            'fSave' => [
+                'objectiveDateMustBeGreaterThanToday' => 'A data do objetivo deve ser maior que a data atual!',
+            ],
         ],
 
         'Avaliation' => [
@@ -120,13 +123,23 @@ return [
             'register' => [
                 'title' => 'Cadastrar Cliente',
                 'cardInfo' => 'Informações do Cliente',
-                'cardMeasures' => 'Medidas',
+                'cardMeasures' => 'Medidas Iniciais',
+                'cardGoals' => 'Objetivos',
+                'noGoals' => 'Nenhum objetivo ativo! Aproveite para adicionar um novo.',
+                'btnNewGoal' => 'Novo Objetivo',
+                'labelActualWeight' => 'Peso Atual',
             ],
             'table' => [
                 'colName' => 'Nome',
                 'colEmail' => 'E-mail',
                 'colPhone' => 'Telefone',
             ]
-        ]
+        ],
+
+        'goal' => [
+            'modalAddGoal' => [
+                'title' => 'Adicionar Objetivo',
+            ],
+        ],
     ],
 ];

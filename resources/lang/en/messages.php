@@ -10,6 +10,11 @@ return [
     'logout' => 'Logout',
     'buttonSave' => 'Save',
     'buttonBackToList' => 'Back to list',
+    'saveModelNotFound' => ':modelName not found for editing!',
+    'saveModelErrorSavingOther' => 'You don\'t have permission to save this :modelName!',
+    'saveModelErrorSaving' => 'There was a problem saving the :modelName, try again.',
+    'saveModelSuccessAdding' => ':modelName added successfully!',
+    'saveModelSuccessEditing' => ':modelName edited successfully!',
 
     'helpers' => [
         'modelValidation' => [
@@ -49,8 +54,8 @@ return [
         'Client' => [
             'name' => 'Cliente',
             'gender' => [
-                'male' => 'Masculino',
-                'female' => 'Feminino',
+                'male' => 'Male',
+                'female' => 'Female',
             ],
             'fields' => [
                 'first_name' => 'Name',
@@ -61,11 +66,6 @@ return [
                 'height' => 'Height',
                 'weight' => 'Weight',
             ],
-            'clientNotFound' => 'Client not found for editing!',
-            'errorSavingClient' => 'There was a problem saving the Client, try again.',
-            'errorSavingOtherClient' => 'You don\'t have permission to save this client!',
-            'successAddingClient' => 'Client added successfully!',
-            'successEditingClient' => 'Client edited successfully!',
         ],
 
         'Goal' => [
@@ -79,7 +79,10 @@ return [
                 'weight' => 'Weight Loss',
                 'muscle' => 'Muscle Gain',
                 'health' => 'Health',
-            ]
+            ],
+            'fSave' => [
+                'objectiveDateMustBeGreaterThanToday' => 'The deadline must be greater than today!',
+            ],
         ],
 
         'Avaliation' => [
@@ -120,13 +123,23 @@ return [
             'register' => [
                 'title' => 'Register Client',
                 'cardInfo' => 'Client Information',
-                'cardMeasures' => 'Measures',
+                'cardMeasures' => 'Initial Measures',
+                'cardGoals' => 'Goals',
+                'noGoals' => 'No active goals! Take the opportunity to add a new one.',
+                'btnNewGoal' => 'New Goal',
+                'labelActualWeight' => 'Peso Atual',
             ],
             'table' => [
                 'colName' => 'Name',
                 'colEmail' => 'Email',
                 'colPhone' => 'Phone',
             ]
-        ]
+        ],
+
+        'goal' => [
+            'modalAddGoal' => [
+                'title' => 'Add Goal',
+            ],
+        ],
     ],
 ];

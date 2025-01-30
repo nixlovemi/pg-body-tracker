@@ -40,5 +40,10 @@ Route::prefix('app')->group(function () {
             Route::post('/doSave', 'App\Http\Controllers\Client@doSave')->name('app.client.doSave');
             Route::get('/edit/{codedId}', 'App\Http\Controllers\Client@edit')->name('app.client.edit');
         });
+
+        Route::prefix('goal')->group(function () {
+            Route::get('/htmlModalAdd', 'App\Http\Controllers\Goal@htmlModalAdd')->name('app.goal.htmlModalAdd');
+            Route::post('/doModalAdd', 'App\Http\Controllers\Goal@doModalAdd')->name('app.goal.doModalAdd');
+        });
     });
 });

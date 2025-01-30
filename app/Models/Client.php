@@ -110,6 +110,34 @@ class Client extends Model
 
         return $validation->validate();
     }
+
+    public function getCurrentGoal(): ?Goal
+    {
+        return $this->goals()
+            ->where('deadline', '>=', SysUtils::timezoneNow('Y-m-d'))
+            ->orderBy('deadline', 'DESC')
+            ->first();
+    }
+
+    public function getPastGoals(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->goals()
+            ->where('deadline', '<', SysUtils::timezoneNow('Y-m-d'))
+            ->orderBy('deadline', 'DESC')
+            ->get();
+    }
+
+    public function getCurrentWeight(): ?float
+    {
+        $avaliation = $this->avaliations()
+            ->orderBy('date', 'DESC')
+            ->first();
+        if ($avaliation) {
+            return $avaliation->weight_kg;
+        }
+
+        return $this->weight_kg;
+    }
     // ===============
 
     // static functions
@@ -127,7 +155,9 @@ class Client extends Model
         if (!empty($codedId)) {
             $Client = self::getModelByCodedId($codedId);
             if ($Client === null) {
-                return new ApiResponse(true, __('messages.models.Client.clientNotFound'));
+                return new ApiResponse(true, __('messages.saveModelNotFound', [
+                    'modelName' => __('messages.models.Client.name')
+                ]));
             }
         } else {
             $Client = new self();
@@ -136,7 +166,9 @@ class Client extends Model
 
         // check if user can save
         if (!self::fHasAccess($Client)) {
-            return new ApiResponse(true, __('messages.models.Client.errorSavingOtherClient'));
+            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
+                'modelName' => __('messages.models.Client.name')
+            ]));
         }
 
         // fill model
@@ -153,11 +185,13 @@ class Client extends Model
             $Client->save();
             $Client->refresh();
         } catch (\Exception $e) {
-            return new ApiResponse(true, __('messages.models.Client.errorSavingClient'));
+            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
+                'modelName' => __('messages.models.Client.name')
+            ]));
         }
 
         // all good, return success
-        $msg = $isEdit ? __('messages.models.Client.successEditingClient') : __('messages.models.Client.successAddingClient');
+        $msg = $isEdit ? __('messages.saveModelSuccessEditing', ['modelName' => __('messages.models.Client.name')]) : __('messages.saveModelSuccessAdding', ['modelName' => __('messages.models.Client.name')]);
         return new ApiResponse(false, $msg, [
             'Client' => $Client,
             'isEdit' => $isEdit,

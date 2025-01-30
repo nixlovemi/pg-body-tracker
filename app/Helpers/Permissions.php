@@ -11,11 +11,15 @@ final class Permissions {
     public const ACL_CLIENT_INDEX = 'client/index';
     public const ACL_CLIENT_EDIT = 'client/edit';
 
+    public const ACL_GOAL_EDIT = 'goal/edit';
+
     private const ACL = [
         self::ACL_DASHBOARD_INDEX => [User::ROLE_MANAGER],
 
         self::ACL_CLIENT_INDEX => [User::ROLE_MANAGER],
         self::ACL_CLIENT_EDIT => [User::ROLE_MANAGER],
+
+        self::ACL_GOAL_EDIT => [User::ROLE_MANAGER],
     ];
 
     private const ROUTE_ACL = [
@@ -25,6 +29,9 @@ final class Permissions {
         'app.client.add' => self::ACL_CLIENT_EDIT,
         'app.client.doSave' => self::ACL_CLIENT_EDIT,
         'app.client.edit' => self::ACL_CLIENT_EDIT,
+
+        'app.goal.htmlModalAdd' => self::ACL_GOAL_EDIT,
+        'app.goal.doModalAdd' => self::ACL_GOAL_EDIT,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

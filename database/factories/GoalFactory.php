@@ -20,8 +20,14 @@ class GoalFactory extends Factory
                 return Client::inRandomOrder()->first();
             },
             'objective' => $this->faker->randomElement(array_keys(Goal::fGetObjectivies())),
+            'initial_weight_kg' => function(array $attributes) {
+                // get Client from client_id
+                $client = Client::find($attributes['client_id']);
+
+                return $client->getCurrentWeight();
+            },
             'target_weight_kg' => $this->faker->numberBetween(50, 110),
-            'deadline' => $this->faker->dateTimeBetween('now', '+6 months')->format('Y-m-d'),
+            'deadline' => $this->faker->dateTimeBetween('+1 month', '+6 months')->format('Y-m-d'),
         ];
     }
 }

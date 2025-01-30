@@ -70,6 +70,11 @@ final class SysUtils {
         return \Carbon\Carbon::parse($date)->setTimezone(env('APP_TIME_ZONE'))->format($format);
     }
 
+    public static function timezoneNow($format): string
+    {
+        return \Carbon\Carbon::now()->setTimezone(env('APP_TIME_ZONE'))->format($format);
+    }
+
     public static function encodeStr(string $text): string
     {
         $base64 = base64_encode($text);

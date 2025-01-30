@@ -15,11 +15,18 @@
         }, 12000);
 
         loadJqueryComponents();
+        loadCharts();
     });
 
-    $(document).on('click', 'div.modal-dialog .btn-modal-close', function(e) {
-        $(this).closest('div.modal').modal('toggle');
-    });
+    //$(document).on('click', 'div.modal-dialog .btn-modal-close', function(e) {
+    //    $(this).closest('div.modal').modal('toggle');
+    //});
+
+    function closeModal(modalObj)
+    {
+        modalObj.remove();
+        $('div.modal-backdrop').remove();
+    }
 
     function showLoader()
     {
@@ -66,6 +73,13 @@
             loadMaskMoney();
             // loadBootstrapSelect();
             loadDatePicker();
+        }, 250);
+    }
+
+    function loadCharts()
+    {
+        setTimeout(function(){
+            initChartClientGoal();
         }, 250);
     }
 
@@ -232,57 +246,6 @@
     }
     // ==============
 
-    // THEME
-    $(document).on('submit', 'form#frm-filter-attendance', function(e) {
-        e.preventDefault();
-        let FORM = $(this);
-        let CSRF = FORM.find('input[name="_token"]').val();
-
-        ajaxSetup(CSRF);
-        let formData = new FormData(this);
-
-        $.ajax({
-            type: 'POST',
-            url: FORM.attr('action'),
-            data: formData,
-            dataType: 'json',
-            processData: false, // required for FormData with jQuery
-            contentType: false, // required for FormData with jQuery
-            beforeSend: function() {
-                showLoader();
-                disableFormWhileSaving(FORM);
-                $('#attendance-list-table').html('Carregando ...');
-            },
-            success: function (retorno) {
-                if (retorno.error) {
-                    showErrorAlert({
-                        'title': 'Erro!',
-                        'text': retorno.message
-                    });
-                    return;
-                }
-
-                $('#attendance-list-table').html(retorno.data.html);
-                setTimeout(function(){
-                    loadJqueryComponents();
-                    initLivewireTable();
-                }, 250);
-            },
-            complete: function() {
-                closeLoader();
-                enableFormWhileSaving(FORM);
-            },
-            error: function (data) {
-                showErrorAlert({
-                    'title': 'Erro!',
-                    'text': 'Ocorreu um erro inesperado! Tente novamente.'
-                });
-                enableFormWhileSaving(FORM)
-            }
-        });
-    });
-    // =====
-
     // sweet alert
     /**
      *
@@ -400,5 +363,99 @@
         const emptyParam = (JSON.stringify(urlParam) === '{}') || (JSON.stringify(urlParam) === '"[]"' || (JSON.stringify(urlParam) === '[]'));
         showJsonAjaxModal('GET', url, emptyParam ? null: urlParam);
     });
+
+    // TEMPLATE FUNCTIONS
+    $(document).on('click', '#btn-client-new-goal', function(e) {
+        showJsonAjaxModal('GET', '/app/goal/htmlModalAdd', {
+            'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
+            'json': 1
+        });
+    });
+
+    $(document).on('click', 'form#register-goal-form .btn-modal-submit', function(e) {
+        const FORM = $(this).closest('form');
+        // const SPAN_QUOTE_CARD = $('form#job-register span#job-partials-quoteCard');
+
+        submitModalForm(FORM, function(retorno) {
+
+            showSuccessAlert({
+                'title': 'Sucesso!',
+                'text': retorno.message
+            });
+
+            closeModal(FORM.closest('div.modal').parent());
+
+            // FORM.find('span#job-partials-quoteCard').html(retorno.data.html);
+            // setTimeout(function(){
+
+            //     initLivewireTable();
+            //     loadJqueryComponents();
+
+            // }, 250);
+
+        }, '/app/goal/doModalAdd');
+    });
+
+    function initChartClientGoal()
+    {
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        // loop all canvas with class 'chart-client-goal'
+        $('canvas.chart-client-goal').each(function() {
+            const chartId = $(this).attr('id');
+            initChartClientGoalSingle(chartId);
+        });
+    }
+
+    function initChartClientGoalSingle(chartId)
+    {
+        // get data from input hidden ID with -data
+        const data = JSON.parse(document.getElementById(chartId + '-data').value);
+
+        // get canvas element
+        const ctx = document.getElementById(chartId);
+
+        // config chart
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                layout: {
+                    padding: {
+                        left: 20,
+                        right: 20,
+                        bottom: 20
+                    }
+                },
+                plugins: {
+                    legend: {
+                        onClick: null
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            padding: 10
+                        },
+                        offset: true
+                    },
+                    y: {
+                        beginAtZero: false,
+                        min: 75,
+                        max: 130,
+                        ticks: {
+                            padding: 15
+                        }
+                    }
+                }
+            }
+        };
+
+        // create chart
+        const myChart = new Chart(ctx, config);
+    }
+    // ==================
 
 }(jQuery));

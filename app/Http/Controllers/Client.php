@@ -60,7 +60,9 @@ class Client extends Controller
         if (null === $Client) {
             return redirect()
                 ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.models.Client.clientNotFound')]);
+                ->withErrors(['msg' => __('messages.saveModelNotFound', [
+                    'modelName' => __('messages.models.Client.name')
+                ])]);
 
         }
 
@@ -68,7 +70,9 @@ class Client extends Controller
         if (!mClient::fHasAccess($Client)) {
             return redirect()
                 ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.models.Client.errorSavingOtherClient')]);
+                ->withErrors(['msg' => __('messages.saveModelErrorSavingOther', [
+                    'modelName' => __('messages.models.Client.name')
+                ])]);
         }
 
         return view('app.client.register', [

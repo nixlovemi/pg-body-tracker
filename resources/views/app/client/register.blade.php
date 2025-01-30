@@ -14,6 +14,7 @@ View variables:
 */
 
 $canEdit = ($Constants::FORM_VIEW !== $TYPE && $Permissions::checkPermission($Permissions::ACL_CLIENT_EDIT));
+$isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_EDIT]);
 @endphp
 
 @extends('layout.dashboard', [
@@ -105,7 +106,12 @@ $canEdit = ($Constants::FORM_VIEW !== $TYPE && $Permissions::checkPermission($Pe
 
         <x-card title="{{ __('messages.pages.client.register.cardMeasures') }}">
             <div class="form-row">
-                <div class="col-12 col-md-6">
+                <div @class([
+                        'col-12',
+                        'col-md-4' => $isEditingOrViewing,
+                        'col-md-6' => $Constants::FORM_ADD === $TYPE
+                    ])
+                >
                     <div class="form-group">
                         <label class="form-label">* {{ __('messages.models.Client.fields.height') }} (cm)</label>
                         <select
@@ -130,21 +136,101 @@ $canEdit = ($Constants::FORM_VIEW !== $TYPE && $Permissions::checkPermission($Pe
                         </select>
                     </div>
                 </div>
-                <div class="col-12 col-md-6">
+
+                <div @class([
+                        'col-12',
+                        'col-md-4' => $isEditingOrViewing,
+                        'col-md-6' => $Constants::FORM_ADD === $TYPE
+                    ])
+                >
                     <div class="form-group">
                         <label class="form-label">* {{ __('messages.models.Client.fields.weight') }} (kg)</label>
                         @php
                         $clientWeight = old("f-weight") ?: number_format($CLIENT?->weight_kg, 3, __('messages.decimalSeparator'), __('messages.thousandSeparator'));
                         @endphp
                         <input type="text" class="form-control form-control-user jq-mask-money"
-                            id="f-weight" name="f-weight" maxlength="6"
+                            id="f-weight" name="f-weight" maxlength="7"
                             data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
                             data-precision="3" value="{{ $clientWeight }}"
                         />
                     </div>
                 </div>
+
+                @if ($isEditingOrViewing)
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">* {{ __('messages.pages.client.register.labelActualWeight') }} (kg)</label>
+                            <input type="text" class="form-control form-control-user jq-mask-money"
+                                disabled maxlength="7"
+                                data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
+                                data-precision="3" value="{{ number_format($CLIENT?->getCurrentWeight(), 3, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}"
+                            />
+                        </div>
+                    </div>
+                @endif
             </div>
         </x-card>
+
+        @if ($isEditingOrViewing)
+            <x-card title="{{ __('messages.pages.client.register.cardGoals') }}">
+                @php
+                $currentGoal = $CLIENT?->getCurrentGoal();
+                @endphp
+
+                @if (!$currentGoal && $canEdit)
+                    <div class="d-block mb-3">
+                        <a href="javascript:;" id="btn-client-new-goal" class="btn btn-light btn-user btn-sm">
+                            {{ __('messages.pages.client.register.btnNewGoal') }}
+                        </a>
+                    </div>
+                @endif
+
+                @if ($currentGoal)
+                    <div class="form-row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('messages.models.Goal.fields.objective') }}</label>
+                                        <input type="text" class="form-control form-control-user"
+                                            disabled value="{{ $currentGoal?->getObjectivieString() }}"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('messages.models.Goal.fields.target_weight') }} (kg)</label>
+                                        <input type="text" class="form-control form-control-user jq-mask-money"
+                                            disabled maxlength="7"
+                                            data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
+                                            data-precision="3" value="{{  number_format($currentGoal?->target_weight_kg, 3, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('messages.models.Goal.fields.deadline') }}</label>
+                                        <input type="text" class="form-control form-control-user"
+                                            disabled value="{{ $SysUtils::reformatDate($currentGoal?->deadline, 'Y-m-d', __('messages.dateFormat')) }}"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <x-chart-client-goal
+                                :clientId="$CLIENT?->id"
+                            />
+                        </div>
+                    </div>
+                @else
+                    {{ __('messages.pages.client.register.noGoals') }}
+                @endif
+            </x-card>
+        @endif
 
         <div class="form-actions">
             <div class="text-right">
