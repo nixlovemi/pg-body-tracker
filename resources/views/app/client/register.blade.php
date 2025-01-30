@@ -27,6 +27,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
     <form id="client-form" action="{{ $ACTION }}" method="POST">
         @csrf
         <input type="hidden" name="f-cid" value="{{ $CLIENT?->codedId }}" />
+        <input type="hidden" name="f-cedit" value="{{ $canEdit }}" />
 
         <x-card title="{{ __('messages.pages.client.register.cardInfo') }}">
             <div class="form-row">
@@ -173,62 +174,12 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
 
         @if ($isEditingOrViewing)
             <x-card title="{{ __('messages.pages.client.register.cardGoals') }}">
-                @php
-                $currentGoal = $CLIENT?->getCurrentGoal();
-                @endphp
-
-                @if (!$currentGoal && $canEdit)
-                    <div class="d-block mb-3">
-                        <a href="javascript:;" id="btn-client-new-goal" class="btn btn-light btn-user btn-sm">
-                            {{ __('messages.pages.client.register.btnNewGoal') }}
-                        </a>
-                    </div>
-                @endif
-
-                @if ($currentGoal)
-                    <div class="form-row">
-                        <div class="col-12 col-md-6">
-                            <div class="form-row">
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label class="form-label">{{ __('messages.models.Goal.fields.objective') }}</label>
-                                        <input type="text" class="form-control form-control-user"
-                                            disabled value="{{ $currentGoal?->getObjectivieString() }}"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label class="form-label">{{ __('messages.models.Goal.fields.target_weight') }} (kg)</label>
-                                        <input type="text" class="form-control form-control-user jq-mask-money"
-                                            disabled maxlength="7"
-                                            data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                            data-precision="3" value="{{  number_format($currentGoal?->target_weight_kg, 3, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label class="form-label">{{ __('messages.models.Goal.fields.deadline') }}</label>
-                                        <input type="text" class="form-control form-control-user"
-                                            disabled value="{{ $SysUtils::reformatDate($currentGoal?->deadline, 'Y-m-d', __('messages.dateFormat')) }}"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <x-chart-client-goal
-                                :clientId="$CLIENT?->id"
-                            />
-                        </div>
-                    </div>
-                @else
-                    {{ __('messages.pages.client.register.noGoals') }}
-                @endif
+                <div id='dv-card-client-goals'>
+                    @include('app.client.partials.cardGoalsContent', [
+                        'CLIENT' => $CLIENT,
+                        'CAN_EDIT' => $canEdit
+                    ])
+                </div>
             </x-card>
         @endif
 

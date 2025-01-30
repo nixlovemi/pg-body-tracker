@@ -26,6 +26,7 @@
     {
         modalObj.remove();
         $('div.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
     }
 
     function showLoader()
@@ -368,13 +369,14 @@
     $(document).on('click', '#btn-client-new-goal', function(e) {
         showJsonAjaxModal('GET', '/app/goal/htmlModalAdd', {
             'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
+            'cedit': $(this).closest('form#client-form').find('input[name="f-cedit"]').val(),
             'json': 1
         });
     });
 
     $(document).on('click', 'form#register-goal-form .btn-modal-submit', function(e) {
         const FORM = $(this).closest('form');
-        // const SPAN_QUOTE_CARD = $('form#job-register span#job-partials-quoteCard');
+        const SPAN_QUOTE_CARD = $('form#client-form div#dv-card-client-goals');
 
         submitModalForm(FORM, function(retorno) {
 
@@ -385,13 +387,12 @@
 
             closeModal(FORM.closest('div.modal').parent());
 
-            // FORM.find('span#job-partials-quoteCard').html(retorno.data.html);
-            // setTimeout(function(){
-
-            //     initLivewireTable();
-            //     loadJqueryComponents();
-
-            // }, 250);
+            SPAN_QUOTE_CARD.html(retorno.data.html);
+            setTimeout(function(){
+                initLivewireTable();
+                loadJqueryComponents();
+                loadCharts();
+            }, 250);
 
         }, '/app/goal/doModalAdd');
     });

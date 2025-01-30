@@ -3,7 +3,8 @@
 @php
 /*
 View variables:
-    - $CUID: string
+    - $CUID: string (Client Coded ID)
+    - $CEDIT: string (bool 0/1)
     - $ACTION: string
 ===============
 */
@@ -26,6 +27,7 @@ View variables:
     <form id="register-goal-form" method="POST" action="{{ $ACTION }}">
         @csrf
         <input type="hidden" name="f-cid" value="{{ $CUID }}" />
+        <input type="hidden" name="f-cedit" value="{{ $CEDIT ?? 0 }}" />
 
         <div class="form-row">
             <div class="col-12">

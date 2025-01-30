@@ -21,6 +21,7 @@ class Goal extends Controller
     {
         $view = view('app.goal.modalRegister', [
             'CUID' => $request->input('cuid'),
+            'CEDIT' => $request->input('cedit'),
             'ACTION' => route('app.goal.doModalAdd'),
         ]);
 
@@ -46,7 +47,23 @@ class Goal extends Controller
             return $this->returnResponse(true, ApiResponse::getValidateMessage($response), [], Response::HTTP_OK);
         }
 
-        return $this->returnResponse(false, $response->getMessage(), [], Response::HTTP_OK);
+        $htmlData = $this->getCardGoalContent($request);
+        return $this->returnResponse(false, $response->getMessage(), [
+            'html' => $htmlData,
+        ], Response::HTTP_OK);
+    }
+
+    private function getCardGoalContent(Request $request): string
+    {
+        $Client = Client::getModelByCodedId($request->input('f-cid'));
+        $canEdit = (1 == $request->input('f-cedit')) ? true: false;
+
+        $view = view('app.client.partials.cardGoalsContent', [
+            'CLIENT' => $Client,
+            'CAN_EDIT' => $canEdit,
+        ]);
+
+        return $view->render();
     }
 
     private function formatSaveRequest(Request $request): array
