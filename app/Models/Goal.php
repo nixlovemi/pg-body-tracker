@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Client;
 use App\Helpers\SysUtils;
+use PhpParser\Node\Stmt\TryCatch;
 
 class Goal extends Model
 {
@@ -80,7 +81,8 @@ class Goal extends Model
                 );
             }
         }], __('messages.models.Goal.fields.objective'));
-        $validation->addField('target_weight_kg', ['required', 'numeric', 'min:30', 'max:400'], __('messages.models.Goal.fields.target_weight'));
+        $validation->addField('initial_weight_kg', ['required', 'numeric', 'min:30', 'max:400'], __('messages.models.Goal.fields.initial_weight'));
+        $validation->addField('target_weight_kg', ['required', 'numeric', 'min:30', 'max:400', 'different:initial_weight_kg'], __('messages.models.Goal.fields.target_weight'));
         $validation->addField('deadline', ['required', 'date', 'date_format:Y-m-d', function ($attribute, $value, $fail) {
             // deadline must be greater than today
             if (strtotime($value) <= strtotime(SysUtils::timezoneNow('Y-m-d'))) {
@@ -97,6 +99,58 @@ class Goal extends Model
     {
         $objectivies = self::fGetObjectivies();
         return $objectivies[$this->objective] ?? '';
+    }
+
+    public function remainingDays(): int
+    {
+        $today = new \DateTime(SysUtils::timezoneNow('Y-m-d'));
+        $deadline = new \DateTime($this->deadline);
+        $diff = $today->diff($deadline);
+        return $diff->days;
+    }
+
+    public function targetWeightChange(): float
+    {
+        $initial = $this->initial_weight_kg;
+        $target = $this->target_weight_kg;
+        return abs($initial - $target);
+    }
+
+    public function totalWeightChangeSinceStart(): float
+    {
+        $initial = $this->initial_weight_kg;
+        $current = $this->client->getCurrentWeight();
+
+        if ($this->isObjectiveWeightLoss()) {
+            return $initial - $current;
+        } else {
+            return $current - $initial;
+        }
+    }
+
+    public function isObjectiveWeightLoss(): bool
+    {
+        return $this->initial_weight_kg > $this->target_weight_kg;
+    }
+
+    public function isObjectiveMuscleGain(): bool
+    {
+        return $this->initial_weight_kg < $this->target_weight_kg;
+    }
+
+    public function percentageTowardsGoal(): float
+    {
+        try {
+            $progress = $this->totalWeightChangeSinceStart() / $this->targetWeightChange();
+        } catch (\DivisionByZeroError $e){
+            return 0;
+        }
+
+        if ($progress < 0) {
+            return 0;
+        }
+
+        return number_format($progress * 100, 2);
     }
     // ===============
 
@@ -134,6 +188,12 @@ class Goal extends Model
 
         // fill model
         $Goal->fill($form);
+
+        // default value for initial_weight_kg = Client current weight
+        if (!$isEdit) {
+            $Client = Client::find($Goal->client_id);
+            $Goal->initial_weight_kg = $Client?->getCurrentWeight();
+        }
 
         // validate model
         $validation = $Goal->validateModel();
@@ -212,21 +272,6 @@ class Goal extends Model
         }
 
         return true;
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        self::creating(function($Goal){
-            if ($Goal->id > 0) {
-                return;
-            }
-
-            // fill initial_weight_kg from client
-            $Client = Client::find($Goal->client_id);
-            $Goal->initial_weight_kg = $Client?->weight_kg;
-        });
     }
     // ================
 }

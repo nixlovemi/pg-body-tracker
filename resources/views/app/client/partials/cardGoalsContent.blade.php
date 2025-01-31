@@ -23,7 +23,7 @@ $currentGoal = $CLIENT?->getCurrentGoal();
     <div class="form-row" id="card-client-goal-form-row-content">
         <div class="col-12 col-md-6">
             <div class="form-row">
-                <div class="col-12">
+                <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label class="form-label">{{ __('messages.models.Goal.fields.objective') }}</label>
                         <input type="text" class="form-control form-control-user"
@@ -32,7 +32,7 @@ $currentGoal = $CLIENT?->getCurrentGoal();
                     </div>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label class="form-label">{{ __('messages.models.Goal.fields.target_weight') }} (kg)</label>
                         <input type="text" class="form-control form-control-user jq-mask-money"
@@ -42,12 +42,43 @@ $currentGoal = $CLIENT?->getCurrentGoal();
                         />
                     </div>
                 </div>
+            </div>
 
-                <div class="col-12">
+            <div class="form-row">
+                <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label class="form-label">{{ __('messages.models.Goal.fields.deadline') }}</label>
                         <input type="text" class="form-control form-control-user"
                             disabled value="{{ $SysUtils::reformatDate($currentGoal?->deadline, 'Y-m-d', __('messages.dateFormat')) }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">{{ __('messages.pages.goal.modalAddGoal.labelDaysToDeadline') }}</label>
+                        <input type="text" class="form-control form-control-user"
+                            disabled value="{{ $currentGoal?->remainingDays() }}"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">{{ __('messages.pages.goal.modalAddGoal.labelWeightChange') }} (kg)</label>
+                        <input type="text" class="form-control form-control-user"
+                            disabled value="{{ ($currentGoal?->isObjectiveWeightLoss() ? '-': '+') . number_format($currentGoal?->totalWeightChangeSinceStart(), 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">{{ __('messages.pages.goal.modalAddGoal.labelProgress') }}</label>
+                        <input type="text" class="form-control form-control-user"
+                            disabled value="{{ number_format($currentGoal?->percentageTowardsGoal(), 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}%"
                         />
                     </div>
                 </div>

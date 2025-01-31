@@ -74,6 +74,7 @@ return [
             'name' => 'Goal',
             'fields' => [
                 'objective' => 'Objective',
+                'initial_weight' => 'Initial Weight',
                 'target_weight' => 'Target Weight',
                 'deadline' => 'Deadline',
             ],
@@ -142,6 +143,9 @@ return [
         'goal' => [
             'modalAddGoal' => [
                 'title' => 'Add Goal',
+                'labelDaysToDeadline' => 'Days to Deadline',
+                'labelProgress' => 'Progress',
+                'labelWeightChange' => 'Weight Change',
             ],
         ],
     ],

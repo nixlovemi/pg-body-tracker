@@ -53,15 +53,15 @@ class ChartClientGoal extends Component
         ];
 
         // add initial weight data
-        $this->arrData['labels'][] = SysUtils::timezoneDate($this->Client->created_at, strtolower(__('messages.dateFormat')));
-        $this->arrData['datasets'][0]['data'][] = $this->Client->weight_kg;
+        $this->arrData['labels'][] = SysUtils::timezoneDate($currentGoal->created_at, strtolower(__('messages.dateFormat')));
+        $this->arrData['datasets'][0]['data'][] = $currentGoal->initial_weight_kg;
 
         // add avaliations data
         $avaliationsBtwStartAndDeadline = $this->Client->avaliations
-            ->where('date', '>', $this->Client->created_at)
+            ->where('date', '>', $currentGoal->created_at)
             ->where('date', '<=', $currentGoal->deadline)
             ->sortBy('date')
-            ->slice(-5);
+            ->slice(-8);
         foreach ($avaliationsBtwStartAndDeadline as $avaliation) {
             $this->arrData['labels'][] = SysUtils::timezoneDate($avaliation->date, strtolower(__('messages.dateFormat')));
             $this->arrData['datasets'][0]['data'][] = $avaliation->weight_kg;
