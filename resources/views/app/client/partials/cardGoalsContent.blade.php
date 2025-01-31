@@ -20,7 +20,7 @@ $currentGoal = $CLIENT?->getCurrentGoal();
 @endif
 
 @if ($currentGoal)
-    <div class="form-row">
+    <div class="form-row" id="card-client-goal-form-row-content">
         <div class="col-12 col-md-6">
             <div class="form-row">
                 <div class="col-12">
@@ -52,6 +52,20 @@ $currentGoal = $CLIENT?->getCurrentGoal();
                     </div>
                 </div>
             </div>
+
+            @csrf
+            <small class="d-block text-md-left text-center" class="text-muted">
+                <a href="javascript:;" id="btn-client-remove-goal"
+                    style="color:gray !important; font-size:90%;"
+                    data-confirm-title="{{ __('messages.confirmModalTitle') }}"
+                    data-confirm-text="{{ __('messages.models.Goal.confirmDeleteModalText') }}"
+                    data-gcid="{{ $currentGoal?->codedId }}"
+                    data-ccid="{{ $CLIENT?->codedId }}"
+                    data-cedt="{{ $CAN_EDIT }}"
+                >
+                    Remover objetivo?
+                </a>
+            </small>
         </div>
 
         <div class="col-12 col-md-6">

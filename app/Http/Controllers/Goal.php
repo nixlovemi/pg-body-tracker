@@ -53,6 +53,19 @@ class Goal extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function doModalRemove(Request $request)
+    {
+        $response = mGoal::fRemove($request->input('f-gcid') ?? '');
+        if ($response->isError()) {
+            return $this->returnResponse(true, $response->getMessage(), [], Response::HTTP_OK);
+        }
+
+        $htmlData = $this->getCardGoalContent($request);
+        return $this->returnResponse(false, $response->getMessage(), [
+            'html' => $htmlData,
+        ], Response::HTTP_OK);
+    }
+
     private function getCardGoalContent(Request $request): string
     {
         $Client = Client::getModelByCodedId($request->input('f-cid'));

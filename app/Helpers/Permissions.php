@@ -32,6 +32,7 @@ final class Permissions {
 
         'app.goal.htmlModalAdd' => self::ACL_GOAL_EDIT,
         'app.goal.doModalAdd' => self::ACL_GOAL_EDIT,
+        'app.goal.doModalRemove' => self::ACL_GOAL_EDIT,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

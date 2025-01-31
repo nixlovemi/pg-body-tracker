@@ -159,6 +159,35 @@ class Goal extends Model
         ]);
     }
 
+    public static function fRemove(string $codedId): ApiResponse
+    {
+        $Goal = self::getModelByCodedId($codedId);
+        if ($Goal === null) {
+            return new ApiResponse(true, __('messages.saveModelNotFound', [
+                'modelName' => __('messages.models.Goal.name'),
+            ]));
+        }
+
+        // check if user can save
+        if (!self::fHasAccess($Goal)) {
+            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
+                'modelName' => __('messages.models.Goal.name'),
+            ]));
+        }
+
+        // remove model
+        try {
+            $Goal->delete();
+        } catch (\Exception $e) {
+            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
+                'modelName' => __('messages.models.Goal.name'),
+            ]));
+        }
+
+        // all good, return success
+        return new ApiResponse(false, __('messages.saveModelSuccessRemoving', ['modelName' => __('messages.models.Goal.name')]));
+    }
+
     public static function fHasAccess(self $Goal): bool
     {
         // adding user is ok

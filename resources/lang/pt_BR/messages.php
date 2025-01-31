@@ -15,6 +15,8 @@ return [
     'saveModelErrorSaving' => 'Ocorreu um problema ao salvar o :modelName, tente novamente.',
     'saveModelSuccessAdding' => ':modelName adicionado com sucesso!',
     'saveModelSuccessEditing' => ':modelName editado com sucesso!',
+    'saveModelSuccessRemoving' => ':modelName removido com sucesso!',
+    'confirmModalTitle' => 'Confirmação',
 
     'helpers' => [
         'modelValidation' => [
@@ -83,6 +85,7 @@ return [
             'fSave' => [
                 'objectiveDateMustBeGreaterThanToday' => 'A data do objetivo deve ser maior que a data atual!',
             ],
+            'confirmDeleteModalText' => 'Tem certeza que deseja remover este objetivo? Essa operação é permanente e não pode ser desfeita!',
         ],
 
         'Avaliation' => [

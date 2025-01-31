@@ -374,6 +374,68 @@
         });
     });
 
+    $(document).on('click', 'form#client-form #btn-client-remove-goal', function(e) {
+        var confirm = getConfirm({
+            title: $(this).data('confirm-title'),
+            text: $(this).data('confirm-text'),
+        });
+        confirm.fire().then((result) => {
+            if (!result.isConfirmed) {
+                return false;
+            }
+
+            // call ajax and remove goal
+            const SPAN_QUOTE_CARD = $('form#client-form div#dv-card-client-goals');
+            const FORM_ID = 'temp-client-goal-form-delete';
+
+            $(document).find(`form#${FORM_ID}`).remove();
+            var FORM = document.createElement('form');
+            FORM.id = FORM_ID;
+
+            var inputGcid = document.createElement('input');
+            inputGcid.type = 'hidden';
+            inputGcid.name = 'f-gcid';
+            inputGcid.value = $(this).data('gcid');
+            FORM.appendChild(inputGcid);
+
+            var inputCcid = document.createElement('input');
+            inputCcid.type = 'hidden';
+            inputCcid.name = 'f-cid';
+            inputCcid.value = $(this).data('ccid');
+            FORM.appendChild(inputCcid);
+
+            var inputCedt = document.createElement('input');
+            inputCedt.type = 'hidden';
+            inputCedt.name = 'f-cedit';
+            inputCedt.value = $(this).data('cedt');
+            FORM.appendChild(inputCedt);
+
+            var inputCsrf = document.createElement('input');
+            inputCsrf.type = 'hidden';
+            inputCsrf.name = '_token';
+            inputCsrf.value = $('#card-client-goal-form-row-content input[name="_token"]').val();
+            FORM.appendChild(inputCsrf);
+            document.body.appendChild(FORM);
+
+            submitModalForm($(document).find(`form#${FORM_ID}`), function(retorno) {
+                $(document).find(`form#${FORM_ID}`).remove();
+
+                showSuccessAlert({
+                    'title': 'Sucesso!',
+                    'text': retorno.message
+                });
+
+                SPAN_QUOTE_CARD.html(retorno.data.html);
+                setTimeout(function(){
+                    initLivewireTable();
+                    loadJqueryComponents();
+                    loadCharts();
+                }, 250);
+
+            }, '/app/goal/doModalRemove');
+        });
+    });
+
     $(document).on('click', 'form#register-goal-form .btn-modal-submit', function(e) {
         const FORM = $(this).closest('form');
         const SPAN_QUOTE_CARD = $('form#client-form div#dv-card-client-goals');
