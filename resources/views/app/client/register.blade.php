@@ -105,7 +105,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
             </div>
         </x-card>
 
-        <x-card title="{{ __('messages.pages.client.register.cardMeasures') }}">
+        <x-card title="{{ __('messages.pages.client.register.cardMeasures') }}" closed="true">
             <div class="form-row">
                 <div @class([
                         'col-12',
@@ -173,10 +173,10 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
         </x-card>
 
         @if ($isEditingOrViewing)
-            <x-card title="{{ __('messages.pages.client.register.cardGoals') }}">
+            <x-card title="{{ __('messages.pages.client.register.cardGoals') }}" closed="true">
                 <div id='dv-card-client-goals'>
                     @include('app.client.partials.cardGoalsContent', [
-                        'CLIENT' => $CLIENT,
+                        'GOAL' => $CLIENT?->getCurrentGoal(),
                         'CAN_EDIT' => $canEdit
                     ])
                 </div>

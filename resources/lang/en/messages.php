@@ -10,6 +10,7 @@ return [
     'logout' => 'Logout',
     'buttonSave' => 'Save',
     'buttonBackToList' => 'Back to list',
+    'buttonLoadMore' => 'Load more',
     'saveModelNotFound' => ':modelName not found for editing!',
     'saveModelErrorSavingOther' => 'You don\'t have permission to save this :modelName!',
     'saveModelErrorSaving' => 'There was a problem saving the :modelName, try again.',
@@ -131,6 +132,7 @@ return [
                 'cardGoals' => 'Goals',
                 'noGoals' => 'No active goals! Take the opportunity to add a new one.',
                 'btnNewGoal' => 'New Goal',
+                'btnOldGoals' => 'Old Goals',
                 'labelActualWeight' => 'Peso Atual',
             ],
             'table' => [

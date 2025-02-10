@@ -16,6 +16,7 @@ class Card extends Component
     public function __construct(
         public string $title,
         public bool $noMarginBottom = false,
+        public bool $closed = false
     ) {
         $this->getCardId();
     }

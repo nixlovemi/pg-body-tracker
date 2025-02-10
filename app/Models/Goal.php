@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Client;
 use App\Helpers\SysUtils;
-use PhpParser\Node\Stmt\TryCatch;
 
 class Goal extends Model
 {
@@ -105,6 +104,11 @@ class Goal extends Model
     {
         $today = new \DateTime(SysUtils::timezoneNow('Y-m-d'));
         $deadline = new \DateTime($this->deadline);
+        if ($today >= $deadline) {
+            return 0;
+        }
+
+        // calculate difference
         $diff = $today->diff($deadline);
         return $diff->days;
     }
@@ -119,12 +123,16 @@ class Goal extends Model
     public function totalWeightChangeSinceStart(): float
     {
         $initial = $this->initial_weight_kg;
-        $current = $this->client->getCurrentWeight();
+        $lastAvaliation = $this->client->avaliations()
+            ->where('date', '<=', $this->deadline)
+            ->orderBy('date', 'DESC')
+            ->first();
+        $last = $lastAvaliation?->weight_kg ?? 0;
 
         if ($this->isObjectiveWeightLoss()) {
-            return $initial - $current;
+            return $initial - $last;
         } else {
-            return $current - $initial;
+            return $last - $initial;
         }
     }
 

@@ -10,6 +10,7 @@ return [
     'logout' => 'Sair',
     'buttonSave' => 'Salvar',
     'buttonBackToList' => 'Voltar para lista',
+    'buttonLoadMore' => 'Carregar mais',
     'saveModelNotFound' => ':modelName não encontrado para salvar!',
     'saveModelErrorSavingOther' => 'Você não tem permissão para salvar este :modelName!',
     'saveModelErrorSaving' => 'Ocorreu um problema ao salvar o :modelName, tente novamente.',
@@ -131,6 +132,7 @@ return [
                 'cardGoals' => 'Objetivos',
                 'noGoals' => 'Nenhum objetivo ativo! Aproveite para adicionar um novo.',
                 'btnNewGoal' => 'Novo Objetivo',
+                'btnOldGoals' => 'Objetivos Anteriores',
                 'labelActualWeight' => 'Peso Atual',
             ],
             'table' => [

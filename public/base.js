@@ -459,13 +459,78 @@
         }, '/app/goal/doModalAdd');
     });
 
-    function initChartClientGoal()
+    $(document).on('click', '#btn-client-past-goals', function(e) {
+        showJsonAjaxModal('GET', '/app/goal/htmlModalPastGoals', {
+            'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
+            'json': 1
+        });
+
+        setTimeout(function(){
+            initChartClientGoal('dv-modal-past-goals');
+        }, 500);
+    });
+
+    $(document).on('click', '#list-client-past-goals-more a', function(e) {
+        let clientCodedId = $(this).data('ccid');
+        let beforeDeadline = $(this).data('bdline');
+        let MAIN_DIV = $(document).find('div#list-client-past-goals-more');
+        let CSRF = MAIN_DIV.find('input[name="_token"]').val();
+
+        ajaxSetup(CSRF);
+        $.ajax({
+            type: 'POST',
+            url: '/app/goal/htmlModalPastGoals',
+            data: {
+                cuid: clientCodedId,
+                bdline: beforeDeadline,
+                json: 1,
+                fullModal: 0
+            },
+            beforeSend: function() {
+                showLoader();
+            },
+            success: function (retorno) {
+                if (retorno.error) {
+                    showErrorAlert({
+                        'title': 'Erro!',
+                        'text': retorno.message
+                    });
+                    return;
+                }
+
+                MAIN_DIV.html(retorno.data.html).removeClass('text-center');
+                setTimeout(function() {
+                    initChartClientGoal(MAIN_DIV.attr('id'));
+
+                    setTimeout(function(){
+                        MAIN_DIV.attr("id", "");
+                    }, 600);
+                }, 300);
+            },
+            complete: function() {
+                closeLoader();
+            },
+            error: function (data) {
+                showErrorAlert({
+                    'title': 'Erro!',
+                    'text': 'Ocorreu um erro inesperado! Tente novamente.'
+                });
+            }
+        });
+    });
+
+    function initChartClientGoal(mainDivId)
     {
+        mainDivId = mainDivId || '';
         Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         Chart.defaults.global.defaultFontColor = '#858796';
 
         // loop all canvas with class 'chart-client-goal'
-        $('canvas.chart-client-goal').each(function() {
+        let selector = 'canvas.chart-client-goal';
+        if (mainDivId != '') {
+            selector = '#' + mainDivId + ' ' + selector;
+        }
+        $(selector).each(function() {
             const chartId = $(this).attr('id');
             initChartClientGoalSingle(chartId);
         });

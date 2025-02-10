@@ -4,10 +4,12 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 use App\Models\Client;
+use App\Models\Goal;
 use App\Helpers\SysUtils;
 
 class ChartClientGoal extends Component
 {
+    public ?Goal $Goal;
     public ?Client $Client;
     public int $chartId;
     public array $arrData;
@@ -18,9 +20,10 @@ class ChartClientGoal extends Component
      * @return void
      */
     public function __construct(
-        public int $clientId
+        public int $goalId
     ) {
-        $this->Client = Client::find($this->clientId);
+        $this->Goal = Goal::find($this->goalId);
+        $this->Client = $this->Goal->client;
         $this->getChartId();
         $this->prepareDataArray();
     }
@@ -32,7 +35,7 @@ class ChartClientGoal extends Component
 
     private function prepareDataArray()
     {
-        $currentGoal = $this->Client->getCurrentGoal();
+        $currentGoal = $this->Goal;
         if (!$currentGoal) {
             return;
         }

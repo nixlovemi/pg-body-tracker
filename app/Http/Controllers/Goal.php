@@ -66,13 +66,36 @@ class Goal extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function htmlModalPastGoals(Request $request)
+    {
+        $fullModal = $request->input('fullModal') ?? true;
+        $viewName = ($fullModal) ? 'app.goal.htmlModalPastGoals': 'app.goal.partials.bodyListClientPastGoals';
+        $view = view($viewName, [
+            'CUID' => $request->input('cuid'),
+            'BEFORE_DEADLINE' => $request->input('bdline') ?? null,
+        ]);
+
+        if (1 == $request->input('json')) {
+            return $this->returnResponse(
+                false,
+                'HTML retornado com sucesso!',
+                [
+                    'html' => $view->render()
+                ],
+                Response::HTTP_OK
+            );
+        }
+
+        return $view;
+    }
+
     private function getCardGoalContent(Request $request): string
     {
         $Client = Client::getModelByCodedId($request->input('f-cid'));
         $canEdit = (1 == $request->input('f-cedit')) ? true: false;
 
         $view = view('app.client.partials.cardGoalsContent', [
-            'CLIENT' => $Client,
+            'GOAL' => $Client->getCurrentGoal(),
             'CAN_EDIT' => $canEdit,
         ]);
 

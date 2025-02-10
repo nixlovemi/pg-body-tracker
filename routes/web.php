@@ -45,6 +45,7 @@ Route::prefix('app')->group(function () {
             Route::get('/htmlModalAdd', 'App\Http\Controllers\Goal@htmlModalAdd')->name('app.goal.htmlModalAdd');
             Route::post('/doModalAdd', 'App\Http\Controllers\Goal@doModalAdd')->name('app.goal.doModalAdd');
             Route::post('/doModalRemove', 'App\Http\Controllers\Goal@doModalRemove')->name('app.goal.doModalRemove');
+            Route::match(array('GET','POST'), '/htmlModalPastGoals', 'App\Http\Controllers\Goal@htmlModalPastGoals')->name('app.goal.htmlModalPastGoals');
         });
     });
 });

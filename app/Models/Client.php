@@ -119,12 +119,11 @@ class Client extends Model
             ->first();
     }
 
-    public function getPastGoals(): \Illuminate\Database\Eloquent\Collection
+    public function getPastGoals(): ?\Illuminate\Database\Eloquent\Relations\Relation
     {
         return $this->goals()
             ->where('deadline', '<', SysUtils::timezoneNow('Y-m-d'))
-            ->orderBy('deadline', 'DESC')
-            ->get();
+            ->orderBy('deadline', 'DESC');
     }
 
     public function getCurrentWeight(): ?float
