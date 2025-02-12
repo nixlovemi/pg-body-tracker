@@ -113,7 +113,7 @@ class Avaliation extends Model
      */
     public function getTmb(): float
     {
-        if ($this->client->gender === Client::GENDER_MALE) {
+        if ($this->client->isMale()) {
             $tmb = number_format(
                 88.36 + (13.4 * $this->weight_kg) + (4.8 * $this->height_cm) - (5.7 * $this->client->getAge()),
                 2,
@@ -152,7 +152,7 @@ class Avaliation extends Model
             $skeletalMuscleMass =
                 (0.244 * $this->weight_kg)
                 + (7.8 * ($this->height_cm / 100))
-                + (6.6 * ($this->client->gender === Client::GENDER_FEMALE) ? 0: 1)
+                + (6.6 * ($this->client->isFemale()) ? 0: 1)
                 - (0.098 * $this->client->getAge())
                 + 0
                 - 3.3;
@@ -174,6 +174,18 @@ class Avaliation extends Model
         }
 
         return number_format($visceralFatKg, 3, '.', '');
+    }
+
+    public function getBodyAge(): int
+    {
+        // avg PGC and PME
+        $media_pgc = ($this->client->isMale()) ? 22 : 28; // Média PGC: 22% (homem), 28% (mulher)
+        $media_pme = ($this->client->isMale()) ? 40 : 30; // Média PME: 40% (homem), 30% (mulher)
+
+        // Aplicar fórmula
+        $bodyAge = $this->client->getAge() + (round($this->body_fat_perc) - $media_pgc) - (round($this->skeletal_muscle_perc) - $media_pme);
+
+        return round($bodyAge, 1);
     }
     // ===============
 

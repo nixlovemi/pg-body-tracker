@@ -22,7 +22,7 @@ $VIEW_ONLY = $VIEW_ONLY ?? false;
     </div>
 @endif
 
-@if (!$pastGoals->isEmpty() && !$VIEW_ONLY)
+@if (isset($pastGoals) && !$pastGoals->isEmpty() && !$VIEW_ONLY)
     <div class="d-block mb-3">
         <a href="javascript:;" id="btn-client-past-goals" class="btn btn-light btn-user btn-sm">
             {{ __('messages.pages.client.register.btnOldGoals') }}

@@ -144,6 +144,16 @@ class Client extends Model
         $age = $today->diff(new \DateTime($this->birthdate))->y;
         return $age;
     }
+
+    public function isMale(): bool
+    {
+        return $this->gender === Client::GENDER_MALE;
+    }
+
+    public function isFemale(): bool
+    {
+        return $this->gender === Client::GENDER_FEMALE;
+    }
     // ===============
 
     // static functions
