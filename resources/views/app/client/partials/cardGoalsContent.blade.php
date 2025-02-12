@@ -22,7 +22,7 @@ $VIEW_ONLY = $VIEW_ONLY ?? false;
     </div>
 @endif
 
-@if (!$pastGoals->isEmpty() && !$VIEW_ONLY)
+@if (isset($pastGoals) && !$pastGoals->isEmpty() && !$VIEW_ONLY)
     <div class="d-block mb-3">
         <a href="javascript:;" id="btn-client-past-goals" class="btn btn-light btn-user btn-sm">
             {{ __('messages.pages.client.register.btnOldGoals') }}
@@ -36,7 +36,9 @@ $VIEW_ONLY = $VIEW_ONLY ?? false;
             <div class="form-row">
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label class="form-label">{{ __('messages.models.Goal.fields.objective') }}</label>
+                        <label class="form-label" title="{{ __('messages.models.Goal.fields.objective') }}">
+                            {{ __('messages.models.Goal.fields.objective') }}
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             disabled value="{{ $GOAL?->getObjectivieString() }}"
                         />
@@ -45,7 +47,9 @@ $VIEW_ONLY = $VIEW_ONLY ?? false;
 
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label class="form-label">{{ __('messages.models.Goal.fields.target_weight') }} (kg)</label>
+                        <label class="form-label" title="{{ __('messages.models.Goal.fields.target_weight') }} (kg)">
+                            {{ __('messages.models.Goal.fields.target_weight') }} (kg)
+                        </label>
                         <input type="text" class="form-control form-control-user jq-mask-money"
                             disabled maxlength="7"
                             data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
@@ -58,7 +62,9 @@ $VIEW_ONLY = $VIEW_ONLY ?? false;
             <div class="form-row">
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label class="form-label">{{ __('messages.models.Goal.fields.deadline') }}</label>
+                        <label class="form-label" title="{{ __('messages.models.Goal.fields.deadline') }}">
+                            {{ __('messages.models.Goal.fields.deadline') }}
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             disabled value="{{ $SysUtils::reformatDate($GOAL?->deadline, 'Y-m-d', __('messages.dateFormat')) }}"
                         />
@@ -67,7 +73,9 @@ $VIEW_ONLY = $VIEW_ONLY ?? false;
 
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label class="form-label">{{ __('messages.pages.goal.modalAddGoal.labelDaysToDeadline') }}</label>
+                        <label class="form-label" title="{{ __('messages.pages.goal.modalAddGoal.labelDaysToDeadline') }}">
+                            {{ __('messages.pages.goal.modalAddGoal.labelDaysToDeadline') }}
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             disabled value="{{ $GOAL?->remainingDays() }}"
                         />
@@ -78,7 +86,9 @@ $VIEW_ONLY = $VIEW_ONLY ?? false;
             <div class="form-row">
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label class="form-label">{{ __('messages.pages.goal.modalAddGoal.labelWeightChange') }} (kg)</label>
+                        <label class="form-label" title="{{ __('messages.pages.goal.modalAddGoal.labelWeightChange') }} (kg)">
+                            {{ __('messages.pages.goal.modalAddGoal.labelWeightChange') }} (kg)
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             disabled value="{{ ($GOAL?->isObjectiveWeightLoss() ? '-': '+') . number_format($GOAL?->totalWeightChangeSinceStart(), 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}"
                         />
@@ -87,7 +97,9 @@ $VIEW_ONLY = $VIEW_ONLY ?? false;
 
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label class="form-label">{{ __('messages.pages.goal.modalAddGoal.labelProgress') }}</label>
+                        <label class="form-label" title="{{ __('messages.pages.goal.modalAddGoal.labelProgress') }}">
+                            {{ __('messages.pages.goal.modalAddGoal.labelProgress') }}
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             disabled value="{{ number_format($GOAL?->percentageTowardsGoal(), 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}%"
                         />

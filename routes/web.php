@@ -39,6 +39,7 @@ Route::prefix('app')->group(function () {
             Route::get('/add', 'App\Http\Controllers\Client@add')->name('app.client.add');
             Route::post('/doSave', 'App\Http\Controllers\Client@doSave')->name('app.client.doSave');
             Route::get('/edit/{codedId}', 'App\Http\Controllers\Client@edit')->name('app.client.edit');
+            Route::get('/view/{codedId}', 'App\Http\Controllers\Client@view')->name('app.client.view');
         });
 
         Route::prefix('goal')->group(function () {
@@ -46,6 +47,18 @@ Route::prefix('app')->group(function () {
             Route::post('/doModalAdd', 'App\Http\Controllers\Goal@doModalAdd')->name('app.goal.doModalAdd');
             Route::post('/doModalRemove', 'App\Http\Controllers\Goal@doModalRemove')->name('app.goal.doModalRemove');
             Route::match(array('GET','POST'), '/htmlModalPastGoals', 'App\Http\Controllers\Goal@htmlModalPastGoals')->name('app.goal.htmlModalPastGoals');
+        });
+
+        Route::prefix('avaliation')->group(function () {
+            Route::get('/', 'App\Http\Controllers\Avaliation@index')->name('app.avaliation.index');
+            Route::get('/htmlModalView', 'App\Http\Controllers\Avaliation@htmlModalView')->name('app.avaliation.htmlModalView');
+            Route::get('/htmlModalAdd', 'App\Http\Controllers\Avaliation@htmlModalAdd')->name('app.avaliation.htmlModalAdd');
+            Route::post('/doModalAdd', 'App\Http\Controllers\Avaliation@doModalAdd')->name('app.avaliation.doModalAdd');
+            Route::get('/htmlModalSelectClient', 'App\Http\Controllers\Avaliation@htmlModalSelectClient')->name('app.avaliation.htmlModalSelectClient');
+            Route::get('/htmlModalEdit', 'App\Http\Controllers\Avaliation@htmlModalEdit')->name('app.avaliation.htmlModalEdit');
+            Route::get('/photo/{fileName}', 'App\Http\Controllers\Avaliation@showPhoto')->name('app.avaliation.showPhoto');
+            Route::get('/viewReport/{codedId}', 'App\Http\Controllers\Avaliation@viewReport')->name('app.avaliation.viewReport');
+            Route::get('/viewReportPDF/{codedId}', 'App\Http\Controllers\Avaliation@viewReportPDF')->name('app.avaliation.viewReportPDF');
         });
     });
 });

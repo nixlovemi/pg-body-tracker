@@ -19,7 +19,7 @@ class GoalFactory extends Factory
             'client_id' => function() {
                 return Client::inRandomOrder()->first();
             },
-            'objective' => $this->faker->randomElement(array_keys(Goal::fGetObjectivies())),
+            'objective' => $this->faker->randomElement(array_keys(Goal::fGetObjectives())),
             'initial_weight_kg' => function(array $attributes) {
                 // get Client from client_id
                 $client = Client::find($attributes['client_id']);

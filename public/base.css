@@ -24,6 +24,14 @@ div.ui-datepicker {
 .form-select {
     padding: 4px 45px 0px 12px !important;
 }
+.form-group .form-label {
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: clip;
+}
+.text-decoration-underline {
+    text-decoration: underline !important;
+}
 
 /* =========== SWEETALERT ============ */
 .colored-toast.swal2-icon-success {

@@ -19,7 +19,9 @@ View variables:
 
 @section('MODAL_HEADER')
     <h5 class="modal-title">
-        {{ __('messages.pages.goal.modalAddGoal.title') }}
+        {{ __('messages.modalAddTitle', [
+            'modelName' => __('messages.models.Goal.name')
+        ]) }}
     </h5>
 @endsection
 
@@ -32,7 +34,9 @@ View variables:
         <div class="form-row">
             <div class="col-12">
                 <div class="form-group">
-                    <label class="form-label">* {{ __('messages.models.Goal.fields.objective') }}</label>
+                    <label class="form-label" title="{{ __('messages.models.Goal.fields.objective') }}">
+                        * {{ __('messages.models.Goal.fields.objective') }}
+                    </label>
                     <select
                         class="form-control form-control-user"
                         id="f-objective"
@@ -40,7 +44,7 @@ View variables:
                     >
                         @foreach (array_merge(
                             ['' => __('messages.selectEmptyOption') ],
-                            $mGoal::fGetObjectivies()
+                            $mGoal::fGetObjectives()
                         ) as $goal => $display)
                             <option
                                 value="{{ $goal }}"
@@ -54,7 +58,9 @@ View variables:
         <div class="form-row">
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    <label class="form-label">* {{ __('messages.models.Goal.fields.target_weight') }} (kg)</label>
+                    <label class="form-label" title="{{ __('messages.models.Goal.fields.target_weight') }} (kg)">
+                        * {{ __('messages.models.Goal.fields.target_weight') }} (kg)
+                    </label>
                     <input type="text" class="form-control form-control-user jq-mask-money"
                         id="f-weight" name="f-weight" maxlength="7"
                         data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
@@ -65,7 +71,9 @@ View variables:
 
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    <label class="form-label">* {{ __('messages.models.Goal.fields.deadline') }}</label>
+                    <label class="form-label" title="{{ __('messages.models.Goal.fields.deadline') }}">
+                        * {{ __('messages.models.Goal.fields.deadline') }}
+                    </label>
                     <input type="text" class="form-control form-control-user jq-datepicker"
                         id="f-deadline" name="f-deadline" maxlength="10" value=""
                     />
@@ -76,7 +84,9 @@ View variables:
         <div class="form-actions">
             <div class="float-right">
                 <button type="submit" class="btn-modal-submit btn btn-sm primary btn-user">{{ __('messages.buttonSave') }}</button>
-                <a href="javascript:;" class="btn-modal-close btn btn-sm btn-light" data-dismiss="modal">Fechar</a>
+                <a href="javascript:;" class="btn-modal-close btn btn-sm btn-light" data-dismiss="modal">
+                    {{ __('messages.buttonClose') }}
+                </a>
             </div>
         </div>
     </form>

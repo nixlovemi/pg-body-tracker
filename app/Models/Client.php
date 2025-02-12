@@ -61,10 +61,7 @@ class Client extends Model
     // relations
     public function user()
     {
-        return $this->hasOne(
-            User::class, 'id',
-            'user_id'
-        );
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function goals()
@@ -137,6 +134,42 @@ class Client extends Model
 
         return $this->weight_kg;
     }
+
+    public function getAge(): int
+    {
+        if (!$this->birthdate) return 0;
+
+        $today = new \DateTime();
+        $age = $today->diff(new \DateTime($this->birthdate))->y;
+        return $age;
+    }
+
+    public function isMale(): bool
+    {
+        return $this->gender === Client::GENDER_MALE;
+    }
+
+    public function isFemale(): bool
+    {
+        return $this->gender === Client::GENDER_FEMALE;
+    }
+
+    public function getName(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getGenderStr(): string
+    {
+        return self::fGetGenders()[$this->gender] ?? '';
+    }
+
+    public function getLastAvaliation(): ?Avaliation
+    {
+        return $this->avaliations()
+            ->orderBy('date', 'DESC')
+            ->first();
+    }
     // ===============
 
     // static functions
@@ -184,6 +217,7 @@ class Client extends Model
             $Client->save();
             $Client->refresh();
         } catch (\Exception $e) {
+            \App\Helpers\LocalLogger::log('Client save error', ['exception' => $e->getMessage()]);
             return new ApiResponse(true, __('messages.saveModelErrorSaving', [
                 'modelName' => __('messages.models.Client.name')
             ]));
@@ -200,7 +234,7 @@ class Client extends Model
     public static function fHasAccess(self $Client): bool
     {
         // adding user is ok
-        if (!$Client->id > 0) {
+        if (empty($Client->id)) {
             return true;
         }
 

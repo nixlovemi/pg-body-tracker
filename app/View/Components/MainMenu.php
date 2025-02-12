@@ -30,13 +30,19 @@ class MainMenu extends Component
                 'route' => route('app.dashboard.index'),
                 'routeName' => 'app.dashboard.index',
                 'icon' => 'fas fa-fw fa-tachometer-alt',
-                'label' => 'Dashboard',
+                'label' => __('messages.menu.dashboard'),
             ],
             'client' => [
                 'route' => route('app.client.index'),
                 'routeName' => 'app.client.index',
                 'icon' => 'fas fa-fw fa-users',
-                'label' => 'Clientes',
+                'label' => __('messages.menu.client'),
+            ],
+            'avaliation' => [
+                'route' => route('app.avaliation.index'),
+                'routeName' => 'app.avaliation.index',
+                'icon' => 'fas fa-fw fa-chart-line',
+                'label' => __('messages.menu.avaliation'),
             ],
         ];
 

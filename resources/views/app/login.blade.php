@@ -1,3 +1,5 @@
+@inject('Icons', 'App\Helpers\Icons')
+
 @php
 /*
 View variables:
@@ -59,24 +61,12 @@ View variables:
                                             />
                                         </div>
 
-                                        @php
-                                        /*
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
-                                            </div>
-                                        </div>
-                                        */
-                                        @endphp
-
                                         <button type="submit" class="btn primary btn-user btn-block">
                                             {{ __('messages.pages.login.loginButton') }}
                                         </button>
                                         <hr />
                                         <a href="#" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i>
+                                            {!! $Icons::GOOGLE !!}
                                             {{ __('messages.pages.login.loginGoogle') }}
                                         </a>
                                     </form>

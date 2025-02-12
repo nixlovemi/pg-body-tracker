@@ -57,10 +57,7 @@ class Goal extends Model
     // relations
     public function client()
     {
-        return $this->hasOne(
-            Client::class, 'id',
-            'client_id'
-        );
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
     // =========
 
@@ -74,7 +71,7 @@ class Goal extends Model
         $validation->addIdField(self::class, __('messages.models.Goal.name'), 'id', 'ID');
         $validation->addIdField(Client::class, __('messages.models.Client.name'), 'id', 'ID');
         $validation->addField('objective', ['nullable', 'filled', 'string', function ($attribute, $value, $fail) {
-            if (false === array_key_exists($value, self::fGetObjectivies())) {
+            if (false === array_key_exists($value, self::fGetObjectives())) {
                 $fail(
                     __('messages.helpers.modelValidation.invalidField', ['attribute' => __('messages.models.Goal.fields.objective')])
                 );
@@ -96,7 +93,7 @@ class Goal extends Model
 
     public function getObjectivieString(): string
     {
-        $objectivies = self::fGetObjectivies();
+        $objectivies = self::fGetObjectives();
         return $objectivies[$this->objective] ?? '';
     }
 
@@ -122,8 +119,13 @@ class Goal extends Model
 
     public function totalWeightChangeSinceStart(): float
     {
+        $client = $this->client;
+        if (!$client) {
+            return 0;
+        }
+
         $initial = $this->initial_weight_kg;
-        $lastAvaliation = $this->client->avaliations()
+        $lastAvaliation = $client->avaliations()
             ->where('date', '<=', $this->deadline)
             ->orderBy('date', 'DESC')
             ->first();
@@ -148,12 +150,10 @@ class Goal extends Model
 
     public function percentageTowardsGoal(): float
     {
-        try {
-            $progress = $this->totalWeightChangeSinceStart() / $this->targetWeightChange();
-        } catch (\DivisionByZeroError $e){
-            return 0;
-        }
+        $change = $this->targetWeightChange();
+        if ($change == 0) return 0;
 
+        $progress = $this->totalWeightChangeSinceStart() / $change;
         if ($progress < 0) {
             return 0;
         }
@@ -163,7 +163,7 @@ class Goal extends Model
     // ===============
 
     // static functions
-    public static function fGetObjectivies(): array
+    public static function fGetObjectives(): array
     {
         return [
             self::OBJECTIVE_WEIGHT_LOSS => __('messages.models.Goal.objective.weight'),
@@ -200,6 +200,12 @@ class Goal extends Model
         // default value for initial_weight_kg = Client current weight
         if (!$isEdit) {
             $Client = Client::find($Goal->client_id);
+            if (!$Client) {
+                return new ApiResponse(true, __('messages.saveModelNotFound', [
+                    'modelName' => __('messages.models.Client.name')
+                ]));
+            }
+
             $Goal->initial_weight_kg = $Client?->getCurrentWeight();
         }
 
@@ -259,7 +265,7 @@ class Goal extends Model
     public static function fHasAccess(self $Goal): bool
     {
         // adding user is ok
-        if (!$Goal->id > 0) {
+        if (empty($Goal->id)) {
             return true;
         }
 

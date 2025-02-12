@@ -1,5 +1,6 @@
 @inject('Permissions', 'App\Helpers\Permissions')
 @inject('SysUtils', 'App\Helpers\SysUtils')
+@inject('Icons', 'App\Helpers\Icons')
 
 @php
 /*
@@ -17,8 +18,10 @@ $userId = $SysUtils::getLoggedInUser()?->id ?? 0;
 @section('DASH_BODY_CONTENT')
     @if ($Permissions::checkPermission($Permissions::ACL_CLIENT_EDIT))
         <a href="{{ route('app.client.add') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i>
-            {{ __('messages.pages.client.index.addButton') }}
+            {!! $Icons::PLUS !!}
+            {{ __('messages.modalAddTitle', [
+                'modelName' => __('messages.models.Client.name')
+            ]) }}
         </a>
     @endif
 
