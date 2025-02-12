@@ -11,6 +11,7 @@ use App\Helpers\ValidatePassword;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\Constants;
 use App\Helpers\SysUtils;
+use App\Helpers\Permissions;
 
 class User extends Authenticatable
 {
@@ -132,6 +133,15 @@ class User extends Authenticatable
     public function isClient(): bool
     {
         return $this->role === User::ROLE_CLIENT;
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->isRoot()) {
+            return true;
+        }
+
+        return Permissions::checkPermission($permission, $this);
     }
     // ===============
 

@@ -11,6 +11,7 @@ return [
     'buttonSave' => 'Save',
     'buttonBackToList' => 'Back to list',
     'buttonLoadMore' => 'Load more',
+    'modelErrorNoAccess' => 'You don\'t have permissions to access this content!',
     'saveModelNotFound' => ':modelName not found for editing!',
     'saveModelErrorSavingOther' => 'You don\'t have permission to save this :modelName!',
     'saveModelErrorSaving' => 'There was a problem saving the :modelName, try again.',
@@ -18,6 +19,8 @@ return [
     'saveModelSuccessEditing' => ':modelName edited successfully!',
     'saveModelSuccessRemoving' => ':modelName removed successfully!',
     'confirmModalTitle' => 'Confirmation',
+    'infoModalTitle' => 'Information',
+    'tableActionView' => 'View',
 
     'helpers' => [
         'modelValidation' => [
@@ -95,16 +98,13 @@ return [
             'fields' => [
                 'date' => 'Date',
                 'body_fat_perc' => 'Body Fat Percentage',
-                'skeletal_muscle_mass_kg' => 'Skeletal Muscle Mass',
-                'muscle_rate_perc' => 'Muscle Rate',
-                'subcutaneous_fat_perc' => 'Subcutaneous Fat Percentage',
-                'visceral_fat_perc' => 'Visceral Fat Percentage',
-                'body_water_perc' => 'Body Water Percentage',
                 'skeletal_muscle_perc' => 'Skeletal Muscle Percentage',
-                'muscle_mass_kg' => 'Muscle Mass',
-                'bone_mass_kg' => 'Bone Mass',
-                'protein_perc' => 'Protein Percentage',
+                'visceral_fat_kg' => 'Visceral Fat',
+                'waist_circumference_cm' => 'Waist Circumference',
             ],
+            'labelFatMass' => 'Fat Mass',
+            'labelLeanMass' => 'Lean Mass',
+            'labelTmb' => 'Basal Metabolic Rate',
         ],
     ],
 
@@ -130,9 +130,11 @@ return [
                 'cardInfo' => 'Client Information',
                 'cardMeasures' => 'Initial Measures',
                 'cardGoals' => 'Goals',
+                'cardAvaliations' => 'Avaliations',
                 'noGoals' => 'No active goals! Take the opportunity to add a new one.',
                 'btnNewGoal' => 'New Goal',
                 'btnOldGoals' => 'Old Goals',
+                'btnNewAvaliation' => 'New Avaliation',
                 'labelActualWeight' => 'Peso Atual',
             ],
             'table' => [
@@ -149,6 +151,16 @@ return [
                 'labelProgress' => 'Progress',
                 'labelWeightChange' => 'Weight Change',
             ],
+        ],
+
+        'avaliation' => [
+            'modalAddAvaliation' => [
+                'title' => 'Add Avaliation',
+                'skeletal_muscle_perc_info' => 'If :skeletal_muscle_perc is not specified, the formula by "Lee et al" will be used for calculation.',
+                'waist_circumference_info' => 'If :visceral_fat is not specified, :waist_circumference will be used for calculation.',
+            ],
+            'deleteConfirmation' => 'Are you sure you want to delete this avaliation? This operation is permanent and cannot be undone!',
+            'deleteSuccess' => 'Avaliation deleted successfully!',
         ],
     ],
 ];

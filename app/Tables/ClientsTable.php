@@ -51,9 +51,9 @@ class ClientsTable extends AbstractTableConfiguration
                 ->searchable(function($query, string $searchBy) {
                     return $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%{$searchBy}%'");
                 })
-                ->format(function(Client $JobFile) {
+                ->format(function(Client $Client) {
                     // return first_name and last_name
-                    return $JobFile->first_name . ' ' . $JobFile->last_name;
+                    return $Client->first_name . ' ' . $Client->last_name;
                 })
                 ->sortable(function($query, string $searchBy) {
                     return $query->orderByRaw("CONCAT(first_name, ' ', last_name) {$searchBy}");

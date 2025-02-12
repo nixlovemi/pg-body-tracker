@@ -8,6 +8,17 @@
             $(this).parent().fadeOut(500);
         });
 
+        $(document).on('click', 'a.show-info', function(e){
+            const content = $(this).data('content');
+            const title = $(this).data('title');
+
+            showInfoAlert({
+                icon: null,
+                title: title,
+                text: content,
+            });
+        });
+
         setTimeout(function(){
             $('div.alert.alert-dismissible').each(function() {
                 $(this).find('.btn-close').click();
@@ -516,6 +527,32 @@
                     'text': 'Ocorreu um erro inesperado! Tente novamente.'
                 });
             }
+        });
+    });
+
+    $(document).on('click', '#btn-client-new-avaliation', function(e) {
+        showJsonAjaxModal('GET', '/app/avaliation/htmlModalAdd', {
+            'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
+            'cedit': $(this).closest('form#client-form').find('input[name="f-cedit"]').val(),
+            'json': 1
+        });
+    });
+
+    $(document).on('click', 'form#register-avaliation-form .btn-modal-submit', function(e) {
+        const FORM = $(this).closest('form');
+
+        submitModalForm(FORM, function(retorno) {
+
+            showSuccessAlert({
+                'title': 'Sucesso!',
+                'text': retorno.message
+            });
+
+            closeModal(FORM.closest('div.modal').parent());
+            setTimeout(function(){
+                refreshLivewireTable(`#dv-card-client-avaliations`);
+            }, 250);
+
         });
     });
 

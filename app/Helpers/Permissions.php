@@ -8,26 +8,32 @@ use App\Helpers\SysUtils;
 final class Permissions {
     public const ACL_DASHBOARD_INDEX = 'dashboard/index';
 
-    public const ACL_CLIENT_INDEX = 'client/index';
+    public const ACL_CLIENT_VIEW = 'client/view';
     public const ACL_CLIENT_EDIT = 'client/edit';
 
     public const ACL_GOAL_VIEW = 'goal/view';
     public const ACL_GOAL_EDIT = 'goal/edit';
 
+    public const ACL_AVALIATION_VIEW = 'avaliation/view';
+    public const ACL_AVALIATION_EDIT = 'avaliation/edit';
+
     private const ACL = [
         self::ACL_DASHBOARD_INDEX => [User::ROLE_MANAGER],
 
-        self::ACL_CLIENT_INDEX => [User::ROLE_MANAGER],
+        self::ACL_CLIENT_VIEW => [User::ROLE_MANAGER],
         self::ACL_CLIENT_EDIT => [User::ROLE_MANAGER],
 
         self::ACL_GOAL_VIEW => [User::ROLE_MANAGER, User::ROLE_CLIENT],
         self::ACL_GOAL_EDIT => [User::ROLE_MANAGER],
+
+        self::ACL_AVALIATION_VIEW => [User::ROLE_MANAGER, User::ROLE_CLIENT],
+        self::ACL_AVALIATION_EDIT => [User::ROLE_MANAGER],
     ];
 
     private const ROUTE_ACL = [
         'app.dashboard.index' => self::ACL_DASHBOARD_INDEX,
 
-        'app.client.index' => self::ACL_CLIENT_INDEX,
+        'app.client.index' => self::ACL_CLIENT_VIEW,
         'app.client.add' => self::ACL_CLIENT_EDIT,
         'app.client.doSave' => self::ACL_CLIENT_EDIT,
         'app.client.edit' => self::ACL_CLIENT_EDIT,
@@ -36,6 +42,10 @@ final class Permissions {
         'app.goal.doModalAdd' => self::ACL_GOAL_EDIT,
         'app.goal.doModalRemove' => self::ACL_GOAL_EDIT,
         'app.goal.htmlModalPastGoals' => self::ACL_GOAL_VIEW,
+
+        'app.avaliation.htmlModalAdd' => self::ACL_AVALIATION_EDIT,
+        'app.avaliation.doModalAdd' => self::ACL_AVALIATION_EDIT,
+        'app.avaliation.htmlModalView' => self::ACL_AVALIATION_VIEW,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

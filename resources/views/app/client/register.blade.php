@@ -33,7 +33,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
             <div class="form-row">
                 <div class="col-12 col-md-4">
                     <div class="form-group">
-                        <label class="form-label">* {{ __('messages.models.Client.fields.first_name') }}</label>
+                        <label class="form-label" title="{{ __('messages.models.Client.fields.first_name') }}">
+                            * {{ __('messages.models.Client.fields.first_name') }}
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             id="f-name" name="f-name" maxlength="60" value="{{ old('f-name') ?: $CLIENT?->first_name }}"
                         />
@@ -41,7 +43,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
-                        <label class="form-label">* {{ __('messages.models.Client.fields.last_name') }}</label>
+                        <label class="form-label" title="{{ __('messages.models.Client.fields.last_name') }}">
+                            * {{ __('messages.models.Client.fields.last_name') }}
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             id="f-surname" name="f-surname" maxlength="80" value="{{ old('f-surname') ?: $CLIENT?->last_name }}"
                         />
@@ -49,7 +53,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
-                        <label class="form-label">* {{ __('messages.models.Client.fields.birthdate') }}</label>
+                        <label class="form-label" title="{{ __('messages.models.Client.fields.birthdate') }}">
+                            * {{ __('messages.models.Client.fields.birthdate') }}
+                        </label>
                         @php
                         $birthdate = old('f-birth') ?: ($CLIENT?->birthdate ? $SysUtils::reformatDate($CLIENT?->birthdate, 'Y-m-d', __('messages.dateFormat')) : '');
                         @endphp
@@ -63,7 +69,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
             <div class="form-row">
                 <div class="col-12 col-md-4">
                     <div class="form-group">
-                        <label class="form-label">* {{ __('messages.models.Client.fields.gender') }}</label>
+                        <label class="form-label" title="{{ __('messages.models.Client.fields.gender') }}">
+                            * {{ __('messages.models.Client.fields.gender') }}
+                        </label>
                         <select
                             class="form-control form-control-user"
                             id="f-bsex"
@@ -87,7 +95,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
-                        <label class="form-label">Email</label>
+                        <label class="form-label" title="Email">
+                            Email
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             id="f-email" name="f-email" maxlength="255"
                             value="{{ old('f-email') ?: $CLIENT?->email }}"
@@ -96,7 +106,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
-                        <label class="form-label">{{ __('messages.models.Client.fields.phone') }}</label>
+                        <label class="form-label" title="{{ __('messages.models.Client.fields.phone') }}">
+                            {{ __('messages.models.Client.fields.phone') }}
+                        </label>
                         <input type="text" class="form-control form-control-user"
                             id="f-phone" name="f-phone" maxlength="35" value="{{ old('f-phone') ?: $CLIENT?->phone }}"
                         />
@@ -114,7 +126,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                     ])
                 >
                     <div class="form-group">
-                        <label class="form-label">* {{ __('messages.models.Client.fields.height') }} (cm)</label>
+                        <label class="form-label" title="{{ __('messages.models.Client.fields.height') }} (cm)">
+                            * {{ __('messages.models.Client.fields.height') }} (cm)
+                        </label>
                         <select
                             class="form-control form-control-user"
                             id="f-height"
@@ -145,7 +159,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                     ])
                 >
                     <div class="form-group">
-                        <label class="form-label">* {{ __('messages.models.Client.fields.weight') }} (kg)</label>
+                        <label class="form-label" title="{{ __('messages.models.Client.fields.weight') }} (kg)">
+                            * {{ __('messages.models.Client.fields.weight') }} (kg)
+                        </label>
                         @php
                         $clientWeight = old("f-weight") ?: number_format($CLIENT?->weight_kg, 3, __('messages.decimalSeparator'), __('messages.thousandSeparator'));
                         @endphp
@@ -160,7 +176,9 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                 @if ($isEditingOrViewing)
                     <div class="col-12 col-md-4">
                         <div class="form-group">
-                            <label class="form-label">* {{ __('messages.pages.client.register.labelActualWeight') }} (kg)</label>
+                            <label class="form-label" title="{{ __('messages.pages.client.register.labelActualWeight') }} (kg)">
+                                * {{ __('messages.pages.client.register.labelActualWeight') }} (kg)
+                            </label>
                             <input type="text" class="form-control form-control-user jq-mask-money"
                                 disabled maxlength="7"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
@@ -179,6 +197,26 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                         'GOAL' => $CLIENT?->getCurrentGoal(),
                         'CAN_EDIT' => $canEdit
                     ])
+                </div>
+            </x-card>
+
+            <x-card title="{{ __('messages.pages.client.register.cardAvaliations') }}" closed="true">
+                @if ($canEdit && $Permissions::checkPermission($Permissions::ACL_AVALIATION_EDIT))
+                    <div class="d-block mb-3">
+                        <a href="javascript:;" id="btn-client-new-avaliation" class="btn btn-light btn-user btn-sm">
+                            {{ __('messages.pages.client.register.btnNewAvaliation') }}
+                        </a>
+                    </div>
+                @endif
+
+                <div id='dv-card-client-avaliations'>
+                    <livewire:table
+                        :config="App\Tables\AvaliationsTable::class"
+                        :configParams="[
+                            'clientId' => $CLIENT?->id,
+                            'canEdit' => $canEdit
+                        ]"
+                    />
                 </div>
             </x-card>
         @endif

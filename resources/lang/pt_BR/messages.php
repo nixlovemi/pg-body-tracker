@@ -11,6 +11,7 @@ return [
     'buttonSave' => 'Salvar',
     'buttonBackToList' => 'Voltar para lista',
     'buttonLoadMore' => 'Carregar mais',
+    'modelErrorNoAccess' => 'Você não tem permissão para acessar este conteúdo!',
     'saveModelNotFound' => ':modelName não encontrado para salvar!',
     'saveModelErrorSavingOther' => 'Você não tem permissão para salvar este :modelName!',
     'saveModelErrorSaving' => 'Ocorreu um problema ao salvar o :modelName, tente novamente.',
@@ -18,6 +19,8 @@ return [
     'saveModelSuccessEditing' => ':modelName editado com sucesso!',
     'saveModelSuccessRemoving' => ':modelName removido com sucesso!',
     'confirmModalTitle' => 'Confirmação',
+    'infoModalTitle' => 'Informação',
+    'tableActionView' => 'Visualizar',
 
     'helpers' => [
         'modelValidation' => [
@@ -95,16 +98,13 @@ return [
             'fields' => [
                 'date' => 'Data',
                 'body_fat_perc' => 'Percentual de Gordura Corporal',
-                'skeletal_muscle_mass_kg' => 'Massa Muscular Esquelética',
-                'muscle_rate_perc' => 'Percentual de Músculos',
-                'subcutaneous_fat_perc' => 'Percentual de Gordura Subcutânea',
-                'visceral_fat_perc' => 'Percentual de Gordura Visceral',
-                'body_water_perc' => 'Percentual de Água Corporal',
-                'skeletal_muscle_perc' => 'Percentual de Músculo Esquelético',
-                'muscle_mass_kg' => 'Massa Muscular',
-                'bone_mass_kg' => 'Massa Óssea',
-                'protein_perc' => 'Percentual de Proteína',
+                'skeletal_muscle_perc' => 'Percentual de Massa Muscular Esquelética',
+                'visceral_fat_kg' => 'Gordura Visceral',
+                'waist_circumference_cm' => 'Circunferência da Cintura',
             ],
+            'labelFatMass' => 'Massa Gorda',
+            'labelLeanMass' => 'Massa Magra',
+            'labelTmb' => 'Taxa Metabólica Basal',
         ],
     ],
 
@@ -130,9 +130,11 @@ return [
                 'cardInfo' => 'Informações do Cliente',
                 'cardMeasures' => 'Medidas Iniciais',
                 'cardGoals' => 'Objetivos',
+                'cardAvaliations' => 'Avaliações',
                 'noGoals' => 'Nenhum objetivo ativo! Aproveite para adicionar um novo.',
                 'btnNewGoal' => 'Novo Objetivo',
                 'btnOldGoals' => 'Objetivos Anteriores',
+                'btnNewAvaliation' => 'Nova Avaliação',
                 'labelActualWeight' => 'Peso Atual',
             ],
             'table' => [
@@ -149,6 +151,16 @@ return [
                 'labelProgress' => 'Progresso',
                 'labelWeightChange' => 'Mudança de Peso',
             ],
+        ],
+
+        'avaliation' => [
+            'modalAddAvaliation' => [
+                'title' => 'Adicionar Avaliação',
+                'skeletal_muscle_perc_info' => 'Se :skeletal_muscle_perc não for informado, a fórmula de "Lee et al" será utilizada para o cálculo.',
+                'waist_circumference_info' => 'Se :visceral_fat não for informado, usaremos :waist_circumference para o cálculo.',
+            ],
+            'deleteConfirmation' => 'Tem certeza que deseja excluir esta avaliação? Essa operação é permanente e não pode ser desfeita!',
+            'deleteSuccess' => 'Avaliação excluída com sucesso!',
         ],
     ],
 ];

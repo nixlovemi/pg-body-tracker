@@ -137,6 +137,13 @@ class Client extends Model
 
         return $this->weight_kg;
     }
+
+    public function getAge(): int
+    {
+        $today = new \DateTime();
+        $age = $today->diff(new \DateTime($this->birthdate))->y;
+        return $age;
+    }
     // ===============
 
     // static functions
