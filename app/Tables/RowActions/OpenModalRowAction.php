@@ -17,8 +17,11 @@ class OpenModalRowAction extends AbstractRowAction
 
     protected function identifier(): string
     {
+        // random unique identifier
+        $uniq = uniqid();
+
         // The unique identifier that is required to retrieve the row action.
-        return 'row_action_open_modal';
+        return 'row_action_open_modal_' . $uniq;
     }
 
     protected function class(Model $model): array
