@@ -25,7 +25,9 @@ class Client extends Controller
     public function add()
     {
         return view('app.client.register', [
-            'PAGE_TITLE' => __('messages.pages.client.index.addButton'),
+            'PAGE_TITLE' => __('messages.modalAddTitle', [
+                'modelName' => __('messages.models.Client.name')
+            ]),
             'TYPE' => Constants::FORM_ADD,
             'ACTION' => route('app.client.doSave'),
             'CLIENT' => null,
@@ -76,7 +78,9 @@ class Client extends Controller
         }
 
         return view('app.client.register', [
-            'PAGE_TITLE' => __('messages.pages.client.index.editButton'),
+            'PAGE_TITLE' => __('messages.modalEditTitle', [
+                'modelName' => __('messages.models.Client.name')
+            ]),
             'TYPE' => Constants::FORM_EDIT,
             'ACTION' => route('app.client.doSave'),
             'CLIENT' => $Client,

@@ -52,6 +52,7 @@ Route::prefix('app')->group(function () {
             Route::get('/htmlModalView', 'App\Http\Controllers\Avaliation@htmlModalView')->name('app.avaliation.htmlModalView');
             Route::get('/htmlModalAdd', 'App\Http\Controllers\Avaliation@htmlModalAdd')->name('app.avaliation.htmlModalAdd');
             Route::post('/doModalAdd', 'App\Http\Controllers\Avaliation@doModalAdd')->name('app.avaliation.doModalAdd');
+            Route::get('/htmlModalEdit', 'App\Http\Controllers\Avaliation@htmlModalEdit')->name('app.avaliation.htmlModalEdit');
         });
     });
 });

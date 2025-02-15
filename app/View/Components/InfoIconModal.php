@@ -6,6 +6,8 @@ use Illuminate\View\Component;
 
 class InfoIconModal extends Component
 {
+    public $icon = \App\Helpers\Icons::INFO_CIRCLE;
+
     /**
      * Create a new component instance.
      *
@@ -27,7 +29,7 @@ class InfoIconModal extends Component
             <a href="javascript:;" class="show-info"
             data-title="{{$title}}"
             data-content="{{$message}}">
-                <i class="fas fa-info-circle"></i>
+                {!!$icon!!}
             </a>
         blade;
     }

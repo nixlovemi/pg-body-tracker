@@ -19,7 +19,9 @@ View variables:
 
 @section('MODAL_HEADER')
     <h5 class="modal-title">
-        {{ __('messages.pages.goal.modalAddGoal.title') }}
+        {{ __('messages.modalAddTitle', [
+            'modelName' => __('messages.models.Goal.name')
+        ]) }}
     </h5>
 @endsection
 

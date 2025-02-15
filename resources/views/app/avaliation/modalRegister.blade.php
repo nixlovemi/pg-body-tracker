@@ -25,7 +25,19 @@ $canEdit = (1 == $CEDIT) ? true: false;
 
 @section('MODAL_HEADER')
     <h5 class="modal-title">
-        {{ __('messages.pages.avaliation.modalAddAvaliation.title') }}
+        @if ($canEdit && !$AVALIATION)
+            {{ __('messages.modalAddTitle', [
+                'modelName' => __('messages.models.Avaliation.name')
+            ]) }}
+        @elseif ($canEdit && $AVALIATION?->id > 0)
+            {{ __('messages.modalEditTitle', [
+                'modelName' => __('messages.models.Avaliation.name')
+            ]) }}
+        @else
+            {{ __('messages.modalViewTitle', [
+                'modelName' => __('messages.models.Avaliation.name')
+            ]) }}
+        @endif
     </h5>
 @endsection
 
@@ -34,6 +46,7 @@ $canEdit = (1 == $CEDIT) ? true: false;
         @csrf
         <input type="hidden" name="f-cid" value="{{ $CUID }}" />
         <input type="hidden" name="f-cedit" value="{{ $CEDIT ?? 0 }}" />
+        <input type="hidden" name="f-acid" value="{{ ($canEdit) ? $AVALIATION?->codedId: '' }}" />
 
         <div class="form-row">
             <div class="col-12 col-md-6">

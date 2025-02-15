@@ -41,7 +41,7 @@ class Avaliation extends Controller
     public function doModalAdd(Request $request)
     {
         $form = $this->formatSaveRequest($request);
-        $response = mAvaliation::fSave($form);
+        $response = mAvaliation::fSave($form, $form['acid']);
 
         if ($response->isError()) {
             return $this->returnResponse(true, ApiResponse::getValidateMessage($response), [], Response::HTTP_OK);
@@ -74,10 +74,35 @@ class Avaliation extends Controller
         return $view;
     }
 
+    public function htmlModalEdit(Request $request)
+    {
+        $Avaliation = mAvaliation::getModelByCodedId($request->input('codedId'));
+        $view = view('app.avaliation.modalRegister', [
+            'CUID' => $Avaliation?->client->codedId,
+            'CEDIT' => 1,
+            'ACTION' => route('app.avaliation.doModalAdd'),
+            'AVALIATION' => $Avaliation,
+        ]);
+
+        if (1 == $request->input('json')) {
+            return $this->returnResponse(
+                false,
+                'HTML retornado com sucesso!',
+                [
+                    'html' => $view->render()
+                ],
+                Response::HTTP_OK
+            );
+        }
+
+        return $view;
+    }
+
     private function formatSaveRequest(Request $request): array
     {
         $form = [];
         $form['cid'] = $request->input('f-cid') ?? null;
+        $form['acid'] = $request->input('f-acid') ?? null;
         $form['date'] = $request->input('f-date') ?? null;
         $form['weight_kg'] = $request->input('f-weight') ?? null;
         $form['body_fat_perc'] = $request->input('f-bfat') ?? null;

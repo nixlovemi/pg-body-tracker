@@ -229,6 +229,7 @@ class Avaliation extends Model
 
         // save model
         try {
+            $Avaliation->timestamps = false;
             $Avaliation->save();
             $Avaliation->refresh();
         } catch (\Exception $e) {

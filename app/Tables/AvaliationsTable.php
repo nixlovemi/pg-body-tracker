@@ -5,15 +5,14 @@ namespace App\Tables;
 use App\Models\Avaliation;
 use Okipa\LaravelTable\Abstracts\AbstractTableConfiguration;
 use Okipa\LaravelTable\Column;
-use Okipa\LaravelTable\Formatters\DateFormatter;
 use Okipa\LaravelTable\RowActions\DestroyRowAction;
-use Okipa\LaravelTable\RowActions\EditRowAction;
 use App\Tables\RowActions\OpenModalRowAction;
 use Okipa\LaravelTable\Table;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Client;
 use App\Helpers\SysUtils;
 use App\Helpers\Permissions;
+use App\Helpers\Icons;
 
 class AvaliationsTable extends AbstractTableConfiguration
 {
@@ -45,8 +44,14 @@ class AvaliationsTable extends AbstractTableConfiguration
                 (new OpenModalRowAction(
                     __('messages.tableActionView'),
                     route('app.avaliation.htmlModalView', ['codedId' => $Avaliation->codedId, 'json' => 1]),
-                    '<i class="fa-solid fas fa-eye fa-fw"></i>'
+                    Icons::EYE
                 ))->when(SysUtils::getLoggedInUser()?->hasPermission(Permissions::ACL_AVALIATION_EDIT)),
+
+                (new OpenModalRowAction(
+                    __('messages.tableActionEdit'),
+                    route('app.avaliation.htmlModalEdit', ['codedId' => $Avaliation->codedId, 'json' => 1]),
+                    Icons::EDIT
+                ))->when($this->canEdit && SysUtils::getLoggedInUser()?->hasPermission(Permissions::ACL_AVALIATION_EDIT)),
 
                 (new DestroyRowAction())
                     ->when($this->canEdit && SysUtils::getLoggedInUser()?->hasPermission(Permissions::ACL_AVALIATION_EDIT))

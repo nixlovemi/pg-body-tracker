@@ -46,6 +46,7 @@ final class Permissions {
         'app.avaliation.htmlModalAdd' => self::ACL_AVALIATION_EDIT,
         'app.avaliation.doModalAdd' => self::ACL_AVALIATION_EDIT,
         'app.avaliation.htmlModalView' => self::ACL_AVALIATION_VIEW,
+        'app.avaliation.htmlModalEdit' => self::ACL_AVALIATION_EDIT,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

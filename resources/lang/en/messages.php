@@ -21,6 +21,10 @@ return [
     'confirmModalTitle' => 'Confirmation',
     'infoModalTitle' => 'Information',
     'tableActionView' => 'View',
+    'tableActionEdit' => 'Edit',
+    'modalAddTitle' => 'Add :modelName',
+    'modalEditTitle' => 'Edit :modelName',
+    'modalViewTitle' => 'View :modelName',
 
     'helpers' => [
         'modelValidation' => [
@@ -120,8 +124,6 @@ return [
         'client' => [
             'index' => [
                 'title' => 'Clients',
-                'addButton' => 'Add Client',
-                'editButton' => 'Edit Client',
                 'deleteConfirmation' => 'Are you sure you want to delete the client :clientName? This operation is permanent and cannot be undone!',
                 'deleteSuccess' => 'Client deleted successfully!',
             ],
@@ -146,7 +148,6 @@ return [
 
         'goal' => [
             'modalAddGoal' => [
-                'title' => 'Add Goal',
                 'labelDaysToDeadline' => 'Days to Deadline',
                 'labelProgress' => 'Progress',
                 'labelWeightChange' => 'Weight Change',
@@ -155,7 +156,6 @@ return [
 
         'avaliation' => [
             'modalAddAvaliation' => [
-                'title' => 'Add Avaliation',
                 'skeletal_muscle_perc_info' => 'If :skeletal_muscle_perc is not specified, the formula by "Lee et al" will be used for calculation.',
                 'waist_circumference_info' => 'If :visceral_fat is not specified, :waist_circumference will be used for calculation.',
             ],
