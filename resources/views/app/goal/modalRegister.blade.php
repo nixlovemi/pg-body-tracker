@@ -44,7 +44,7 @@ View variables:
                     >
                         @foreach (array_merge(
                             ['' => __('messages.selectEmptyOption') ],
-                            $mGoal::fGetObjectivies()
+                            $mGoal::fGetObjectives()
                         ) as $goal => $display)
                             <option
                                 value="{{ $goal }}"
@@ -84,7 +84,9 @@ View variables:
         <div class="form-actions">
             <div class="float-right">
                 <button type="submit" class="btn-modal-submit btn btn-sm primary btn-user">{{ __('messages.buttonSave') }}</button>
-                <a href="javascript:;" class="btn-modal-close btn btn-sm btn-light" data-dismiss="modal">Fechar</a>
+                <a href="javascript:;" class="btn-modal-close btn btn-sm btn-light" data-dismiss="modal">
+                    {{ __('messages.buttonClose') }}
+                </a>
             </div>
         </div>
     </form>

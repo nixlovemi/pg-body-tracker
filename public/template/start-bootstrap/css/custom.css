@@ -219,3 +219,9 @@ a#userDropdown span {
 .card-header {
     background-color: #f3f9ff !important;
 }
+.modal-subtitle {
+    background-color: #f3f9ff;
+    color: #4e73df;
+    padding: 4px 10px;
+    border: 1px solid #e3e6f0;
+}

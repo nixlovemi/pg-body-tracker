@@ -29,6 +29,9 @@ div.ui-datepicker {
     max-width: 100%;
     overflow: clip;
 }
+.text-decoration-underline {
+    text-decoration: underline !important;
+}
 
 /* =========== SWEETALERT ============ */
 .colored-toast.swal2-icon-success {

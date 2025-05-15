@@ -37,6 +37,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                             * {{ __('messages.models.Client.fields.first_name') }}
                         </label>
                         <input type="text" class="form-control form-control-user"
+                            {{ ($canEdit) ?: 'disabled' }}
                             id="f-name" name="f-name" maxlength="60" value="{{ old('f-name') ?: $CLIENT?->first_name }}"
                         />
                     </div>
@@ -47,6 +48,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                             * {{ __('messages.models.Client.fields.last_name') }}
                         </label>
                         <input type="text" class="form-control form-control-user"
+                            {{ ($canEdit) ?: 'disabled' }}
                             id="f-surname" name="f-surname" maxlength="80" value="{{ old('f-surname') ?: $CLIENT?->last_name }}"
                         />
                     </div>
@@ -60,6 +62,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                         $birthdate = old('f-birth') ?: ($CLIENT?->birthdate ? $SysUtils::reformatDate($CLIENT?->birthdate, 'Y-m-d', __('messages.dateFormat')) : '');
                         @endphp
                         <input type="text" class="form-control form-control-user jq-datepicker"
+                            {{ ($canEdit) ?: 'disabled' }}
                             id="f-birth" name="f-birth" maxlength="10" value="{{ $birthdate }}"
                         />
                     </div>
@@ -73,6 +76,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                             * {{ __('messages.models.Client.fields.gender') }}
                         </label>
                         <select
+                            {{ ($canEdit) ?: 'disabled' }}
                             class="form-control form-control-user"
                             id="f-bsex"
                             name="f-bsex"
@@ -99,6 +103,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                             Email
                         </label>
                         <input type="text" class="form-control form-control-user"
+                            {{ ($canEdit) ?: 'disabled' }}
                             id="f-email" name="f-email" maxlength="255"
                             value="{{ old('f-email') ?: $CLIENT?->email }}"
                         />
@@ -110,6 +115,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                             {{ __('messages.models.Client.fields.phone') }}
                         </label>
                         <input type="text" class="form-control form-control-user"
+                            {{ ($canEdit) ?: 'disabled' }}
                             id="f-phone" name="f-phone" maxlength="35" value="{{ old('f-phone') ?: $CLIENT?->phone }}"
                         />
                     </div>
@@ -130,6 +136,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                             * {{ __('messages.models.Client.fields.height') }} (cm)
                         </label>
                         <select
+                            {{ ($canEdit) ?: 'disabled' }}
                             class="form-control form-control-user"
                             id="f-height"
                             name="f-height"
@@ -166,7 +173,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                         $clientWeight = old("f-weight") ?: number_format($CLIENT?->weight_kg, 3, __('messages.decimalSeparator'), __('messages.thousandSeparator'));
                         @endphp
                         <input type="text" class="form-control form-control-user jq-mask-money"
-                            id="f-weight" name="f-weight" maxlength="7"
+                            id="f-weight" name="f-weight" maxlength="7" {{ ($canEdit) ?: 'disabled' }}
                             data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
                             data-precision="3" value="{{ $clientWeight }}"
                         />
@@ -180,7 +187,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                                 * {{ __('messages.pages.client.register.labelActualWeight') }} (kg)
                             </label>
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                disabled maxlength="7"
+                                disabled maxlength="7" {{ ($canEdit) ?: 'disabled' }}
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
                                 data-precision="3" value="{{ number_format($CLIENT?->getCurrentWeight(), 3, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}"
                             />
@@ -202,11 +209,13 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
 
             <x-card title="{{ __('messages.pages.client.register.cardAvaliations') }}" closed="true">
                 @if ($canEdit && $Permissions::checkPermission($Permissions::ACL_AVALIATION_EDIT))
-                    <div class="d-block mb-3">
-                        <a href="javascript:;" id="btn-client-new-avaliation" class="btn btn-light btn-user btn-sm">
-                            {{ __('messages.pages.client.register.btnNewAvaliation') }}
-                        </a>
-                    </div>
+                <a
+                    href="javascript:;" id="btn-client-new-avaliation"
+                    class="btn btn-light btn-user btn-sm"
+                    style="position:absolute; margin-top:6px;"
+                >
+                    {{ __('messages.pages.client.register.btnNewAvaliation') }}
+                </a>
                 @endif
 
                 <div id='dv-card-client-avaliations'>

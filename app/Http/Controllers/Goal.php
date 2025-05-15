@@ -27,7 +27,7 @@ class Goal extends Controller
         if (1 == $request->input('json')) {
             return $this->returnResponse(
                 false,
-                'HTML retornado com sucesso!',
+                __('messages.htmlReturned'),
                 [
                     'html' => $view->render()
                 ],
@@ -77,7 +77,7 @@ class Goal extends Controller
         if (1 == $request->input('json')) {
             return $this->returnResponse(
                 false,
-                'HTML retornado com sucesso!',
+                __('messages.htmlReturned'),
                 [
                     'html' => $view->render()
                 ],

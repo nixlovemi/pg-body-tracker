@@ -87,6 +87,37 @@ class Client extends Controller
         ]);
     }
 
+    public function view(string $codedId)
+    {
+        $Client = mClient::getModelByCodedId($codedId);
+        if (null === $Client) {
+            return redirect()
+                ->route('app.client.index')
+                ->withErrors(['msg' => __('messages.saveModelNotFound', [
+                    'modelName' => __('messages.models.Client.name')
+                ])]);
+
+        }
+
+        // if its not your client, redirect to index
+        if (!mClient::fHasAccess($Client)) {
+            return redirect()
+                ->route('app.client.index')
+                ->withErrors(['msg' => __('messages.saveModelErrorSavingOther', [
+                    'modelName' => __('messages.models.Client.name')
+                ])]);
+        }
+
+        return view('app.client.register', [
+            'PAGE_TITLE' => __('messages.modalEditTitle', [
+                'modelName' => __('messages.models.Client.name')
+            ]),
+            'TYPE' => Constants::FORM_VIEW,
+            'ACTION' => '',
+            'CLIENT' => $Client,
+        ]);
+    }
+
     private function formatSaveRequest(Request $request): array
     {
         $form = [];

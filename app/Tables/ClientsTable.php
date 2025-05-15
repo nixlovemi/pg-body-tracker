@@ -9,6 +9,7 @@ use Okipa\LaravelTable\Abstracts\AbstractTableConfiguration;
 use Okipa\LaravelTable\Column;
 use Okipa\LaravelTable\RowActions\DestroyRowAction;
 use Okipa\LaravelTable\RowActions\EditRowAction;
+use Okipa\LaravelTable\RowActions\ShowRowAction;
 use Okipa\LaravelTable\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -32,14 +33,9 @@ class ClientsTable extends AbstractTableConfiguration
                 return $query->where('user_id', '=', $this->User->id ?? 0);
             })
             ->rowActions(fn(Client $client) => [
-                (new EditRowAction(route('app.client.edit', ['codedId' => $client->codedId])))
-                    ->when(Permissions::checkPermission(Permissions::ACL_CLIENT_EDIT, $this->User)),
-                (new DestroyRowAction())
-                    ->when(Permissions::checkPermission(Permissions::ACL_CLIENT_EDIT, $this->User))
-                    ->confirmationQuestion(__('messages.pages.client.index.deleteConfirmation', [
-                        'clientName' => $client->first_name . ' ' . $client->last_name
-                    ]))
-                    ->feedbackMessage(__('messages.pages.client.index.deleteSuccess')),
+                $this->getViewRowAction($client),
+                $this->getEditRowAction($client),
+                $this->getDeleteRowAction($client),
             ]);
     }
 
@@ -77,5 +73,37 @@ class ClientsTable extends AbstractTableConfiguration
             // The table results configuration.
             // As results are optional on tables, you may delete this method if you do not use it.
         ];
+    }
+
+    private function getViewRowAction(Client $Client): ShowRowAction
+    {
+        $routeName = 'app.client.view';
+
+        return (new ShowRowAction(
+            route($routeName,
+            ['codedId' => $Client->codedId])
+        ))
+        ->when(Permissions::checkPermission($routeName, $this->User));
+    }
+
+    private function getEditRowAction(Client $Client): EditRowAction
+    {
+        $routeName = 'app.client.edit';
+
+        return (new EditRowAction(
+            route($routeName,
+            ['codedId' => $Client->codedId])
+        ))
+        ->when(Permissions::checkPermission($routeName, $this->User));
+    }
+
+    private function getDeleteRowAction(Client $Client): DestroyRowAction
+    {
+        return (new DestroyRowAction())
+            ->when(Permissions::checkPermission(Permissions::ACL_CLIENT_EDIT, $this->User))
+            ->confirmationQuestion(__('messages.pages.client.index.deleteConfirmation', [
+                'clientName' => $Client->first_name . ' ' . $Client->last_name
+            ]))
+            ->feedbackMessage(__('messages.pages.client.index.deleteSuccess'));
     }
 }

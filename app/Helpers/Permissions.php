@@ -37,6 +37,7 @@ final class Permissions {
         'app.client.add' => self::ACL_CLIENT_EDIT,
         'app.client.doSave' => self::ACL_CLIENT_EDIT,
         'app.client.edit' => self::ACL_CLIENT_EDIT,
+        'app.client.view' => self::ACL_CLIENT_VIEW,
 
         'app.goal.htmlModalAdd' => self::ACL_GOAL_EDIT,
         'app.goal.doModalAdd' => self::ACL_GOAL_EDIT,
@@ -47,6 +48,11 @@ final class Permissions {
         'app.avaliation.doModalAdd' => self::ACL_AVALIATION_EDIT,
         'app.avaliation.htmlModalView' => self::ACL_AVALIATION_VIEW,
         'app.avaliation.htmlModalEdit' => self::ACL_AVALIATION_EDIT,
+        'app.avaliation.index' => self::ACL_AVALIATION_VIEW,
+        'app.avaliation.htmlModalSelectClient' => self::ACL_AVALIATION_EDIT,
+        'app.avaliation.showPhoto' => self::ACL_AVALIATION_VIEW,
+        'app.avaliation.viewReport' => self::ACL_AVALIATION_VIEW,
+        'app.avaliation.viewReportPDF' => self::ACL_AVALIATION_VIEW,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

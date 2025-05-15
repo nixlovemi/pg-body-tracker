@@ -34,7 +34,7 @@ class ClientSeeder extends Seeder
                 Goal::factory()
                     ->create([
                         'client_id' => $Client->id,
-                        'target_weight_kg' => number_format($Client->weight_kg * (1 - (random_int(10, 20) / 100)), 2, '.', ''),
+                        'target_weight_kg' => number_format($Client->weight_kg * (1 - (random_int(10, 20) / 100)), 1, '.', ''),
                     ]);
                 Avaliation::factory()
                     ->create(array_merge(

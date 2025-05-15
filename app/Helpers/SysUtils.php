@@ -128,6 +128,11 @@ final class SysUtils {
         return (float) number_format((float) $newNumber, $decimals, '.', '');
     }
 
+    public static function formatDbToNumber(string $number, int $decimals): string
+    {
+        return number_format((float) $number, $decimals, __('messages.decimalSeparator'), __('messages.thousandSeparator'));
+    }
+
     public static function formatCurrencyBr(float $value, int $decimals=2, string $currency=''): string
     {
         $result = $currency . ' ' . number_format($value, $decimals, ',', '.');
@@ -138,5 +143,22 @@ final class SysUtils {
     {
         $dateObj = DateTime::createFromFormat($fromFormat, $date);
         return $dateObj->format($toFormat);
+    }
+
+    public static function hexToRGB(string $hex): array
+    {
+        $hex = str_replace('#', '', $hex);
+        if (strlen($hex) == 6) {
+            list($r, $g, $b) = str_split($hex, 2);
+        } elseif (strlen($hex) == 3) {
+            list($r, $g, $b) = str_split(str_repeat($hex, 2), 2);
+        } else {
+            return [0, 0, 0];
+        }
+        return [
+            hexdec($r),
+            hexdec($g),
+            hexdec($b)
+        ];
     }
 }

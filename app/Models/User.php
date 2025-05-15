@@ -137,10 +137,6 @@ class User extends Authenticatable
 
     public function hasPermission(string $permission): bool
     {
-        if ($this->isRoot()) {
-            return true;
-        }
-
         return Permissions::checkPermission($permission, $this);
     }
     // ===============

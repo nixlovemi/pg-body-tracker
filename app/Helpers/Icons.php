@@ -12,4 +12,7 @@ final class Icons {
     public const ANGLE_UP = '<i class="fas fa-angle-up"></i>';
     public const EYE = '<i class="fa-solid fas fa-eye fa-fw"></i>';
     public const EDIT = '<i class="fa-solid fas fa-pencil-alt fa-fw"></i>';
+    public const FILE_CHART = '<i class="fas fa-chart-line fa-fw"></i>';
+    public const FILE_REPORT = '<i class="fas fa-file-alt fa-fw"></i>';
+    public const ARROW_UP = '<i class="fas fa-arrow-up"></i>';
 }

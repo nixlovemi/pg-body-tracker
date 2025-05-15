@@ -1,6 +1,17 @@
 // Livewire: https://laravel-livewire.com/docs/2.x/reference#global-livewire-js
 
 (function($) {
+    Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+    Chart.defaults.global.defaultFontColor = '#858796';
+
+    const JS_ALERT_SUCCESS_TITLE = $('body').data('js-modal-success-title');
+    const JS_ALERT_CONFIRM_TITLE = $('body').data('js-modal-confirm-title');
+    const JS_ALERT_INFO_TITLE = $('body').data('js-modal-info-title');
+    const JS_ALERT_ERROR_TITLE = $('body').data('js-modal-error-title');
+    const JS_AJAX_ERROR_MSG = $('body').data('js-ajax-error-msg');
+    const JS_AJAX_UNEXPECTED_ERROR = $('body').data('js-ajax-unexpected-error');
+    const JS_MODAL_CONFIRM_YES = $('body').data('js-modal-confirm-yes');
+    const JS_MODAL_CONFIRM_CLOSE = $('body').data('js-modal-confirm-close');
 
     // BASE FUNCTIONS
     $(document).ready(function(){
@@ -28,10 +39,6 @@
         loadJqueryComponents();
         loadCharts();
     });
-
-    //$(document).on('click', 'div.modal-dialog .btn-modal-close', function(e) {
-    //    $(this).closest('div.modal').modal('toggle');
-    //});
 
     function closeModal(modalObj)
     {
@@ -73,7 +80,7 @@
     function getAjaxErrorMsg(data)
     {
         if (typeof data.responseJSON == 'undefined' || typeof data.responseJSON.message == 'undefined') {
-            return 'Erro ao processar essa requisição!';
+            return JS_AJAX_ERROR_MSG;
         }
 
         return data.responseJSON.message;
@@ -92,13 +99,14 @@
     {
         setTimeout(function(){
             initChartClientGoal();
+            initChartElements();
         }, 250);
     }
 
     function loadDatePicker()
     {
         // TODO: create eng version
-        $(".jq-datepicker").datepicker({
+        $('.jq-datepicker:not(.hasDatepicker)').datepicker({
             dateFormat: 'dd/mm/yy',
             closeText:"Fechar",
             prevText:"&#x3C;Anterior",
@@ -185,19 +193,22 @@
             success: function (retorno) {
                 if (retorno.error) {
                     showErrorAlert({
-                        title: 'Erro',
+                        title: JS_ALERT_ERROR_TITLE,
                         text: retorno.message
                     });
                     return;
                 }
 
                 showBootstrapModal(retorno.data.html);
-                loadJqueryComponents();
+                setTimeout(() => {
+                    loadJqueryComponents();
+                    initLivewireTable();
+                }, 250);
             },
             complete: function(){closeLoader()},
             error: function (data) {
                 showErrorAlert({
-                    title: 'Erro',
+                    title: JS_ALERT_ERROR_TITLE,
                     text: getAjaxErrorMsg(data)
                 });
             }
@@ -231,7 +242,7 @@
             success: function (retorno) {
                 if (retorno.error) {
                     showErrorAlert({
-                        'title': 'Erro!',
+                        'title': JS_ALERT_ERROR_TITLE,
                         'text': retorno.message
                     });
                     return;
@@ -247,8 +258,8 @@
             },
             error: function (data) {
                 showErrorAlert({
-                    'title': 'Erro!',
-                    'text': 'Ocorreu um erro inesperado! Tente novamente.'
+                    'title': JS_ALERT_ERROR_TITLE,
+                    'text': JS_AJAX_UNEXPECTED_ERROR
                 });
                 if (!skipDisableForm) {
                     enableFormWhileSaving(FORM);
@@ -302,8 +313,8 @@
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim!',
-            cancelButtonText: "Fechar",
+            confirmButtonText: JS_MODAL_CONFIRM_YES,
+            cancelButtonText: JS_MODAL_CONFIRM_CLOSE,
         });
     }
     // ===========
@@ -342,7 +353,7 @@
 
         showInfoAlert({
             icon: null,
-            title: 'Informação',
+            title: JS_ALERT_INFO_TITLE,
             text: feedbackMessage,
         });
     });
@@ -357,7 +368,7 @@
         */
 
         var confirm = getConfirm({
-            title: 'Confirmação',
+            title: JS_ALERT_CONFIRM_TITLE,
             text: confirmationQuestion
         });
         confirm.fire().then((result) => {
@@ -376,7 +387,25 @@
         showJsonAjaxModal('GET', url, emptyParam ? null: urlParam);
     });
 
+    document.addEventListener('livewire:load', () => {
+        Livewire.hook('message.processed', (message, component) => {
+            // console.log(component.fingerprint.name); table
+            setTimeout(function(){
+                loadDatePicker()
+            }, 250);
+        });
+    });
+
     // TEMPLATE FUNCTIONS
+    function fncClientNewAvaliation(cuid, cedit)
+    {
+        showJsonAjaxModal('GET', '/app/avaliation/htmlModalAdd', {
+            'cuid': cuid,
+            'cedit': cedit,
+            'json': 1
+        });
+    }
+
     $(document).on('click', '#btn-client-new-goal', function(e) {
         showJsonAjaxModal('GET', '/app/goal/htmlModalAdd', {
             'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
@@ -432,7 +461,7 @@
                 $(document).find(`form#${FORM_ID}`).remove();
 
                 showSuccessAlert({
-                    'title': 'Sucesso!',
+                    'title': JS_ALERT_SUCCESS_TITLE,
                     'text': retorno.message
                 });
 
@@ -454,7 +483,7 @@
         submitModalForm(FORM, function(retorno) {
 
             showSuccessAlert({
-                'title': 'Sucesso!',
+                'title': JS_ALERT_SUCCESS_TITLE,
                 'text': retorno.message
             });
 
@@ -503,7 +532,7 @@
             success: function (retorno) {
                 if (retorno.error) {
                     showErrorAlert({
-                        'title': 'Erro!',
+                        'title': JS_ALERT_ERROR_TITLE,
                         'text': retorno.message
                     });
                     return;
@@ -523,19 +552,19 @@
             },
             error: function (data) {
                 showErrorAlert({
-                    'title': 'Erro!',
-                    'text': 'Ocorreu um erro inesperado! Tente novamente.'
+                    'title': JS_ALERT_ERROR_TITLE,
+                    'text': JS_AJAX_UNEXPECTED_ERROR
                 });
             }
         });
     });
 
     $(document).on('click', '#btn-client-new-avaliation', function(e) {
-        showJsonAjaxModal('GET', '/app/avaliation/htmlModalAdd', {
-            'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
-            'cedit': $(this).closest('form#client-form').find('input[name="f-cedit"]').val(),
-            'json': 1
-        });
+        const FORM = $(this).closest('form#client-form');
+        const CLIENT_CID = FORM.find('input[name="f-cid"]').val();
+        const CLIENT_CEDIT = FORM.find('input[name="f-cedit"]').val();
+
+        fncClientNewAvaliation(CLIENT_CID, CLIENT_CEDIT);
     });
 
     $(document).on('click', 'form#register-avaliation-form .btn-modal-submit', function(e) {
@@ -544,23 +573,117 @@
         submitModalForm(FORM, function(retorno) {
 
             showSuccessAlert({
-                'title': 'Sucesso!',
+                'title': JS_ALERT_SUCCESS_TITLE,
                 'text': retorno.message
             });
 
             closeModal(FORM.closest('div.modal').parent());
             setTimeout(function(){
-                refreshLivewireTable(`#dv-card-client-avaliations`);
+                refreshLivewireTable(`div#content`);
             }, 250);
 
         });
     });
 
+    $(document).on('click', 'div[id^="avaliation-modal-register"] .modal-header .btn-nav', function(e) {
+        const modaContent = $(this).closest('.modal-content');
+        const modalHeader = modaContent.find('.modal-header');
+        const modalBody = modaContent.find('.modal-body');
+        const prevObj = modalHeader.find('.btn-prev');
+        const nextObj = modalHeader.find('.btn-next');
+        $(this).blur();
+
+        // jquery selector for div[id^="raf-page-"] that is not hidden
+        const currentPgIdx = modalBody.find('div[id^="raf-page-"]').not('.d-none').data('idx');
+        const nextPgIdx = $(this).data('idx');
+
+        // hide current page
+        modalBody.find(`div#raf-page-${currentPgIdx}`).addClass('d-none');
+
+        // show next page
+        modalBody.find(`div#raf-page-${nextPgIdx}`).removeClass('d-none');
+
+        // get current visible div
+        const currentVisibleDiv = modalBody.find(`div#raf-page-${nextPgIdx}`);
+
+        // if there is a previous div, change idx from back button
+        const previousDivIdx = currentVisibleDiv.prev('div[id^="raf-page-"]').data('idx');
+        if (previousDivIdx > 0) {
+            prevObj.data('idx', previousDivIdx);
+            prevObj.attr('disabled', false);
+        } else {
+            prevObj.data('idx', '');
+            prevObj.attr('disabled', true);
+        }
+
+        // if there is a next div, change idx from next button
+        const nextDivIdx = currentVisibleDiv.next('div[id^="raf-page-"]').data('idx');
+        if (nextDivIdx > 0) {
+            nextObj.data('idx', nextDivIdx);
+            nextObj.attr('disabled', false);
+        } else {
+            nextObj.data('idx', '');
+            nextObj.attr('disabled', true);
+        }
+    });
+
+    $(document).on('click', '#btn-add-avaliations', function(e) {
+        showJsonAjaxModal('GET', '/app/avaliation/htmlModalSelectClient', {
+            'json': 1
+        });
+    });
+
+    $(document).on('click', 'div[id^="avaliation-modal-select"] button.btn-modal-submit', function(e) {
+        e.preventDefault();
+
+        // get form
+        const FORM = $(this).closest('form#register-avaliation-modal-select-client');
+
+        // get input value
+        const CLIENT_CID = FORM.find('input[name="client_cid"]:checked').val();
+
+        // if CLIENT_CID is undefined, show error alert
+        if (typeof CLIENT_CID === 'undefined') {
+            showErrorAlert({
+                'title': JS_ALERT_ERROR_TITLE,
+                'text': FORM.find('#client-select-error-message').val()
+            });
+            return;
+        }
+
+        // close modal
+        closeModal(FORM.closest('div.modal').parent());
+        $('.modal-backdrop').remove();
+
+        // show form
+        fncClientNewAvaliation(CLIENT_CID, 1);
+    });
+
+    function initChartJs(elementId, config)
+    {
+        // get canvas element
+        const ctx = document.getElementById(elementId);
+
+        // create chart
+        return myChart = new Chart(ctx, config);
+    }
+
+    function initChartElements()
+    {
+        $('canvas.chart-js-element').each(function() {
+            const elementId = $(this).attr('id');
+            const config = JSON.parse(
+                $(this).find('input[name="config"]').val()
+            );
+
+            initChartJs(elementId, config);
+        });
+    }
+
+    // TODO: maybe change this like canvas.chart-js-element
     function initChartClientGoal(mainDivId)
     {
         mainDivId = mainDivId || '';
-        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-        Chart.defaults.global.defaultFontColor = '#858796';
 
         // loop all canvas with class 'chart-client-goal'
         let selector = 'canvas.chart-client-goal';
@@ -577,9 +700,6 @@
     {
         // get data from input hidden ID with -data
         const data = JSON.parse(document.getElementById(chartId + '-data').value);
-
-        // get canvas element
-        const ctx = document.getElementById(chartId);
 
         // config chart
         const config = {
@@ -619,7 +739,7 @@
         };
 
         // create chart
-        const myChart = new Chart(ctx, config);
+        const myChart = initChartJs(chartId, config)
     }
     // ==================
 

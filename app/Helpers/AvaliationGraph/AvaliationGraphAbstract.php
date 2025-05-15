@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Helpers\AvaliationGraph;
+
+use App\Models\Avaliation;
+use App\Helpers\Constants;
+
+abstract class AvaliationGraphAbstract
+{
+    protected bool $fullHtmlTable = false;
+
+    private array $tableData = [
+        'head' => [],
+        'body' => [],
+    ];
+    protected string $defaultColor = Constants::RANK_COLOR_DEFAULT;
+
+    abstract protected function getAvaliation(): Avaliation;
+    abstract protected function getConfig(): array;
+    abstract protected function getClassName(): string;
+
+    protected final function getUID(): string
+    {
+        return $this->getClassName() . '-' . $this->getAvaliation()->codedId;
+    }
+
+    protected final function addHeadItem(string $string): void
+    {
+        $this->tableData['head'][] = $string;
+    }
+
+    protected final function addBodyItem(string ...$string): void
+    {
+        $this->tableData['body'][] = $string;
+    }
+
+    protected final function getPreviousAvaliations(int $limit)
+    {
+        $Avaliation = $this->getAvaliation();
+
+        return Avaliation::where('date', '<', $Avaliation->date)
+            ->where('client_id', $Avaliation->client_id)
+            ->where('id', '!=', $Avaliation->id)
+            ->orderByDesc('date')
+            ->limit($limit)
+            ->get();
+    }
+
+    private function getDataTableHtml(): string
+    {
+        $html = '<table class="table table-borderless" style="font-size:80%;">';
+        $html .= '<thead class="font-weight-bold"><tr class="table-light border-top border-bottom">';
+        foreach ($this->tableData['head'] as $item) {
+            $html .= '<th class="align-middle" scope="col"><span class="ms-2">' . $item . '</span></th>';
+        }
+        $html .= '</tr></thead><tbody>';
+        foreach ($this->tableData['body'] as $row) {
+            $html .= '<tr class="border-bottom">';
+            foreach ($row as $item) {
+                $html .= '<td class="align-middle" scope="row">' . $item . '</td>';
+            }
+            $html .= '</tr>';
+        }
+        $html .= '</tbody></table>';
+
+        $tableClass = $this->fullHtmlTable ? 'col-12' : 'col-8 offset-2';
+        return '
+            <div class="row mt-3">
+                <div class="'.$tableClass.' table-responsive">
+                    '.$html.'
+                </div>
+            </div>';
+    }
+
+    public final function getData(): array
+    {
+        try {
+            $config = $this->getConfig();
+        } catch (\Throwable $e) {
+            \App\Helpers\LocalLogger::log(self::class . ' error', ['exception' => $e->getMessage()]);
+            $config = [];
+        }
+
+        return [
+            'config' => json_encode($config),
+            'UID' => $this->getUID(),
+            'defaultColor' => $this->defaultColor,
+            'dataTableHtml' => $this->getDataTableHtml(),
+        ];
+    }
+}
