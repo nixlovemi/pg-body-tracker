@@ -305,7 +305,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                 <div class="form-row">
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}
                             </label>
                             @php
@@ -337,7 +337,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}
                             </label>
                             @php
@@ -375,7 +375,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                 <div class="form-row">
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}
                             </label>
                             @php
@@ -407,7 +407,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}
                             </label>
                             @php
@@ -445,7 +445,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                 <div class="form-row">
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}
                             </label>
                             @php
@@ -477,7 +477,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}
                             </label>
                             @php
@@ -515,7 +515,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                 <div class="form-row">
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}
                             </label>
                             @php
@@ -547,7 +547,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}
                             </label>
                             @php
@@ -585,7 +585,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                 <div class="form-row">
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassKg') }}
                             </label>
                             @php
@@ -617,7 +617,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
+                            <label class="form-label text-decoration-underline" title="{{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}">
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatKg') }}
                             </label>
                             @php
