@@ -838,6 +838,22 @@ class Avaliation extends Model
         $this->removePhotoUrl('photo_left_url');
     }
 
+    public function getPhotoBase64(string $fieldName): ?string
+    {
+        if (null === $this->{$fieldName}) {
+            return null;
+        }
+
+        $filePath = storage_path(self::fGetOsPhotosFolder() . DIRECTORY_SEPARATOR . basename($this->{$fieldName}));
+        if (!File::exists($filePath)) {
+            return null;
+        }
+
+        $mimeType = mime_content_type($filePath);
+        $base64 = base64_encode(file_get_contents($filePath));
+        return "data:$mimeType;base64,$base64";
+    }
+
     private function setPhotoUrl(string $field, ?UploadedFile $file): void
     {
         // check if file is null

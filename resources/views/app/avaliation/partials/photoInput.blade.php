@@ -31,7 +31,7 @@ $CAN_EDIT = $CAN_EDIT ?? false;
     <img
         class="img-fluid"
         @if ($AVALIATION?->{$FIELD_NAME})
-            src="{{ route('app.avaliation.showPhoto', ['fileName' => basename($AVALIATION?->{$FIELD_NAME})]) }}?v={{ time() }}"
+            src="{{ $AVALIATION?->getPhotoBase64($FIELD_NAME) }}"
         @else
             src="{{ $INPUT_DEFAULT_IMAGE }}"
         @endif

@@ -135,6 +135,7 @@ class Avaliation extends Controller
 
     public function showPhoto(string $fileName)
     {
+        // TODO: similar to Avaliation->getPhotoBase64(string $fieldName)???
         $path = storage_path(mAvaliation::fGetOsPhotosFolder() . DIRECTORY_SEPARATOR . $fileName);
 
         if (!file_exists($path)) {
