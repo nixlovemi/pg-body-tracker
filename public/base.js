@@ -399,7 +399,7 @@
     // TEMPLATE FUNCTIONS
     function fncClientNewAvaliation(cuid, cedit)
     {
-        showJsonAjaxModal('GET', '/app/avaliation/htmlModalAdd', {
+        showJsonAjaxModal('GET', '/adm/avaliation/htmlModalAdd', {
             'cuid': cuid,
             'cedit': cedit,
             'json': 1
@@ -407,7 +407,7 @@
     }
 
     $(document).on('click', '#btn-client-new-goal', function(e) {
-        showJsonAjaxModal('GET', '/app/goal/htmlModalAdd', {
+        showJsonAjaxModal('GET', '/adm/goal/htmlModalAdd', {
             'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
             'cedit': $(this).closest('form#client-form').find('input[name="f-cedit"]').val(),
             'json': 1
@@ -472,7 +472,7 @@
                     loadCharts();
                 }, 250);
 
-            }, '/app/goal/doModalRemove');
+            }, '/adm/goal/doModalRemove');
         });
     });
 
@@ -496,11 +496,11 @@
                 loadCharts();
             }, 250);
 
-        }, '/app/goal/doModalAdd');
+        }, '/adm/goal/doModalAdd');
     });
 
     $(document).on('click', '#btn-client-past-goals', function(e) {
-        showJsonAjaxModal('GET', '/app/goal/htmlModalPastGoals', {
+        showJsonAjaxModal('GET', '/adm/goal/htmlModalPastGoals', {
             'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
             'json': 1
         });
@@ -519,7 +519,7 @@
         ajaxSetup(CSRF);
         $.ajax({
             type: 'POST',
-            url: '/app/goal/htmlModalPastGoals',
+            url: '/adm/goal/htmlModalPastGoals',
             data: {
                 cuid: clientCodedId,
                 bdline: beforeDeadline,
@@ -628,7 +628,7 @@
     });
 
     $(document).on('click', '#btn-add-avaliations', function(e) {
-        showJsonAjaxModal('GET', '/app/avaliation/htmlModalSelectClient', {
+        showJsonAjaxModal('GET', '/adm/avaliation/htmlModalSelectClient', {
             'json': 1
         });
     });
@@ -662,7 +662,7 @@
     $(document).on('click', '.avaliation-report-body #avaliation-send-link-whatsapp', function(e) {
         let cid = $(this).data('cid');
 
-        showJsonAjaxModal('GET', '/app/avaliation/htmlModalSendWhats', {
+        showJsonAjaxModal('GET', '/adm/avaliation/htmlModalSendWhats', {
             'cid': cid,
             'json': 1
         });
@@ -682,7 +682,7 @@
             window.open(retorno.data.url);
             closeModal(FORM.closest('div.modal').parent());
 
-        }, '/app/avaliation/doModalSendWhats');
+        }, '/adm/avaliation/doModalSendWhats');
     });
 
     function initChartJs(elementId, config)
