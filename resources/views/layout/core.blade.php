@@ -24,6 +24,7 @@
         data-js-modal-confirm-close="{{ __('messages.buttonClose') }}"
         data-js-ajax-error-msg="{{ __('messages.jsAjaxErrorMsg') }}"
         data-js-ajax-unexpected-error="{{ __('messages.jsAjaxUnexpectedError') }}"
+        data-js-app-prefix-folder="{{ env('APP_PREFIX_FOLDER') }}"
     >
 
         @yield('CORE_BODY_CONTENT')

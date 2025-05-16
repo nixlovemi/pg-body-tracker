@@ -12,6 +12,7 @@
     const JS_AJAX_UNEXPECTED_ERROR = $('body').data('js-ajax-unexpected-error');
     const JS_MODAL_CONFIRM_YES = $('body').data('js-modal-confirm-yes');
     const JS_MODAL_CONFIRM_CLOSE = $('body').data('js-modal-confirm-close');
+    const JS_APP_PREFIX = $('body').data('js-app-prefix-folder');
 
     // BASE FUNCTIONS
     $(document).ready(function(){
@@ -399,7 +400,7 @@
     // TEMPLATE FUNCTIONS
     function fncClientNewAvaliation(cuid, cedit)
     {
-        showJsonAjaxModal('GET', '/adm/avaliation/htmlModalAdd', {
+        showJsonAjaxModal('GET', `/${JS_APP_PREFIX}/avaliation/htmlModalAdd`, {
             'cuid': cuid,
             'cedit': cedit,
             'json': 1
@@ -407,7 +408,7 @@
     }
 
     $(document).on('click', '#btn-client-new-goal', function(e) {
-        showJsonAjaxModal('GET', '/adm/goal/htmlModalAdd', {
+        showJsonAjaxModal('GET', `/${JS_APP_PREFIX}/goal/htmlModalAdd`, {
             'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
             'cedit': $(this).closest('form#client-form').find('input[name="f-cedit"]').val(),
             'json': 1
@@ -472,7 +473,7 @@
                     loadCharts();
                 }, 250);
 
-            }, '/adm/goal/doModalRemove');
+            }, `/${JS_APP_PREFIX}/goal/doModalRemove`);
         });
     });
 
@@ -496,11 +497,11 @@
                 loadCharts();
             }, 250);
 
-        }, '/adm/goal/doModalAdd');
+        }, `/${JS_APP_PREFIX}/goal/doModalAdd`);
     });
 
     $(document).on('click', '#btn-client-past-goals', function(e) {
-        showJsonAjaxModal('GET', '/adm/goal/htmlModalPastGoals', {
+        showJsonAjaxModal('GET', `/${JS_APP_PREFIX}/goal/htmlModalPastGoals`, {
             'cuid': $(this).closest('form#client-form').find('input[name="f-cid"]').val(),
             'json': 1
         });
@@ -519,7 +520,7 @@
         ajaxSetup(CSRF);
         $.ajax({
             type: 'POST',
-            url: '/adm/goal/htmlModalPastGoals',
+            url: `/${JS_APP_PREFIX}/goal/htmlModalPastGoals`,
             data: {
                 cuid: clientCodedId,
                 bdline: beforeDeadline,
@@ -628,7 +629,7 @@
     });
 
     $(document).on('click', '#btn-add-avaliations', function(e) {
-        showJsonAjaxModal('GET', '/adm/avaliation/htmlModalSelectClient', {
+        showJsonAjaxModal('GET', `/${JS_APP_PREFIX}/avaliation/htmlModalSelectClient`, {
             'json': 1
         });
     });
@@ -662,7 +663,7 @@
     $(document).on('click', '.avaliation-report-body #avaliation-send-link-whatsapp', function(e) {
         let cid = $(this).data('cid');
 
-        showJsonAjaxModal('GET', '/adm/avaliation/htmlModalSendWhats', {
+        showJsonAjaxModal('GET', `/${JS_APP_PREFIX}/avaliation/htmlModalSendWhats`, {
             'cid': cid,
             'json': 1
         });
@@ -682,7 +683,7 @@
             window.open(retorno.data.url);
             closeModal(FORM.closest('div.modal').parent());
 
-        }, '/adm/avaliation/doModalSendWhats');
+        }, `/${JS_APP_PREFIX}/avaliation/doModalSendWhats`);
     });
 
     function initChartJs(elementId, config)
