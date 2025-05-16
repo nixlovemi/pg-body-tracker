@@ -52,11 +52,14 @@ View variables:
                                         <button type="submit" class="btn primary btn-user btn-block">
                                             {{ __('messages.pages.login.loginButton') }}
                                         </button>
-                                        <hr />
-                                        <a href="#" class="btn btn-google btn-user btn-block">
-                                            {!! $Icons::GOOGLE !!}
-                                            {{ __('messages.pages.login.loginGoogle') }}
-                                        </a>
+
+                                        @if (app()->environment('local'))
+                                            <hr />
+                                            <a href="#" class="btn btn-google btn-user btn-block">
+                                                {!! $Icons::GOOGLE !!}
+                                                {{ __('messages.pages.login.loginGoogle') }}
+                                            </a>
+                                        @endif
                                     </form>
 
                                     <hr />

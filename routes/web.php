@@ -12,17 +12,20 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::prefix('')->group(function () {
+    Route::match(array('GET','POST'), '/', function(){ echo 'SITE HOME!'; })->name('site.home');
+
+    Route::group([], function(){
+        Route::fallback(function () {
+            echo 'SITE 404!';
+        })->name('site.404');
+    });
+});
 
 // ==============================================
 // ALL ROUTES MUST HAVE NAME FOR PERMISSION CHECK
 // ==============================================
-Route::group([], function(){
-    Route::fallback(function () {
-        return view('app.404');
-    })->name('app.404');
-});
-
-Route::prefix('app')->group(function () {
+Route::prefix('adm')->group(function () {
     Route::get('/', 'App\Http\Controllers\Login@index')->name('app.login');
     Route::post('/doLogin', 'App\Http\Controllers\Login@doLogin')->name('app.doLogin');
     Route::get('/avaliation/showMyAvaliation/{codedId}', 'App\Http\Controllers\Avaliation@showMyAvaliation')->name('app.avaliation.showMyAvaliation')->middleware('signed');
@@ -61,5 +64,11 @@ Route::prefix('app')->group(function () {
             Route::get('/htmlModalSendWhats', 'App\Http\Controllers\Avaliation@htmlModalSendWhats')->name('app.avaliation.htmlModalSendWhats');
             Route::post('/doModalSendWhats', 'App\Http\Controllers\Avaliation@doModalSendWhats')->name('app.avaliation.doModalSendWhats');
         });
+    });
+
+    Route::group([], function(){
+        Route::fallback(function () {
+            return view('app.404');
+        })->name('app.404');
     });
 });
