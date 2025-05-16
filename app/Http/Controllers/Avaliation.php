@@ -19,6 +19,8 @@ class Avaliation extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    private const SEND_WHATS_HOURS = 168; // 7 days
+
     public function index()
     {
         return view('app.avaliation.index', [
@@ -214,17 +216,29 @@ class Avaliation extends Controller
         // variables
         $code = $request->input('country_code', '');
         $phone = $code . $request->input('phone', '');
-        $portalLink = URL::temporarySignedRoute(
-            'app.avaliation.showMyAvaliation',
-            now()->addHours(168),
-            ['codedId' => $Avaliation->codedId]
-        );
+        $phone = preg_replace('/[^0-9]/', '', $phone); // only numbers on phone
 
-        // only numbers on phone
-        $phone = preg_replace('/[^0-9]/', '', $phone);
+        // cache if same phone + same cid
+        $cacheKey = 'avalation_send_whats_' . $Avaliation->id . '_' . $phone;
+        if (cache()->has($cacheKey)) {
+            $pdfUrl = cache()->get($cacheKey);
+        } else {
+            $hours = self::SEND_WHATS_HOURS;
+            $portalLink = URL::temporarySignedRoute(
+                'app.avaliation.showMyAvaliation',
+                now()->addHours($hours),
+                ['codedId' => $Avaliation->codedId]
+            );
+            $pdfUrl = \App\Models\UrlShort::make($portalLink);
+
+            // add to cache
+            cache()->put($cacheKey, $pdfUrl, $hours * 60 * 60);
+        }
+
+        // prepare return message
         $message = __('messages.pages.avaliation.modalSendWhats.whatsMessage', [
             'clientName' => $Avaliation->client->getName(),
-            'link' => $portalLink,
+            'link' => $pdfUrl,
         ]);
         $url = sprintf(Constants::WHATS_LINK_URL, $phone, urlencode($message));
 

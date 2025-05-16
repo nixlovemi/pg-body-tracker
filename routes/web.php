@@ -29,6 +29,7 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     Route::get('/', 'App\Http\Controllers\Login@index')->name('app.login');
     Route::post('/doLogin', 'App\Http\Controllers\Login@doLogin')->name('app.doLogin');
     Route::get('/avaliation/showMyAvaliation/{codedId}', 'App\Http\Controllers\Avaliation@showMyAvaliation')->name('app.avaliation.showMyAvaliation')->middleware('signed');
+    Route::get('/s/{key}', 'App\Http\Controllers\UrlShortController@redirect')->name('app.urlShortController.redirect');
 
     // ================================================
     // ADD ROUTE PERMISSIONS ON App\Helpers\Permissions
