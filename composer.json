@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "arietimmerman/laravel-url-shortener": "^0.1.8",
         "avlima/php-cpf-cnpj-generator": "^1.0",
         "barryvdh/laravel-snappy": "^1.0",
         "fruitcake/laravel-cors": "^2.0",

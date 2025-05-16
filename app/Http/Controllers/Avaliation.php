@@ -14,6 +14,7 @@ use App\Models\Avaliation as mAvaliation;
 use PDF;
 use App\Helpers\Constants;
 use Illuminate\Support\Facades\URL;
+use URLShortener;
 
 class Avaliation extends Controller
 {
@@ -224,7 +225,7 @@ class Avaliation extends Controller
         $phone = preg_replace('/[^0-9]/', '', $phone);
         $message = __('messages.pages.avaliation.modalSendWhats.whatsMessage', [
             'clientName' => $Avaliation->client->getName(),
-            'link' => $portalLink,
+            'link' => URLShortener::shorten($portalLink),
         ]);
         $url = sprintf(Constants::WHATS_LINK_URL, $phone, urlencode($message));
 
