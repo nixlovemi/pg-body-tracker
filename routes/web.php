@@ -18,15 +18,14 @@ use Illuminate\Support\Facades\Route;
 // ==============================================
 Route::group([], function(){
     Route::fallback(function () {
-        // TODO: make a 404 page
-        echo '404'; die;
-        return view('404');
-    })->name('site.404');
+        return view('app.404');
+    })->name('app.404');
 });
 
 Route::prefix('app')->group(function () {
     Route::get('/', 'App\Http\Controllers\Login@index')->name('app.login');
     Route::post('/doLogin', 'App\Http\Controllers\Login@doLogin')->name('app.doLogin');
+    Route::get('/avaliation/showMyAvaliation/{codedId}', 'App\Http\Controllers\Avaliation@showMyAvaliation')->name('app.avaliation.showMyAvaliation')->middleware('signed');
 
     // ================================================
     // ADD ROUTE PERMISSIONS ON App\Helpers\Permissions
@@ -59,6 +58,8 @@ Route::prefix('app')->group(function () {
             Route::get('/photo/{fileName}', 'App\Http\Controllers\Avaliation@showPhoto')->name('app.avaliation.showPhoto');
             Route::get('/viewReport/{codedId}', 'App\Http\Controllers\Avaliation@viewReport')->name('app.avaliation.viewReport');
             Route::get('/viewReportPDF/{codedId}', 'App\Http\Controllers\Avaliation@viewReportPDF')->name('app.avaliation.viewReportPDF');
+            Route::get('/htmlModalSendWhats', 'App\Http\Controllers\Avaliation@htmlModalSendWhats')->name('app.avaliation.htmlModalSendWhats');
+            Route::post('/doModalSendWhats', 'App\Http\Controllers\Avaliation@doModalSendWhats')->name('app.avaliation.doModalSendWhats');
         });
     });
 });

@@ -53,6 +53,8 @@ final class Permissions {
         'app.avaliation.showPhoto' => self::ACL_AVALIATION_VIEW,
         'app.avaliation.viewReport' => self::ACL_AVALIATION_VIEW,
         'app.avaliation.viewReportPDF' => self::ACL_AVALIATION_VIEW,
+        'app.avaliation.htmlModalSendWhats' => self::ACL_AVALIATION_EDIT,
+        'app.avaliation.doModalSendWhats' => self::ACL_AVALIATION_EDIT,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

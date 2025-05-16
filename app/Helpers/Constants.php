@@ -5,6 +5,7 @@ namespace App\Helpers;
 final class Constants {
     public const USER_DEFAULT_IMAGE_PATH = '/images/no-user.jpg';
     public const REGEX_PHONE_NUMBER = '/(?=.*[0-9])[- +()0-9]+/';
+    public const WHATS_LINK_URL = 'https://api.whatsapp.com/send?phone=%s&text=%s';
     public const FORM_ADD = 'add';
     public const FORM_EDIT = 'edit';
     public const FORM_VIEW = 'view';

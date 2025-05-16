@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -36,6 +37,10 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             \App\Helpers\LocalLogger::log("Erro registrado: " . $e->getMessage(), $this->context());
+        });
+
+        $this->renderable(function (InvalidSignatureException $e) {
+            return response()->view('app.signed-expired', [], 419);
         });
     }
 

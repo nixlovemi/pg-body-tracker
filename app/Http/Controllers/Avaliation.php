@@ -12,6 +12,8 @@ use App\Helpers\ApiResponse;
 use App\Models\Client;
 use App\Models\Avaliation as mAvaliation;
 use PDF;
+use App\Helpers\Constants;
+use Illuminate\Support\Facades\URL;
 
 class Avaliation extends Controller
 {
@@ -168,6 +170,78 @@ class Avaliation extends Controller
             ->setOption('margin-right', 2)
             ->setOption('margin-top', 2);
         return $pdf->inline();
+    }
+
+    public function htmlModalSendWhats(Request $request)
+    {
+        $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
+        if (null === $Avaliation) {
+            return $this->redirectWithError('app.avaliation.index', __('messages.modelErrorNoAccess'));
+        }
+
+        $view = view('app.avaliation.modalSendWhats', [
+            'AVALIATION' => $Avaliation,
+        ]);
+
+        if (1 == $request->input('json', 0)) {
+            return $this->returnResponse(
+                false,
+                __('messages.htmlReturned'),
+                [
+                    'html' => $view->render()
+                ],
+                Response::HTTP_OK
+            );
+        }
+
+        return $view;
+    }
+
+    public function doModalSendWhats(Request $request)
+    {
+        $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
+        if (null === $Avaliation) {
+            return $this->returnResponse(
+                true,
+                __('messages.saveModelNotFound', [
+                    'modelName' => __('messages.models.Avaliation.name')
+                ]),
+                [],
+                Response::HTTP_OK
+            );
+        }
+
+        // variables
+        $code = $request->input('country_code', '');
+        $phone = $code . $request->input('phone', '');
+        $portalLink = URL::temporarySignedRoute(
+            'app.avaliation.showMyAvaliation',
+            now()->addHours(168),
+            ['codedId' => $Avaliation->codedId]
+        );
+
+        // only numbers on phone
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        $message = __('messages.pages.avaliation.modalSendWhats.whatsMessage', [
+            'clientName' => $Avaliation->client->getName(),
+            'link' => $portalLink,
+        ]);
+        $url = sprintf(Constants::WHATS_LINK_URL, $phone, urlencode($message));
+
+        return $this->returnResponse(
+            false,
+            __('messages.pages.avaliation.modalSendWhats.successMessage'),
+            [
+                'url' => $url,
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    /** signed route */
+    public function showMyAvaliation(string $codedId)
+    {
+        return $this->viewReportPDF($codedId);
     }
 
     private function formatSaveRequest(Request $request): array

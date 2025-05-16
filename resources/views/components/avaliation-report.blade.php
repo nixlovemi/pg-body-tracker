@@ -41,15 +41,6 @@
 </style>
 
 <div class="avaliation-report-body card shadow mb-4">
-    <!--
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">
-            {{ __('messages.components.avaliationReport.title', [
-                'clientName' => $Avaliation->client->getName()
-            ]) }}
-        </h6>
-    </div>
-    -->
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">
             {{ __('messages.components.avaliationReport.title', [
@@ -63,9 +54,19 @@
                     <i class="fa fa-download fa-fw text-gray-600"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" style="">
+                    <div class="dropdown-header">{{ __('messages.components.avaliationReport.downloadHeader') }}</div>
                     <a class="dropdown-item" target="_blank" href="{{ route('app.avaliation.viewReportPDF', ['codedId' => $Avaliation->codedId]) }}">
                         <i class="fas fa-file-pdf"></i>&nbsp;
                         {{ __('messages.components.avaliationReport.downloadPdfButton') }}
+                    </a>
+
+                    <div class="dropdown-header">{{ __('messages.components.avaliationReport.sendLinkHeader') }}</div>
+                    <a class="dropdown-item"
+                        href="javascript:;" id="avaliation-send-link-whatsapp"
+                        data-cid="{{ urlencode($Avaliation->codedId) }}"
+                    >
+                        <i class="fab fa-whatsapp-square"></i>&nbsp;
+                        {{ __('messages.components.avaliationReport.sendWhatsLink') }}
                     </a>
                 </div>
             </div>

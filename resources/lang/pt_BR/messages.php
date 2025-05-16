@@ -196,6 +196,18 @@ return [
             'forgotPassword' => 'Esqueceu a senha?',
         ],
 
+        '404' => [
+            'title' => 'Página não encontrada',
+            'message' => 'A página que você está procurando não existe ou foi removida.',
+            'buttonBackToHome' => 'Voltar à Página Inicial',
+        ],
+
+        'signedExpired' => [
+            'title' => 'Link expirado',
+            'message' => 'O link que você está tentando acessar não é mais válido. Por favor, entre em contato com o suporte.',
+            'buttonBackToHome' => 'Voltar à Página Inicial',
+        ],
+
         'client' => [
             'index' => [
                 'title' => 'Clientes',
@@ -307,6 +319,14 @@ return [
             'viewReport' => [
                 'title' => 'Visualizar Avaliação',
             ],
+            'modalSendWhats' => [
+                'title' => 'Enviar Link: :type',
+                'message' => 'Confira as informações e clique em "Enviar"',
+                'fieldCode' => 'Código',
+                'buttonSend' => 'Enviar',
+                'successMessage' => 'Link enviado com sucesso!',
+                'whatsMessage' => 'Olá, :clientName! Aqui estão os resultados da sua avaliação. Confira no link! :link',
+            ],
         ],
     ],
 
@@ -318,7 +338,10 @@ return [
 
     'components' => [
         'avaliationReport' => [
+            'downloadHeader' => 'Download:',
             'downloadPdfButton' => 'Baixar PDF',
+            'sendLinkHeader' => 'Enviar link:',
+            'sendWhatsLink' => 'Whatsapp',
             'dataErrorPrintReport' => 'Dados insuficientes para gerar gráfico!',
             'notCalculated' => 'Não calculado',
             'title' => 'Relatório de Avaliação - Cliente :clientName',

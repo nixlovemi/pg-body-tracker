@@ -659,6 +659,32 @@
         fncClientNewAvaliation(CLIENT_CID, 1);
     });
 
+    $(document).on('click', '.avaliation-report-body #avaliation-send-link-whatsapp', function(e) {
+        let cid = $(this).data('cid');
+
+        showJsonAjaxModal('GET', '/app/avaliation/htmlModalSendWhats', {
+            'cid': cid,
+            'json': 1
+        });
+    });
+
+    $(document).on('click', 'form#frm-modal-send-whats .btn-modal-submit', function(e) {
+        e.preventDefault();
+        const FORM = $(this).closest('form');
+
+        submitModalForm(FORM, function(retorno) {
+
+            showSuccessAlert({
+                'title': JS_ALERT_SUCCESS_TITLE,
+                'text': retorno.message
+            });
+
+            window.open(retorno.data.url);
+            closeModal(FORM.closest('div.modal').parent());
+
+        }, '/app/avaliation/doModalSendWhats');
+    });
+
     function initChartJs(elementId, config)
     {
         // get canvas element

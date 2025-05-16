@@ -196,6 +196,12 @@ return [
             'forgotPassword' => 'Forgot your password?',
         ],
 
+        '404' => [
+            'title' => 'Page not found',
+            'message' => 'The page you are looking for does not exist or has been removed.',
+            'buttonBackToHome' => 'Return to Home',
+        ],
+
         'client' => [
             'index' => [
                 'title' => 'Clients',
@@ -307,6 +313,14 @@ return [
             'viewReport' => [
                 'title' => 'View Report',
             ],
+            'modalSendWhats' => [
+                'title' => 'Send Link: :type',
+                'message' => 'Check the information and click "Send"',
+                'fieldCode' => 'Code',
+                'buttonSend' => 'Send',
+                'successMessage' => 'Link sent successfully!',
+                'whatsMessage' => 'Hello, :clientName! Here are the results of your avaliation. Check on the link! :link',
+            ],
         ],
     ],
 
@@ -318,7 +332,10 @@ return [
 
     'components' => [
         'avaliationReport' => [
+            'downloadHeader' => 'Download:',
             'downloadPdfButton' => 'Download PDF',
+            'sendLinkHeader' => 'Send link:',
+            'sendWhatsLink' => 'Whatsapp',
             'dataErrorPrintReport' => 'Insufficient data to generate graph!',
             'notCalculated' => 'Not calculated',
             'title' => 'Avaliation Report - Client :clientName',
