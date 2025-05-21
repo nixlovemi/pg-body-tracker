@@ -12,11 +12,16 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\Constants;
 use App\Helpers\SysUtils;
 use App\Helpers\Permissions;
+use App\Models\UserInfo;
+use Illuminate\Http\UploadedFile;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;
+    use \App\Traits\HasPhotoField;
+
+    public const BASE_PHOTOS_FOLDER = '/users/photos/';
 
     public const ROLE_ROOT = 'ROOT';
     public const ROLE_MANAGER = 'MANAGER';
@@ -72,6 +77,14 @@ class User extends Authenticatable
             'id'
         );
     }
+
+    public function info()
+    {
+        return $this->hasOne(
+            UserInfo::class, 'user_id',
+            'id'
+        );
+    }
     // =========
 
     // class functions
@@ -85,15 +98,15 @@ class User extends Authenticatable
         $validation->addField('first_name', ['required', 'string', 'min:2', 'max:60'], __('messages.models.User.fields.name'));
         $validation->addField('last_name', ['required', 'string', 'min:2', 'max:80'], __('messages.models.User.fields.lastName'));
         $validation->addEmailField('email', 'E-mail', ['required', 'string', 'min:3', 'max:255']);
-        $validation->addField('picture_url', ['nullable', 'filled', 'string', 'min:5', 'max:255'], __('messages.models.User.fields.pictureUrl'));
-        $validation->addField('password', ['required', 'string', 'min:8', 'max:255', function ($attribute, $value, $fail) {
+        $validation->addField('picture_url', ['nullable', 'string', 'min:5', 'max:255'], __('messages.models.User.fields.pictureUrl'));
+        $validation->addField('password', ['filled', 'string', 'min:8', 'max:255', function ($attribute, $value, $fail) {
             $ValidadePwd = new ValidatePassword($value);
             $retValidate = $ValidadePwd->validate();
             if (true === $retValidate->isError()) {
                 $fail($retValidate->getMessage());
             }
         }], __('messages.models.User.fields.password'));
-        $validation->addField('password_reset_token', ['nullable', 'filled', 'string', 'min:20', 'max:255'], __('messages.models.User.fields.passwordToken'));
+        $validation->addField('password_reset_token', ['nullable', 'string', 'min:20', 'max:255'], __('messages.models.User.fields.passwordToken'));
         $validation->addField('role', ['required', 'string', function ($attribute, $value, $fail) {
             if (false === array_key_exists($value, self::fGetRoles())) {
                 $fail(
@@ -106,18 +119,24 @@ class User extends Authenticatable
         return $validation->validate();
     }
 
+    public function getFormattedCreatedAt(): string
+    {
+        return $this->created_at->format(__('messages.dateFormat'));
+    }
+
     public function checkPassword(string $password): bool
     {
         return Hash::check($password, $this->password);
     }
 
-    public function getPictureUrl(): string
+    public function getPictureBase64(): string
     {
         if (empty($this->picture_url)) {
-            return Constants::USER_DEFAULT_IMAGE_PATH;
+            $path = public_path(str_replace('/', DIRECTORY_SEPARATOR, Constants::USER_DEFAULT_IMAGE_PATH));
+            return $this->getBase64String($path);
         }
 
-        return $this->picture_url;
+        return $this->getPhotoBase64('picture_url');
     }
 
     public function isRoot(): bool
@@ -139,9 +158,100 @@ class User extends Authenticatable
     {
         return Permissions::checkPermission($permission, $this);
     }
+
+    public function setPictureUrl(?UploadedFile $file): void
+    {
+        $this->setPhotoUrl(
+            'picture_url',
+            $file,
+            self::BASE_PHOTOS_FOLDER,
+            400,
+            'user_' . $this->id . '_' . time()
+        );
+    }
+
+    public function removePictureUrl(): void
+    {
+        $this->removePhotoUrl('picture_url', self::BASE_PHOTOS_FOLDER);
+    }
     // ===============
 
     // static functions
+    public static function fSave(array $form, ?string $codedId = null): ApiResponse
+    {
+        // get model for insert or update
+        if (!empty($codedId)) {
+            $User = self::getModelByCodedId($codedId);
+            if ($User === null) {
+                return new ApiResponse(true, __('messages.saveModelNotFound', [
+                    'modelName' => __('messages.models.User.name'),
+                ]));
+            }
+        } else {
+            $User = new self();
+        }
+        $isEdit = ($User->id > 0);
+
+        // check if user can save
+        if (!self::fHasAccess($User)) {
+            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
+                'modelName' => __('messages.models.User.name'),
+            ]));
+        }
+
+        // fill model
+        $User->fill($form);
+
+        // validate model
+        $validation = $User->validateModel();
+        if ($validation->isError()) {
+            return $validation;
+        }
+
+        // save model
+        try {
+            $User->save();
+            $User->refresh();
+        } catch (\Exception $e) {
+            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
+                'modelName' => __('messages.models.User.name'),
+            ]));
+        }
+
+        // all good, return success
+        $msg = $isEdit ? __('messages.saveModelSuccessEditing', ['modelName' => __('messages.models.User.name')]) : __('messages.saveModelSuccessAdding', ['modelName' => __('messages.models.User.name')]);
+        return new ApiResponse(false, $msg, [
+            'User' => $User,
+            'isEdit' => $isEdit,
+        ]);
+    }
+
+    public static function fHasAccess(self $User): bool
+    {
+        // adding user is ok
+        if (empty($User->id)) {
+            return true;
+        }
+
+        // check logged user
+        $lggdUser = SysUtils::getLoggedInUser();
+        if (null === $lggdUser) {
+            return false;
+        }
+
+        // root can save any client
+        if ($lggdUser->role === User::ROLE_ROOT) {
+            return true;
+        }
+
+        // can only save itself
+        if ($User->id > 0 && $User->id !== $lggdUser->id) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function fPasswordHash(string $password): string
     {
         // return bcrypt($password);

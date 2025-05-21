@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\UserInfo;
 
 class UserSeeder extends Seeder
 {
@@ -36,9 +37,22 @@ class UserSeeder extends Seeder
                     $createArray['picture_url'] = null;
                 }
 
-                User::factory()
+                $UserCol = User::factory()
                     ->count(1)
                     ->create($createArray);
+                $User = $UserCol[0] ?? null;
+                if (!$User) {
+                    continue;
+                }
+
+                // if is manager
+                if ($User->isManager()) {
+                    UserInfo::factory()
+                        ->count(1)
+                        ->create([
+                            'user_id' => $User->id,
+                        ]);
+                }
             }
         }
     }

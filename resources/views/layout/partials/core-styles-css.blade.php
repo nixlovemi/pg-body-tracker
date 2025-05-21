@@ -22,5 +22,54 @@
 <link href="{{ url('/') }}/template/start-bootstrap/css/sb-admin-2.min.css" rel="stylesheet" />
 <link href="{{ url('/') }}/template/start-bootstrap/css/custom.css" rel="stylesheet" />
 
+<!-- RAF PHOTO -->
+<style>
+    .raf-photo-url {
+        width: 100%;
+        aspect-ratio: 3 / 4; /* 480 / 640 = 3 / 4 */
+        background-color: #f8f9fa;
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        object-fit: cover;
+    }
+    .raf-photo-url img {
+        cursor: pointer;
+    }
+    .raf-file-input {
+        position: absolute;
+        opacity: 0;
+        z-index: -1;
+        text-indent: -9999px;
+    }
+    .raf-photo-url:hover .raf-remove-btn {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .raf-remove-btn {
+        position: absolute;
+        top: 16px;
+        right: 8px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 22px;
+        text-align: center;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease-in-out;
+        z-index: 10;
+        padding: 0;
+    }
+</style>
+
 <!-- BASE CSS -->
 <link rel='stylesheet' href='{{ url('/') }}/base.css' type='text/css' media='all' />

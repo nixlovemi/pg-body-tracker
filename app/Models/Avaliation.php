@@ -17,6 +17,7 @@ class Avaliation extends Model
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;
+    use \App\Traits\HasPhotoField;
 
     public const CALCULATE_PERC_FAT_BY_BIOIMPEDANCE = 'BIOIMPEDANCE';
     public const CALCULATE_PERC_FAT_BY_SKINFOLD = 'SKINFOLD';
@@ -844,14 +845,12 @@ class Avaliation extends Model
             return null;
         }
 
-        $filePath = storage_path(self::fGetOsPhotosFolder() . DIRECTORY_SEPARATOR . basename($this->{$fieldName}));
+        $filePath = storage_path(self::fGetOsPhotosFolder(self::BASE_PHOTOS_FOLDER) . DIRECTORY_SEPARATOR . basename($this->{$fieldName}));
         if (!File::exists($filePath)) {
             return null;
         }
 
-        $mimeType = mime_content_type($filePath);
-        $base64 = base64_encode(file_get_contents($filePath));
-        return "data:$mimeType;base64,$base64";
+        return $this->getBase64String($filePath);
     }
 
     private function setPhotoUrl(string $field, ?UploadedFile $file): void
@@ -862,7 +861,7 @@ class Avaliation extends Model
         }
 
         // check folder
-        $destinationPath = storage_path(self::fGetOsPhotosFolder());
+        $destinationPath = storage_path(self::fGetOsPhotosFolder(self::BASE_PHOTOS_FOLDER));
         if (!File::exists($destinationPath)) {
             File::makeDirectory($destinationPath, 0755, true);
         }
@@ -889,7 +888,7 @@ class Avaliation extends Model
     {
         // remove file
         $fileName = basename($this->{$field});
-        $filePath = storage_path(self::fGetOsPhotosFolder() . DIRECTORY_SEPARATOR . $fileName);
+        $filePath = storage_path(self::fGetOsPhotosFolder(self::BASE_PHOTOS_FOLDER) . DIRECTORY_SEPARATOR . $fileName);
         if (File::exists($filePath)) {
             File::delete($filePath);
         }
@@ -1258,12 +1257,6 @@ class Avaliation extends Model
         }
 
         return true;
-    }
-
-    public static function fGetOsPhotosFolder(): string
-    {
-        $basePath = str_replace('/', DIRECTORY_SEPARATOR, self::BASE_PHOTOS_FOLDER);
-        return 'app'.$basePath;
     }
 
     public static function fGetDbPhotosFolder(): string

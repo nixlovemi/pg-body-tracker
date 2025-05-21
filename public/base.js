@@ -37,6 +37,7 @@
             });
         }, 12000);
 
+        loadRafPhoto();
         loadJqueryComponents();
         loadCharts();
     });
@@ -94,6 +95,55 @@
             // loadBootstrapSelect();
             loadDatePicker();
         }, 250);
+    }
+
+    function loadRafPhoto()
+    {
+        $(document).ready(function(){
+            // raf photo
+            $('.raf-photo-url img').on('click', function() {
+                // click
+                let targetInput = $(this).closest('.form-group').find('.raf-file-input');
+                $(targetInput).click();
+            });
+
+            $('.raf-file-input').on('change', function(e) {
+                // set to not remove_$INPUT_NAME
+                let removeInput = $(this).closest('.form-group').find('input[name^="remove_"]');
+                $(removeInput).val(0);
+
+                let img = $(this).closest('.form-group').find('.raf-photo-url img');
+                let file = e.target.files[0];
+                let reader = new FileReader();
+
+                reader.onload = function(e) {
+                    img.attr('src', e.target.result);
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            setTimeout(function(){
+                document.querySelectorAll('.raf-remove-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const photoContainer = this.closest('.raf-photo-url');
+                        const img = photoContainer.querySelector('img');
+                        const input = photoContainer.parentElement.querySelector('.raf-file-input');
+
+                        // clear values
+                        img.src = this.dataset.defaultImg;
+                        input.value = '';
+
+                        // set to remove_$INPUT_NAME
+                        const removeInput = photoContainer.parentElement.querySelector('input[name^="remove_"]');
+                        removeInput.value = 1;
+                    });
+                });
+            }, 250);
+            // =========
+        });
     }
 
     function loadCharts()
@@ -202,6 +252,7 @@
 
                 showBootstrapModal(retorno.data.html);
                 setTimeout(() => {
+                    loadRafPhoto();
                     loadJqueryComponents();
                     initLivewireTable();
                 }, 250);

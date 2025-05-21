@@ -361,7 +361,7 @@
                                     @foreach ($arrPhotoLoop as $item)
                                         <div @class(['mb-3', 'col-12 col-lg-6' => !$isPdf, 'col-6 is-pdf-picture-col' => $isPdf])>
                                             @include('app.avaliation.partials.photoInput', [
-                                                'AVALIATION' => $Avaliation,
+                                                'MODEL' => $Avaliation,
                                                 'FIELD_NAME' => $item['fieldName'],
                                                 'INPUT_NAME' => $item['inputName'],
                                                 'INPUT_DEFAULT_IMAGE' => $item['defaultImg'],

@@ -7,6 +7,7 @@ return [
     'selectEmptyOption' => 'Selecione...',
     'dontHavePermission' => 'Você não tem acesso a esse conteúdo! Faça o login novamente.',
     'userNameDash' => 'Usuário',
+    'profile' => 'Perfil',
     'logout' => 'Sair',
     'buttonSave' => 'Salvar',
     'buttonBackToList' => 'Voltar para lista',
@@ -39,6 +40,8 @@ return [
     'okipaDateRangeLabel' => 'Data',
     'okipaDateRangePlaceholderStart' => 'Inicial',
     'okipaDateRangePlaceholderEnd' => 'Final',
+    'yes' => 'Sim',
+    'no' => 'Não',
 
     'helpers' => [
         'modelValidation' => [
@@ -185,6 +188,21 @@ return [
             'skinFoldFormula7FoldsJacksonPollock' => 'Jackson & Pollock - 7 Dobras Cutâneas',
             'skinFoldFormula4FoldsDurninWomersley' => 'Durnin & Womersley - 4 Dobras Cutâneas',
         ],
+
+        'UserInfo' => [
+            'name' => 'Informações do Usuário',
+            'fields' => [
+                'title' => 'Título',
+                'license_text' => 'Texto da Licença',
+                'whatsapp_phone' => 'WhatsApp',
+                'link_telegram' => 'Telegram',
+                'link_facebook' => 'Facebook',
+                'link_instagram' => 'Instagram',
+                'link_twitter' => 'X (Twitter)',
+                'link_youtube' => 'YouTube',
+                'link_website' => 'Website',
+            ],
+        ],
     ],
 
     'pages' => [
@@ -328,6 +346,14 @@ return [
                 'whatsMessage' => 'Olá, :clientName! Aqui estão os resultados da sua avaliação. Confira no link! :link',
             ],
         ],
+
+        'profile' => [
+            'userSince' => 'Usuário desde',
+            'cardMoreInfo' => 'Informações Adicionais',
+            'cardMoreInfoObsText' => 'As informações adicionais estarão visíveis na avaliação do cliente.',
+            'userInfoTitlePlaceholder' => 'Exemplo: Nutricionista, Personal Trainer, etc.',
+            'userInfoLicensePlaceholder' => 'Exemplo: CRN 123432, CREF 123432, etc.',
+        ]
     ],
 
     'menu' => [

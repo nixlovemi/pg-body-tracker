@@ -36,6 +36,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     // ================================================
     Route::middleware(['authWeb'])->group(function () {
         Route::get('/dashboard', 'App\Http\Controllers\Dashboard@index')->name('app.dashboard.index');
+        Route::get('/profile', 'App\Http\Controllers\User@profile')->name('app.user.profile');
+        Route::post('/doProfile', 'App\Http\Controllers\User@doProfile')->name('app.user.doProfile');
 
         Route::prefix('client')->group(function () {
             Route::get('/', 'App\Http\Controllers\Client@index')->name('app.client.index');

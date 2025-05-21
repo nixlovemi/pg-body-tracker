@@ -7,6 +7,7 @@ return [
     'selectEmptyOption' => 'Select...',
     'dontHavePermission' => 'You do not have permission to access this page! Please login again!',
     'userNameDash' => 'User',
+    'profile' => 'Profile',
     'logout' => 'Logout',
     'buttonSave' => 'Save',
     'buttonBackToList' => 'Back to list',
@@ -39,6 +40,8 @@ return [
     'okipaDateRangeLabel' => 'Date',
     'okipaDateRangePlaceholderStart' => 'Start',
     'okipaDateRangePlaceholderEnd' => 'End',
+    'yes' => 'Yes',
+    'no' => 'No',
 
     'helpers' => [
         'modelValidation' => [
@@ -165,8 +168,8 @@ return [
                 'skin_folds_tricep_cm' => 'Tricep',
                 'skin_folds_suprailiac_cm' => 'Suprailiac',
                 'skin_folds_axilla_cm' => 'Axillary Medium',
-                'skin_folds_subscapular_cm' => 'Subescapular',
-                'skin_folds_bicep_cm' => 'Bíceps',
+                'skin_folds_subscapular_cm' => 'Subscapular',
+                'skin_folds_bicep_cm' => 'Bicep',
                 'client_notes' => 'Client Notes',
                 'private_notes' => 'Private Notes',
                 'photo_front_url' => 'Front View',
@@ -185,6 +188,21 @@ return [
             'skinFoldFormula7FoldsJacksonPollock' => 'Jackson & Pollock - 7 Skin Folds',
             'skinFoldFormula4FoldsDurninWomersley' => 'Durnin & Womersley - 4 Skin Folds',
         ],
+
+        'UserInfo' => [
+            'name' => 'User Info',
+            'fields' => [
+                'title' => 'Title',
+                'license_text' => 'License Text',
+                'whatsapp_phone' => 'WhatsApp',
+                'link_telegram' => 'Telegram',
+                'link_facebook' => 'Facebook',
+                'link_instagram' => 'Instagram',
+                'link_twitter' => 'X (Twitter)',
+                'link_youtube' => 'YouTube',
+                'link_website' => 'Website',
+            ],
+        ],
     ],
 
     'pages' => [
@@ -200,6 +218,12 @@ return [
             'title' => 'Page not found',
             'message' => 'The page you are looking for does not exist or has been removed.',
             'buttonBackToHome' => 'Return to Home',
+        ],
+
+        'signedExpired' => [
+            'title' => 'Link expired',
+            'message' => 'The link you are trying to access is no longer valid. Please contact support.',
+            'buttonBackToHome' => 'Return to Home Page',
         ],
 
         'client' => [
@@ -218,7 +242,7 @@ return [
                 'btnNewGoal' => 'New Goal',
                 'btnOldGoals' => 'Old Goals',
                 'btnNewAvaliation' => 'New Avaliation',
-                'labelActualWeight' => 'Peso Atual',
+                'labelActualWeight' => 'Actual Weight',
             ],
             'table' => [
                 'colName' => 'Name',
@@ -255,7 +279,7 @@ return [
                 'requiredFieldsInfo2' => 'Underlined fields are not mandatory, but help in estimating some calculations.',
                 'labelRightArm' => 'Right Arm',
                 'labelLeftArm' => 'Left Arm',
-                'labelTrunk' => 'Tronco',
+                'labelTrunk' => 'Trunk',
                 'labelRightLeg' => 'Right Leg',
                 'labelLeftLeg' => 'Left Leg',
                 'labelLeanMassKg' => 'Lean Mass (kg)',
@@ -322,6 +346,14 @@ return [
                 'whatsMessage' => 'Hello, :clientName! Here are the results of your avaliation. Check on the link! :link',
             ],
         ],
+
+        'profile' => [
+            'userSince' => 'User since',
+            'cardMoreInfo' => 'Additional Information',
+            'cardMoreInfoObsText' => 'Additional information will be visible in the customer review.',
+            'userInfoTitlePlaceholder' => 'Example: Nutritionist, Personal Trainer, etc.',
+            'userInfoLicensePlaceholder' => 'Example: CRM 123432',
+        ]
     ],
 
     'menu' => [

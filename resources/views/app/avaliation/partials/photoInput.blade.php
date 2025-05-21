@@ -2,11 +2,12 @@
 /*
 View variables:
 ===============
-    - $AVALIATION: ?Avaliation
+    - $MODEL: ?Model
     - $FIELD_NAME: string
     - $INPUT_NAME: string
     - $INPUT_DEFAULT_IMAGE: string
     - $IMG_ALT: string
+    - $CUSTOM_CLASS: ?string
     - $CAN_EDIT: bool
 */
 $INPUT_NAME = $INPUT_NAME ?? '';
@@ -29,9 +30,9 @@ $CAN_EDIT = $CAN_EDIT ?? false;
     @endif
 
     <img
-        class="img-fluid"
-        @if ($AVALIATION?->{$FIELD_NAME})
-            src="{{ $AVALIATION?->getPhotoBase64($FIELD_NAME) }}"
+        class="img-fluid {{$CUSTOM_CLASS ?? ''}}"
+        @if ($MODEL?->{$FIELD_NAME})
+            src="{{ $MODEL?->getPhotoBase64($FIELD_NAME) }}"
         @else
             src="{{ $INPUT_DEFAULT_IMAGE }}"
         @endif
