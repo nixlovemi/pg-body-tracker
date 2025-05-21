@@ -1166,6 +1166,7 @@ class Avaliation extends Model
             $Avaliation->save();
             $Avaliation->refresh();
         } catch (\Exception $e) {
+            \App\Helpers\LocalLogger::log('Avaliation save error', ['exception' => $e->getMessage()]);
             return new ApiResponse(true, __('messages.saveModelErrorSaving', [
                 'modelName' => __('messages.models.Avaliation.name'),
             ]));

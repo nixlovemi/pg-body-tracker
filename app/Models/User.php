@@ -108,7 +108,7 @@ class User extends Authenticatable
         }], __('messages.models.User.fields.password'));
         $validation->addField('password_reset_token', ['nullable', 'string', 'min:20', 'max:255'], __('messages.models.User.fields.passwordToken'));
         $validation->addField('role', ['required', 'string', function ($attribute, $value, $fail) {
-            if (false === array_key_exists($value, self::fGetRoles())) {
+            if (false === array_key_exists($value, self::fGetRoles(false))) {
                 $fail(
                     __('messages.helpers.modelValidation.invalidField', ['attribute' => __('messages.models.User.fields.role')])
                 );
@@ -213,6 +213,7 @@ class User extends Authenticatable
             $User->save();
             $User->refresh();
         } catch (\Exception $e) {
+            \App\Helpers\LocalLogger::log('User save error', ['exception' => $e->getMessage()]);
             return new ApiResponse(true, __('messages.saveModelErrorSaving', [
                 'modelName' => __('messages.models.User.name'),
             ]));

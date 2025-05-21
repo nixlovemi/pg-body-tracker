@@ -48,13 +48,13 @@ class User extends Controller
         // User Info
         $response = UserInfo::fSave($form['UserInfo'], $User?->info?->codedId ?? null);
         if ($response->isError()) {
-            return $this->redirect(self::DO_PROFILE_REDIRECT, true, ApiResponse::getValidateMessage($validation));
+            return $this->redirect(self::DO_PROFILE_REDIRECT, true, ApiResponse::getValidateMessage($response));
         }
 
         // User
         $response = mUser::fSave($form['User'], $User->codedId);
         if ($response->isError()) {
-            return $this->redirect(self::DO_PROFILE_REDIRECT, true, ApiResponse::getValidateMessage($validation));
+            return $this->redirect(self::DO_PROFILE_REDIRECT, true, ApiResponse::getValidateMessage($response));
         }
         $User->refresh();
 
@@ -88,6 +88,7 @@ class User extends Controller
         $form['User']['first_name'] = $request->input('f-user-name') ?? null;
         $form['User']['last_name'] = $request->input('f-user-lname') ?? null;
 
+        $form['UserInfo']['user_id'] = SysUtils::getLoggedInUser()?->id ?? null;
         $form['UserInfo']['title'] = $request->input('f-userinfo-title') ?? null;
         $form['UserInfo']['license_text'] = $request->input('f-userinfo-lictext') ?? null;
         $form['UserInfo']['whatsapp_phone'] = $request->input('f-userinfo-whats') ?? null;

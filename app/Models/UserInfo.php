@@ -151,6 +151,7 @@ class UserInfo extends Model
             $UserInfo->save();
             $UserInfo->refresh();
         } catch (\Exception $e) {
+            \App\Helpers\LocalLogger::log('UserInfo save error', ['exception' => $e->getMessage()]);
             return new ApiResponse(true, __('messages.saveModelErrorSaving', [
                 'modelName' => __('messages.models.UserInfo.name'),
             ]));
