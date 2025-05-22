@@ -31,11 +31,7 @@ $CAN_EDIT = $CAN_EDIT ?? false;
 
     <img
         class="img-fluid {{$CUSTOM_CLASS ?? ''}}"
-        @if ($MODEL?->{$FIELD_NAME})
-            src="{{ $MODEL?->getPhotoBase64($FIELD_NAME) }}"
-        @else
-            src="{{ $INPUT_DEFAULT_IMAGE }}"
-        @endif
+        src="{{ $MODEL?->getPhotoBase64($FIELD_NAME, $INPUT_DEFAULT_IMAGE) }}"
         alt="{{ $IMG_ALT }}"
     />
 </div>

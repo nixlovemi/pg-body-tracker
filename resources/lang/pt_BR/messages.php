@@ -336,6 +336,7 @@ return [
             ],
             'viewReport' => [
                 'title' => 'Visualizar Avaliação',
+                'contact' => 'Contato',
             ],
             'modalSendWhats' => [
                 'title' => 'Enviar Link: :type',

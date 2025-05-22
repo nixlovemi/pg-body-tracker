@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use App\Helpers\SysUtils;
 use Illuminate\Http\UploadedFile;
+use App\Helpers\Constants;
 
 class UserInfo extends Model
 {
@@ -111,6 +112,12 @@ class UserInfo extends Model
     public function removeLogoUrl(): void
     {
         $this->removePhotoUrl('logo_url', self::BASE_PHOTOS_FOLDER);
+    }
+
+    public function getLogoBase64(): ?string
+    {
+        $defaultImg = public_path(str_replace('/', DIRECTORY_SEPARATOR, Constants::USER_LOGO_DEFAULT_IMAGE_PATH));
+        return $this->getPhotoBase64('logo_url', $defaultImg);
     }
     // ===============
 

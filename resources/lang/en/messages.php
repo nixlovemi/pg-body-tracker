@@ -336,6 +336,7 @@ return [
             ],
             'viewReport' => [
                 'title' => 'View Report',
+                'contact' => 'Contact',
             ],
             'modalSendWhats' => [
                 'title' => 'Send Link: :type',

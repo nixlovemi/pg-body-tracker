@@ -129,14 +129,15 @@ class User extends Authenticatable
         return Hash::check($password, $this->password);
     }
 
-    public function getPictureBase64(): string
+    public function getPictureBase64(): ?string
     {
-        if (empty($this->picture_url)) {
-            $path = public_path(str_replace('/', DIRECTORY_SEPARATOR, Constants::USER_DEFAULT_IMAGE_PATH));
-            return $this->getBase64String($path);
-        }
+        $defaultImg = public_path(str_replace('/', DIRECTORY_SEPARATOR, Constants::USER_DEFAULT_IMAGE_PATH));
+        return $this->getPhotoBase64('picture_url', $defaultImg);
+    }
 
-        return $this->getPhotoBase64('picture_url');
+    public function getFullName(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function isRoot(): bool

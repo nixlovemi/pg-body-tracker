@@ -7,11 +7,11 @@ use Illuminate\Http\UploadedFile;
 use Image;
 
 trait HasPhotoField {
-    public function getPhotoBase64(string $fieldName): ?string
+    public function getPhotoBase64(string $fieldName, ?string $defaultImage=null): ?string
     {
         $filePath = $this->{$fieldName};
         if (null === $filePath) {
-            return null;
+            $filePath = $defaultImage;
         }
 
         // check if file exists
