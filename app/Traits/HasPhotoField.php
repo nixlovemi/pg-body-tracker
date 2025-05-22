@@ -15,7 +15,7 @@ trait HasPhotoField {
         }
 
         // check if file exists
-        if (file_exists($filePath)) {
+        if (@file_exists($filePath)) {
             return $this->getBase64String($filePath);
         }
 
