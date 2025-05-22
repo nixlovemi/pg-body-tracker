@@ -15,6 +15,11 @@ trait HasPhotoField {
         }
 
         // check if file exists
+        if (file_exists($filePath)) {
+            return $this->getBase64String($filePath);
+        }
+
+        // check if file exists in public
         $publicPath = str_replace('app' . DIRECTORY_SEPARATOR, '', public_path(self::fGetOsPhotosFolder($filePath)));
         if (file_exists($publicPath)) {
             return $this->getBase64String($publicPath);
