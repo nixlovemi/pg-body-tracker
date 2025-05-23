@@ -294,7 +294,7 @@
         </div>
 
         <!-- Info Cards -->
-        <div class="row mt-0 mt-lg-3">
+        <div class="row mt-3">
             @php
             $arrInfoLoop = [
                 [

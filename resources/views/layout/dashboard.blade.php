@@ -37,10 +37,12 @@ $USER = $mSysUtils::getLoggedInUser();
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('app.dashboard.index') }}">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    {!! $Icons::WEIGHT !!}
+                <div class="sidebar-brand-icon">
+                    <img class="img-fluid w-100" style="max-width:60px;" src="/images/logo-icon.png" alt="Logo" />
                 </div>
-                <div class="sidebar-brand-text mx-3">{{ env('SHORT_DISPLAY_NAME') }}</div>
+                <div class="sidebar-brand-text">
+                    <img class="img-fluid w-100" src="/images/logo.png" alt="Logo" />
+                </div>
             </a>
 
             <!-- Divider -->
