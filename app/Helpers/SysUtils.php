@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\SessionGuard;
 use App\Models\User;
 use DateTime;
+use Illuminate\Support\Facades\File;
 
 final class SysUtils {
 
@@ -160,5 +161,42 @@ final class SysUtils {
             hexdec($g),
             hexdec($b)
         ];
+    }
+
+    public static function getImageBase64(string $filePath): ?string
+    {
+        // check if file exists
+        if (@file_exists($filePath)) {
+            return self::getBase64String($filePath);
+        }
+
+        // check if file exists in public
+        $publicPath = str_replace('app' . DIRECTORY_SEPARATOR, '', public_path(self::getOsPhotosFolder($filePath)));
+        if (file_exists($publicPath)) {
+            return self::getBase64String($publicPath);
+        }
+
+        // check if file exists in storage
+        $idx = strpos($filePath, 'storage/');
+        $publicPath = substr($filePath, $idx + strlen('storage/'));
+        $publicPath = storage_path(self::getOsPhotosFolder(DIRECTORY_SEPARATOR . $publicPath));
+        if (File::exists($publicPath)) {
+            return self::getBase64String($publicPath);
+        }
+
+        return null;
+    }
+
+    public static function getBase64String(string $filePath): string
+    {
+        $mimeType = mime_content_type($filePath);
+        $base64 = base64_encode(file_get_contents($filePath));
+        return "data:$mimeType;base64,$base64";
+    }
+
+    public static function getOsPhotosFolder(string $basePath): string
+    {
+        $basePath = str_replace('/', DIRECTORY_SEPARATOR, $basePath);
+        return env('APP_PREFIX_FOLDER').$basePath;
     }
 }

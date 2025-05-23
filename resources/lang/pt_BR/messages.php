@@ -212,6 +212,25 @@ return [
             'loginButton' => 'Entrar',
             'loginGoogle' => 'Entrar com Google',
             'forgotPassword' => 'Esqueceu a senha?',
+            'forgot' => [
+                'title' => 'Recuperar Senha',
+                'description' => 'Digite seu e-mail para receber um link de recuperação de senha.',
+                'sendButton' => 'Enviar',
+                'successMessage' => 'E-mail enviado com sucesso! Verifique sua caixa de entrada.',
+                'errorMessage' => 'Erro ao enviar o e-mail! Tente novamente.',
+                'returnLogin' => 'Voltar para o Login',
+                'errorMailNotValid' => 'E-mail inválido! Verifique se o e-mail está correto.',
+                'mailTitle' => 'Recuperação de Senha',
+                'mailLine1' => 'Esqueceu a sua senha?',
+                'mailLine2' => 'Você recebeu este e-mail porque recebemos um pedido de recuperação de senha para sua conta.',
+                'mailLine3' => 'Caso não tenha sido você, ignore esse e-mail. Mas fique tranquilo, a sua conta está segura com a gente!',
+                'mailActionLink' => 'Clique aqui para redefinir sua senha',
+            ],
+            'resetPwd' => [
+                'title' => 'Redefinir Senha',
+                'description' => 'Use o formulário abaixo para redefinir sua senha.',
+                'invalidKey' => 'Chave inválida! Verifique o link enviado para o seu e-mail.',
+            ],
         ],
 
         '404' => [

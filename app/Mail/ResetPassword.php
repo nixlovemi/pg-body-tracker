@@ -13,7 +13,7 @@ class ResetPassword extends Mailable
     protected $emailTitle;
     protected $title;
     protected $preHeader;
-    protected $headerImgFullUrl;
+    protected $headerImgFullBase64;
     protected $arrTextLines;
     protected $actionButtonUrl;
     protected $actionButtonText;
@@ -28,7 +28,7 @@ class ResetPassword extends Mailable
         $this->emailTitle = $arrParam['EMAIL_TITLE'] ?? 'Novo Email';
         $this->title = $arrParam['TITLE'] ?? 'Mensagem';
         $this->preHeader = $arrParam['PRE_HEADER'] ?? '';
-        $this->headerImgFullUrl = $arrParam['HEADER_IMG_FULL_URL'] ?? '';
+        $this->headerImgFullBase64 = $arrParam['HEADER_IMG_FULL_BASE64'] ?? '';
         $this->arrTextLines = $arrParam['ARR_TEXT_LINES'] ?? [];
         $this->actionButtonUrl = $arrParam['ACTION_BUTTON_URL'] ?? '';
         $this->actionButtonText = $arrParam['ACTION_BUTTON_TEXT'] ?? '';
@@ -46,7 +46,7 @@ class ResetPassword extends Mailable
                 ->with([
                     'TITLE' => $this->title,
                     'PRE_HEADER' => $this->preHeader,
-                    'HEADER_IMG_FULL_URL' => $this->headerImgFullUrl,
+                    'HEADER_IMG_FULL_BASE64' => $this->headerImgFullBase64,
                     'ARR_TEXT_LINES' => $this->arrTextLines,
                     'ACTION_BUTTON_URL' => $this->actionButtonUrl,
                     'ACTION_BUTTON_TEXT' => $this->actionButtonText,

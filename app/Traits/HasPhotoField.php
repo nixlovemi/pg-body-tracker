@@ -4,7 +4,8 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
-use Image;
+use Intervention\Image\Facades\Image;
+use App\Helpers\SysUtils;
 
 trait HasPhotoField {
     public function getPhotoBase64(string $fieldName, ?string $defaultImage=null): ?string
@@ -14,33 +15,12 @@ trait HasPhotoField {
             $filePath = $defaultImage;
         }
 
-        // check if file exists
-        if (@file_exists($filePath)) {
-            return $this->getBase64String($filePath);
-        }
-
-        // check if file exists in public
-        $publicPath = str_replace('app' . DIRECTORY_SEPARATOR, '', public_path(self::fGetOsPhotosFolder($filePath)));
-        if (file_exists($publicPath)) {
-            return $this->getBase64String($publicPath);
-        }
-
-        // check if file exists in storage
-        $idx = strpos($filePath, 'storage/');
-        $publicPath = substr($filePath, $idx + strlen('storage/'));
-        $publicPath = storage_path(self::fGetOsPhotosFolder(DIRECTORY_SEPARATOR . $publicPath));
-        if (File::exists($publicPath)) {
-            return $this->getBase64String($publicPath);
-        }
-
-        return null;
+        return SysUtils::getImageBase64($filePath);
     }
 
     final public function getBase64String(string $filePath): string
     {
-        $mimeType = mime_content_type($filePath);
-        $base64 = base64_encode(file_get_contents($filePath));
-        return "data:$mimeType;base64,$base64";
+        return SysUtils::getBase64String($filePath);
     }
 
     final public function setPhotoUrl(
@@ -94,8 +74,7 @@ trait HasPhotoField {
 
     public static function fGetOsPhotosFolder(string $basePath): string
     {
-        $basePath = str_replace('/', DIRECTORY_SEPARATOR, $basePath);
-        return env('APP_PREFIX_FOLDER').$basePath;
+        return SysUtils::getOsPhotosFolder($basePath);
     }
 
     public static function fGetDbPhotosFolder(string $basePhotoFolder): string

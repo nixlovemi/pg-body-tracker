@@ -28,6 +28,10 @@ Route::prefix('')->group(function () {
 Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     Route::get('/', 'App\Http\Controllers\Login@index')->name('app.login');
     Route::post('/doLogin', 'App\Http\Controllers\Login@doLogin')->name('app.doLogin');
+    Route::get('/forgot', 'App\Http\Controllers\Login@forgot')->name('app.forgot');
+    Route::post('/doForgot', 'App\Http\Controllers\Login@doForgot')->name('app.doForgot');
+    Route::get('/resetPwd/{idKey}', 'App\Http\Controllers\Login@resetPwd')->name('app.resetPwd')->middleware('signed');
+    Route::post('/doResetPwd', 'App\Http\Controllers\Login@doResetPwd')->name('app.doResetPwd')->middleware('signed');
     Route::get('/avaliation/showMyAvaliation/{codedId}', 'App\Http\Controllers\Avaliation@showMyAvaliation')->name('app.avaliation.showMyAvaliation')->middleware('signed');
     Route::get('/s/{key}', 'App\Http\Controllers\UrlShortController@redirect')->name('app.urlShortController.redirect');
 

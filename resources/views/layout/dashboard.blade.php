@@ -22,8 +22,8 @@ $USER = $mSysUtils::getLoggedInUser();
             color: rgba(255,255,255,.5);
             position: relative;
             font-size: 1.7em;
-            top: -11px;
-            left: -7px;
+            top: -12px;
+            left: -8px;
         }
     </style>
 @endsection

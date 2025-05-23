@@ -44,6 +44,7 @@ class Controller extends BaseController
     {
         return redirect()
             ->route($routeName, $routeParams)
+            ->withInput()
             ->withErrors(['msg' => $errorMsg]);
     }
 

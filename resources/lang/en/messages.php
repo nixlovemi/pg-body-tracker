@@ -212,6 +212,25 @@ return [
             'loginButton' => 'Login',
             'loginGoogle' => 'Login with Google',
             'forgotPassword' => 'Forgot your password?',
+            'forgot' => [
+                'title' => 'Recover Password',
+                'description' => 'Enter your email to receive a password recovery link.',
+                'sendButton' => 'Send',
+                'successMessage' => 'Email sent successfully! Check your inbox.',
+                'errorMessage' => 'Error sending email! Please try again.',
+                'returnLogin' => 'Return to login',
+                'errorMailNotValid' => 'Invalid email! Please check if your email is correct.',
+                'mailTitle' => 'Password Recovery',
+                'mailLine1' => 'Forgot your password?',
+                'mailLine2' => 'You received this email because we received a password recovery request for your account.',
+                'mailLine3' => 'If it wasn\'t you, ignore this email. But don\'t worry, your account is safe with us!',
+                'mailActionLink' => 'Click here to reset your password',
+            ],
+            'resetPwd' => [
+                'title' => 'Reset Password',
+                'description' => 'Use the form below to reset your password.',
+                'invalidKey' => 'Invalid key! Check the link sent to your email.',
+            ],
         ],
 
         '404' => [

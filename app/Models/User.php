@@ -14,6 +14,9 @@ use App\Helpers\SysUtils;
 use App\Helpers\Permissions;
 use App\Models\UserInfo;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPassword;
+use Illuminate\Support\Facades\URL;
 
 class User extends Authenticatable
 {
@@ -207,6 +210,14 @@ class User extends Authenticatable
             'User' => $this
         ]);
     }
+
+    public function generateResetPassToken(): string
+    {
+        $this->password_reset_token = SysUtils::encodeStr($this->id . date('YmdHisu'));
+        $this->update();
+
+        return $this->password_reset_token;
+    }
     // ===============
 
     // static functions
@@ -340,6 +351,76 @@ class User extends Authenticatable
         return new ApiResponse(false, __('messages.models.User.fLogin.loginSuccess'), [
             'User' => $User
         ]);
+    }
+
+    public static function fRecoverPwd(string $email): ApiResponse
+    {
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return new ApiResponse(true, __('messages.pages.login.forgot.errorMailNotValid'));
+        }
+
+        $User = User::where('email', $email)
+            ->where('active', true)
+            ->first();
+        if (!$User) {
+            // returning like this to avoid user enumeration
+            // if user exists or not
+            return new ApiResponse(false, __('messages.pages.login.forgot.successMessage'), [
+                'token' => null,
+                'User' => null,
+            ]);
+        }
+
+        // generate and save token
+        $token = $User->generateResetPassToken();
+        $User->refresh();
+
+        // reset link
+        $resetLink = URL::temporarySignedRoute(
+            'app.resetPwd',
+            now()->addHours(24),
+            ['idKey' => $token]
+        );
+        $shortResetLink = \App\Models\UrlShort::make($resetLink);
+
+        // send mail
+        $forgotImg = 'images/mail-forgot-password.jpg';
+
+        Mail::to($User->email)
+            ->send(
+                new ResetPassword([
+                    'EMAIL_TITLE' => __('messages.pages.login.forgot.mailTitle'),
+                    'TITLE' => __('messages.pages.login.forgot.mailTitle'),
+                    'HEADER_IMG_FULL_BASE64' => SysUtils::getImageBase64($forgotImg),
+                    'ARR_TEXT_LINES' => [
+                        __('messages.pages.login.forgot.mailLine1'),
+                        __('messages.pages.login.forgot.mailLine2'),
+                        __('messages.pages.login.forgot.mailLine3'),
+                    ],
+                    'ACTION_BUTTON_URL' => $shortResetLink,
+                    'ACTION_BUTTON_TEXT' => __('messages.pages.login.forgot.mailActionLink'),
+                ])
+            );
+
+        return new ApiResponse(false, __('messages.pages.login.forgot.successMessage'), [
+            'token' => $token,
+            'User' => $User,
+        ]);
+    }
+
+    public static function fResetPasswordByToken(
+        string $token,
+        string $newPassword,
+        string $newPasswordRetype
+    ): ApiResponse {
+        $User = User::where('password_reset_token', $token)
+            ->where('active', true)
+            ->first();
+        if (!$User) {
+            return new ApiResponse(true, __('messages.pages.login.resetPwd.invalidKey'));
+        }
+
+        return $User->changePassword($newPassword, $newPasswordRetype);
     }
     // ================
 }

@@ -34,4 +34,46 @@ class Login extends Controller
 
         return redirect()->route('app.dashboard.index');
     }
+
+    public function forgot()
+    {
+        return view('app.login-forgot', [
+            'PAGE_TITLE' => __('messages.pages.login.forgot.title'),
+        ]);
+    }
+
+    public function doForgot(Request $request)
+    {
+        $form = $request->only(['f-email']);
+        $ret = User::fRecoverPwd($form['f-email'] ?? '');
+        if ($ret->isError()) {
+            return $this->redirectWithError('app.forgot', $ret->getMessage());
+        }
+
+        return $this->redirectSuccess('app.forgot', $ret->getMessage());
+    }
+
+    public function resetPwd(string $idKey)
+    {
+        SysUtils::logout(false);
+        return view('app.login-reset-pwd', [
+            'PAGE_TITLE' => __('messages.pages.login.resetPwd.title'),
+            'ID_KEY' => $idKey,
+        ]);
+    }
+
+    public function doResetPwd(Request $request)
+    {
+        $idKey = $request->input('f-idkey') ?: '';
+        $newPassword = $request->input('f-password') ?: '';
+        $newPasswordCheck = $request->input('f-rtype-password') ?: '';
+
+        $ret = User::fResetPasswordByToken($idKey, $newPassword, $newPasswordCheck);
+        if ($ret->isError()) {
+            return redirect()->back()
+                ->withErrors(['msg' => $ret->getMessage()]);
+        }
+
+        return $this->redirectSuccess('app.login', $ret->getMessage());
+    }
 }
