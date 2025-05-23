@@ -5,37 +5,28 @@ namespace App\Helpers;
 use App\Helpers\ApiResponse;
 
 class ValidatePassword {
-    public const RULES = [
-        [
-            'text' => 'Mínimo de 8 caracteres',
-            'fnc' => 'checkMinChar'
-        ],
-        [
-            'text' => 'Letras e números',
-            'fnc' => 'checkHasNumber'
-        ],
-    ];
 
     public function __construct(private string $_password = '') { }
 
     public function validate(): ApiResponse
     {
         $ret = [];
-        foreach ($this::RULES as $rules) {
-            $methodToCheck = $rules['fnc'];
+        $rules = self::getRulesArray();
+        foreach ($rules as $rule) {
+            $methodToCheck = $rule['fnc'];
             if (false === method_exists($this, $methodToCheck)) {
                 continue;
             }
 
             if (false === $this->$methodToCheck()) {
-                $ret[] = $rules['text'];
+                $ret[] = $rule['text'];
             }
         }
 
         $hasErrors = count($ret) > 0;
         return new ApiResponse(
             $hasErrors,
-            $hasErrors ? 'Senha não é válida. Verifique:<br />- ' . implode('<br />- ', $ret): 'Senha validada com sucesso!',
+            $this->getValidationMsg($hasErrors, $ret),
             [
                 'ret' => $ret
             ]
@@ -44,7 +35,7 @@ class ValidatePassword {
 
     public static function getRulesTexts(): array
     {
-        return array_column(self::RULES, 'text');
+        return array_column(self::getRulesArray(), 'text');
     }
 
     private function checkMinChar(): bool
@@ -55,5 +46,30 @@ class ValidatePassword {
     private function checkHasNumber(): bool
     {
         return preg_match('@[0-9]@', $this->_password);
+    }
+
+    private function getValidationMsg(bool $hasErrors, array $ret): string
+    {
+        if ($hasErrors) {
+            return __('messages.components.ValidatePassword.notValidHtml', [
+                'text' => ' -' . implode('<br />- ', $ret)
+            ]);
+        }
+
+        return __('messages.components.ValidatePassword.validHtml');
+    }
+
+    public static function getRulesArray(): array
+    {
+        return [
+            [
+                'text' => __('messages.components.ValidatePassword.minChar'),
+                'fnc' => 'checkMinChar'
+            ],
+            [
+                'text' => __('messages.components.ValidatePassword.hasNumber'),
+                'fnc' => 'checkHasNumber'
+            ],
+        ];
     }
 }

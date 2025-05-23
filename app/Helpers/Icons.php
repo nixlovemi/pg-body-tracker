@@ -16,4 +16,5 @@ final class Icons {
     public const FILE_REPORT = '<i class="fas fa-file-alt fa-fw"></i>';
     public const ARROW_UP = '<i class="fas fa-arrow-up"></i>';
     public const USER_GREY = '<i class="fas fa-user fa-fw mr-2 text-gray-400"></i>';
+    public const KEY_GREY = '<i class="fas fa-key fa-fw mr-2 text-gray-400"></i>';
 }

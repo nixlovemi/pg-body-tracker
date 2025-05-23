@@ -354,7 +354,16 @@ return [
             'cardMoreInfoObsText' => 'As informações adicionais estarão visíveis na avaliação do cliente.',
             'userInfoTitlePlaceholder' => 'Exemplo: Nutricionista, Personal Trainer, etc.',
             'userInfoLicensePlaceholder' => 'Exemplo: CRN 123432, CREF 123432, etc.',
-        ]
+        ],
+
+        'changePsw' => [
+            'title' => 'Alterar Senha',
+            'currentPassword' => 'Senha Atual',
+            'newPassword' => 'Nova Senha',
+            'confirmNewPassword' => 'Confirmar Nova Senha',
+            'passwordChangedSuccess' => 'Senha alterada com sucesso!',
+            'passwordChangedError' => 'Erro ao alterar a senha! Tente novamente.',
+        ],
     ],
 
     'menu' => [
@@ -450,6 +459,17 @@ return [
         ],
         'AvaliationLowerLimbsGraph' => [
             'title' => 'Membros Inferiores',
+        ],
+        'ValidatePassword' => [
+            'title' => 'Validação de Senha',
+            'minChar' => 'Mínimo de 8 caracteres',
+            'hasNumber' => 'Letras e números',
+            'notValidHtml' => 'Senha não é válida. Verifique:<br /> :text',
+            'validHtml' => 'Senha validada com sucesso!',
+            'passwordRulesTitle' => 'A senha deve conter:',
+            'currentPasswordWrong' => 'Senha atual inválida!',
+            'retypePasswordWrong' => 'As senhas não conferem!',
+            'passwordChangedSuccess' => 'Senha alterada com sucesso!',
         ],
     ],
 ];

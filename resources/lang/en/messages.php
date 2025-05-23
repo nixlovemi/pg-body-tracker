@@ -354,7 +354,16 @@ return [
             'cardMoreInfoObsText' => 'Additional information will be visible in the customer review.',
             'userInfoTitlePlaceholder' => 'Example: Nutritionist, Personal Trainer, etc.',
             'userInfoLicensePlaceholder' => 'Example: CRM 123432',
-        ]
+        ],
+
+        'changePsw' => [
+            'title' => 'Change Password',
+            'currentPassword' => 'Current Password',
+            'newPassword' => 'New Password',
+            'confirmNewPassword' => 'Confirm New Password',
+            'passwordChangedSuccess' => 'Password changed successfully!',
+            'passwordChangedError' => 'Error changing password! Please try again.',
+        ],
     ],
 
     'menu' => [
@@ -450,6 +459,17 @@ return [
         ],
         'AvaliationLowerLimbsGraph' => [
             'title' => 'Lower Limbs',
+        ],
+        'ValidatePassword' => [
+            'title' => 'Password Validation',
+            'minChar' => 'Minimum 8 characters',
+            'hasNumber' => 'Letters and numbers',
+            'notValidHtml' => 'Password is not valid. Please check:<br /> :text',
+            'validHtml' => 'Password validated successfully!',
+            'passwordRulesTitle' => 'The password must contain:',
+            'currentPasswordWrong' => 'Current password is invalid!',
+            'retypePasswordWrong' => 'Password confirmation does not match!',
+            'passwordChangedSuccess' => 'Password changed successfully!',
         ],
     ],
 ];

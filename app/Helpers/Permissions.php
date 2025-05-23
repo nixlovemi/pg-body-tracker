@@ -34,6 +34,8 @@ final class Permissions {
         'app.dashboard.index' => self::ACL_DASHBOARD_INDEX,
         'app.user.profile' => self::ACL_DASHBOARD_INDEX,
         'app.user.doProfile' => self::ACL_DASHBOARD_INDEX,
+        'app.user.changePsw' => self::ACL_DASHBOARD_INDEX,
+        'app.user.doChangePsw' => self::ACL_DASHBOARD_INDEX,
 
         'app.client.index' => self::ACL_CLIENT_VIEW,
         'app.client.add' => self::ACL_CLIENT_EDIT,

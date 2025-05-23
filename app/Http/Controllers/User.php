@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Controller
 {
     private const DO_PROFILE_REDIRECT = 'app.user.profile';
+    private const DO_CHANGE_PSW_REDIRECT = 'app.user.changePsw';
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -79,6 +80,41 @@ class User extends Controller
         return redirect()
             ->route(self::DO_PROFILE_REDIRECT)
             ->withSuccess($response->getMessage());
+    }
+
+    public function changePsw()
+    {
+        return view('app.user.changePsw', [
+            'PAGE_TITLE' => __('messages.pages.changePsw.title'),
+        ]);
+    }
+
+    public function doChangePsw(Request $request)
+    {
+        $form = [
+            'old_password' => $request->input('f-cur-psw'),
+            'new_password' => $request->input('f-new-psw'),
+            'new_password_confirmation' => $request->input('f-confirm-new-psw'),
+        ];
+        $User = SysUtils::getLoggedInUser();
+        if (null === $User) {
+            return $this->redirect(self::DO_CHANGE_PSW_REDIRECT, true, __('messages.saveModelNotFound', [
+                'model' => __('messages.models.User.name'),
+            ]));
+        }
+
+        $changeRet = $User->changePassword(
+            $form['new_password'] ?? '',
+            $form['new_password_confirmation'] ?? '',
+            $form['old_password'] ?? ''
+        );
+        if ($changeRet->isError()) {
+            return $this->redirect(self::DO_CHANGE_PSW_REDIRECT, true, ApiResponse::getValidateMessage($changeRet));
+        }
+
+        return redirect()
+            ->route(self::DO_CHANGE_PSW_REDIRECT)
+            ->withSuccess($changeRet->getMessage());
     }
 
     private function formatSaveRequest(Request $request): array

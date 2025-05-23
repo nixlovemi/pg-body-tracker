@@ -85,6 +85,10 @@ $USER = $mSysUtils::getLoggedInUser();
                                     {!! $Icons::USER_GREY !!}
                                     {{ __('messages.profile') }}
                                 </a>
+                                <a class="dropdown-item" href="{{ route('app.user.changePsw') }}">
+                                    {!! $Icons::KEY_GREY !!}
+                                    {{ __('messages.pages.changePsw.title') }}
+                                </a>
                                 <a class="dropdown-item" href="{{ route('app.login') }}">
                                     {!! $Icons::SIGN_OUT_GREY !!}
                                     {{ __('messages.logout') }}

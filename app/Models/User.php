@@ -175,6 +175,38 @@ class User extends Authenticatable
     {
         $this->removePhotoUrl('picture_url', self::BASE_PHOTOS_FOLDER);
     }
+
+    public function changePassword(
+        string $newPassword,
+        string $newPasswordRetype,
+        ?string $currentPassword = null
+    ): ApiResponse {
+        if (null !== $currentPassword) {
+            if (false === $this->checkPassword($currentPassword)) {
+                return new ApiResponse(true, __('messages.components.ValidatePassword.currentPasswordWrong'));
+            }
+        }
+
+        if ($newPassword !== $newPasswordRetype) {
+            return new ApiResponse(true, __('messages.components.ValidatePassword.retypePasswordWrong'));
+        }
+
+        $ValidadePwd = new ValidatePassword($newPassword);
+        $retValidate = $ValidadePwd->validate();
+        if (true === $retValidate->isError()) {
+            return $retValidate;
+        }
+
+        // all good, change it
+        $this->password_reset_token = null;
+        $this->password = User::fPasswordHash($newPassword);
+        $this->update();
+        $this->refresh();
+
+        return new ApiResponse(false, __('messages.components.ValidatePassword.passwordChangedSuccess'), [
+            'User' => $this
+        ]);
+    }
     // ===============
 
     // static functions
