@@ -15,4 +15,9 @@ final class Icons {
     public const FILE_CHART = '<i class="fas fa-chart-line fa-fw"></i>';
     public const FILE_REPORT = '<i class="fas fa-file-alt fa-fw"></i>';
     public const ARROW_UP = '<i class="fas fa-arrow-up"></i>';
+    public const USER_GREY = '<i class="fas fa-user fa-fw mr-2 text-gray-400"></i>';
+    public const KEY_GREY = '<i class="fas fa-key fa-fw mr-2 text-gray-400"></i>';
+    public const HOME = '<i class="fas fa-home"></i>';
+    public const ENVELOP = '<i class="fas fa-envelope"></i>';
+    public const WHATSAPP = '<i class="fab fa-whatsapp-square"></i>';
 }

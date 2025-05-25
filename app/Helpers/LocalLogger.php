@@ -11,7 +11,7 @@ final class LocalLogger
     public static function log(string $text, ?array $logVars=[]): void
     {
         $date = \Carbon\Carbon::now();
-        $fileName = 'logs/' . SysUtils::timezoneDate($date, 'Ymd') . '.log';
+        $fileName = 'logs/' . SysUtils::timezoneDate($date, 'D') . '.log';
         $fullText = '[' . SysUtils::timezoneDate($date, 'd/m/Y H:i:s') . '] ' . $text . '. ';
         $fullText .= self::getLogVarsText($logVars);
 

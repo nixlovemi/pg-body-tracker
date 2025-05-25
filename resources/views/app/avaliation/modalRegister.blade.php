@@ -1157,54 +1157,6 @@ $Client = $mClient::getModelByCodedId($CUID);
         </div>
 
         <div class="d-none" id="raf-page-6" data-idx="6">
-            <style>
-                .raf-photo-url {
-                    width: 100%;
-                    aspect-ratio: 3 / 4; /* 480 / 640 = 3 / 4 */
-                    background-color: #f8f9fa;
-                    border-radius: 0.25rem;
-                    border: 1px solid #ced4da;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    object-fit: cover;
-                }
-                .raf-photo-url img {
-                    cursor: pointer;
-                }
-                .raf-file-input {
-                    position: absolute;
-                    opacity: 0;
-                    z-index: -1;
-                    text-indent: -9999px;
-                }
-                .raf-photo-url:hover .raf-remove-btn {
-                    opacity: 1;
-                    pointer-events: auto;
-                }
-                .raf-remove-btn {
-                    position: absolute;
-                    top: 16px;
-                    right: 8px;
-                    background: #dc3545;
-                    color: white;
-                    border: none;
-                    border-radius: 50%;
-                    width: 24px;
-                    height: 24px;
-                    font-weight: bold;
-                    font-size: 16px;
-                    line-height: 22px;
-                    text-align: center;
-                    cursor: pointer;
-                    opacity: 0;
-                    pointer-events: none;
-                    transition: opacity 0.2s ease-in-out;
-                    z-index: 10;
-                    padding: 0;
-                }
-            </style>
-
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageSixTitle') }}">
                 <div class="form-row">
                     <div class="col-12 col-md-6">
@@ -1214,7 +1166,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                             </label>
 
                             @include('app.avaliation.partials.photoInput', [
-                                'AVALIATION' => $AVALIATION,
+                                'MODEL' => $AVALIATION,
                                 'FIELD_NAME' => 'photo_front_url',
                                 'INPUT_NAME' => 'f-photo_front_url',
                                 'INPUT_DEFAULT_IMAGE' => '/images/photo_front.jpg',
@@ -1230,7 +1182,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                             </label>
 
                             @include('app.avaliation.partials.photoInput', [
-                                'AVALIATION' => $AVALIATION,
+                                'MODEL' => $AVALIATION,
                                 'FIELD_NAME' => 'photo_right_url',
                                 'INPUT_NAME' => 'f-photo_right_url',
                                 'INPUT_DEFAULT_IMAGE' => '/images/photo_right.jpg',
@@ -1246,7 +1198,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                             </label>
 
                             @include('app.avaliation.partials.photoInput', [
-                                'AVALIATION' => $AVALIATION,
+                                'MODEL' => $AVALIATION,
                                 'FIELD_NAME' => 'photo_rear_url',
                                 'INPUT_NAME' => 'f-photo_rear_url',
                                 'INPUT_DEFAULT_IMAGE' => '/images/photo_rear.jpg',
@@ -1262,7 +1214,7 @@ $Client = $mClient::getModelByCodedId($CUID);
                             </label>
 
                             @include('app.avaliation.partials.photoInput', [
-                                'AVALIATION' => $AVALIATION,
+                                'MODEL' => $AVALIATION,
                                 'FIELD_NAME' => 'photo_left_url',
                                 'INPUT_NAME' => 'f-photo_left_url',
                                 'INPUT_DEFAULT_IMAGE' => '/images/photo_left.jpg',
@@ -1336,48 +1288,8 @@ $Client = $mClient::getModelByCodedId($CUID);
                     let skinFoldsFormulaKey = $(this).val();
                     displayInputs(skinFoldsFormulaKey);
                 });
-
-                $('.raf-photo-url img').on('click', function() {
-                    // click
-                    let targetInput = $(this).closest('.form-group').find('.raf-file-input');
-                    $(targetInput).click();
-                });
-
-                $('.raf-file-input').on('change', function(e) {
-                    // set to not remove_$INPUT_NAME
-                    let removeInput = $(this).closest('.form-group').find('input[name^="remove_"]');
-                    $(removeInput).val(0);
-
-                    let img = $(this).closest('.form-group').find('.raf-photo-url img');
-                    let file = e.target.files[0];
-                    let reader = new FileReader();
-
-                    reader.onload = function(e) {
-                        img.attr('src', e.target.result);
-                    }
-
-                    if (file) {
-                        reader.readAsDataURL(file);
-                    }
-                });
             });
         }(jQuery));
-
-        document.querySelectorAll('.raf-remove-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const photoContainer = this.closest('.raf-photo-url');
-                const img = photoContainer.querySelector('img');
-                const input = photoContainer.parentElement.querySelector('.raf-file-input');
-
-                // clear values
-                img.src = this.dataset.defaultImg;
-                input.value = '';
-
-                // set to remove_$INPUT_NAME
-                const removeInput = photoContainer.parentElement.querySelector('input[name^="remove_"]');
-                removeInput.value = 1;
-            });
-        });
     </script>
 
 @endsection

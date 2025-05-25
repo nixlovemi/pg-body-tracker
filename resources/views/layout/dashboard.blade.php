@@ -22,8 +22,8 @@ $USER = $mSysUtils::getLoggedInUser();
             color: rgba(255,255,255,.5);
             position: relative;
             font-size: 1.7em;
-            top: -11px;
-            left: -7px;
+            top: -12px;
+            left: -8px;
         }
     </style>
 @endsection
@@ -37,10 +37,12 @@ $USER = $mSysUtils::getLoggedInUser();
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('app.dashboard.index') }}">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    {!! $Icons::WEIGHT !!}
+                <div class="sidebar-brand-icon">
+                    <img class="img-fluid w-100" style="max-width:60px;" src="/images/logo-icon.png" alt="Logo" />
                 </div>
-                <div class="sidebar-brand-text mx-3">{{ env('SHORT_DISPLAY_NAME') }}</div>
+                <div class="sidebar-brand-text">
+                    <img class="img-fluid w-100" src="/images/logo.png" alt="Logo" />
+                </div>
             </a>
 
             <!-- Divider -->
@@ -77,10 +79,18 @@ $USER = $mSysUtils::getLoggedInUser();
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             >
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ $USER->first_name ?? __('messages.userNameDash') }}</span>
-                                <img class="img-profile rounded-circle" src="{{ url('/') . $USER->getPictureUrl() }}" />
+                                <img class="img-profile rounded-circle" src="{{ $USER->getPictureBase64() }}" />
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="{{ route('app.user.profile') }}">
+                                    {!! $Icons::USER_GREY !!}
+                                    {{ __('messages.profile') }}
+                                </a>
+                                <a class="dropdown-item" href="{{ route('app.user.changePsw') }}">
+                                    {!! $Icons::KEY_GREY !!}
+                                    {{ __('messages.pages.changePsw.title') }}
+                                </a>
                                 <a class="dropdown-item" href="{{ route('app.login') }}">
                                     {!! $Icons::SIGN_OUT_GREY !!}
                                     {{ __('messages.logout') }}

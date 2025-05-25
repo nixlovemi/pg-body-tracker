@@ -7,6 +7,7 @@ return [
     'selectEmptyOption' => 'Select...',
     'dontHavePermission' => 'You do not have permission to access this page! Please login again!',
     'userNameDash' => 'User',
+    'profile' => 'Profile',
     'logout' => 'Logout',
     'buttonSave' => 'Save',
     'buttonBackToList' => 'Back to list',
@@ -39,6 +40,8 @@ return [
     'okipaDateRangeLabel' => 'Date',
     'okipaDateRangePlaceholderStart' => 'Start',
     'okipaDateRangePlaceholderEnd' => 'End',
+    'yes' => 'Yes',
+    'no' => 'No',
 
     'helpers' => [
         'modelValidation' => [
@@ -165,8 +168,8 @@ return [
                 'skin_folds_tricep_cm' => 'Tricep',
                 'skin_folds_suprailiac_cm' => 'Suprailiac',
                 'skin_folds_axilla_cm' => 'Axillary Medium',
-                'skin_folds_subscapular_cm' => 'Subescapular',
-                'skin_folds_bicep_cm' => 'Bíceps',
+                'skin_folds_subscapular_cm' => 'Subscapular',
+                'skin_folds_bicep_cm' => 'Bicep',
                 'client_notes' => 'Client Notes',
                 'private_notes' => 'Private Notes',
                 'photo_front_url' => 'Front View',
@@ -185,6 +188,21 @@ return [
             'skinFoldFormula7FoldsJacksonPollock' => 'Jackson & Pollock - 7 Skin Folds',
             'skinFoldFormula4FoldsDurninWomersley' => 'Durnin & Womersley - 4 Skin Folds',
         ],
+
+        'UserInfo' => [
+            'name' => 'User Info',
+            'fields' => [
+                'title' => 'Title',
+                'license_text' => 'License Text',
+                'whatsapp_phone' => 'WhatsApp',
+                'link_telegram' => 'Telegram',
+                'link_facebook' => 'Facebook',
+                'link_instagram' => 'Instagram',
+                'link_twitter' => 'X (Twitter)',
+                'link_youtube' => 'YouTube',
+                'link_website' => 'Website',
+            ],
+        ],
     ],
 
     'pages' => [
@@ -194,12 +212,37 @@ return [
             'loginButton' => 'Login',
             'loginGoogle' => 'Login with Google',
             'forgotPassword' => 'Forgot your password?',
+            'forgot' => [
+                'title' => 'Recover Password',
+                'description' => 'Enter your email to receive a password recovery link.',
+                'sendButton' => 'Send',
+                'successMessage' => 'Email sent successfully! Check your inbox.',
+                'errorMessage' => 'Error sending email! Please try again.',
+                'returnLogin' => 'Return to login',
+                'errorMailNotValid' => 'Invalid email! Please check if your email is correct.',
+                'mailTitle' => 'Password Recovery',
+                'mailLine1' => 'Forgot your password?',
+                'mailLine2' => 'You received this email because we received a password recovery request for your account.',
+                'mailLine3' => 'If it wasn\'t you, ignore this email. But don\'t worry, your account is safe with us!',
+                'mailActionLink' => 'Click here to reset your password',
+            ],
+            'resetPwd' => [
+                'title' => 'Reset Password',
+                'description' => 'Use the form below to reset your password.',
+                'invalidKey' => 'Invalid key! Check the link sent to your email.',
+            ],
         ],
 
         '404' => [
             'title' => 'Page not found',
             'message' => 'The page you are looking for does not exist or has been removed.',
             'buttonBackToHome' => 'Return to Home',
+        ],
+
+        'signedExpired' => [
+            'title' => 'Link expired',
+            'message' => 'The link you are trying to access is no longer valid. Please contact support.',
+            'buttonBackToHome' => 'Return to Home Page',
         ],
 
         'client' => [
@@ -218,7 +261,7 @@ return [
                 'btnNewGoal' => 'New Goal',
                 'btnOldGoals' => 'Old Goals',
                 'btnNewAvaliation' => 'New Avaliation',
-                'labelActualWeight' => 'Peso Atual',
+                'labelActualWeight' => 'Actual Weight',
             ],
             'table' => [
                 'colName' => 'Name',
@@ -255,7 +298,7 @@ return [
                 'requiredFieldsInfo2' => 'Underlined fields are not mandatory, but help in estimating some calculations.',
                 'labelRightArm' => 'Right Arm',
                 'labelLeftArm' => 'Left Arm',
-                'labelTrunk' => 'Tronco',
+                'labelTrunk' => 'Trunk',
                 'labelRightLeg' => 'Right Leg',
                 'labelLeftLeg' => 'Left Leg',
                 'labelLeanMassKg' => 'Lean Mass (kg)',
@@ -312,6 +355,7 @@ return [
             ],
             'viewReport' => [
                 'title' => 'View Report',
+                'contact' => 'Contact',
             ],
             'modalSendWhats' => [
                 'title' => 'Send Link: :type',
@@ -321,6 +365,32 @@ return [
                 'successMessage' => 'Link sent successfully!',
                 'whatsMessage' => 'Hello, :clientName! Here are the results of your avaliation. Check on the link! :link',
             ],
+            'sendAvaliationLink' => [
+                'emailTitle' => 'Your Avaliation Results',
+                'title' => 'Check your Avaliation',
+                'bodyLine1' => 'Hello, :clientName! Here are the results of your avaliation.',
+                'bodyLine2' => 'Check out the link below:',
+                'bodyLine3' => 'If you did not request this, please ignore this email.',
+                'bodyLine4' => 'Thank you for using our services!',
+                'mailActionLink' => 'CHECK AVALIATION',
+            ],
+        ],
+
+        'profile' => [
+            'userSince' => 'User since',
+            'cardMoreInfo' => 'Additional Information',
+            'cardMoreInfoObsText' => 'Additional information will be visible in the customer review.',
+            'userInfoTitlePlaceholder' => 'Example: Nutritionist, Personal Trainer, etc.',
+            'userInfoLicensePlaceholder' => 'Example: CRM 123432',
+        ],
+
+        'changePsw' => [
+            'title' => 'Change Password',
+            'currentPassword' => 'Current Password',
+            'newPassword' => 'New Password',
+            'confirmNewPassword' => 'Confirm New Password',
+            'passwordChangedSuccess' => 'Password changed successfully!',
+            'passwordChangedError' => 'Error changing password! Please try again.',
         ],
     ],
 
@@ -417,6 +487,17 @@ return [
         ],
         'AvaliationLowerLimbsGraph' => [
             'title' => 'Lower Limbs',
+        ],
+        'ValidatePassword' => [
+            'title' => 'Password Validation',
+            'minChar' => 'Minimum 8 characters',
+            'hasNumber' => 'Letters and numbers',
+            'notValidHtml' => 'Password is not valid. Please check:<br /> :text',
+            'validHtml' => 'Password validated successfully!',
+            'passwordRulesTitle' => 'The password must contain:',
+            'currentPasswordWrong' => 'Current password is invalid!',
+            'retypePasswordWrong' => 'Password confirmation does not match!',
+            'passwordChangedSuccess' => 'Password changed successfully!',
         ],
     ],
 ];

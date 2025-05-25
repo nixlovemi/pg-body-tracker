@@ -32,6 +32,10 @@ final class Permissions {
 
     private const ROUTE_ACL = [
         'app.dashboard.index' => self::ACL_DASHBOARD_INDEX,
+        'app.user.profile' => self::ACL_DASHBOARD_INDEX,
+        'app.user.doProfile' => self::ACL_DASHBOARD_INDEX,
+        'app.user.changePsw' => self::ACL_DASHBOARD_INDEX,
+        'app.user.doChangePsw' => self::ACL_DASHBOARD_INDEX,
 
         'app.client.index' => self::ACL_CLIENT_VIEW,
         'app.client.add' => self::ACL_CLIENT_EDIT,
@@ -55,6 +59,8 @@ final class Permissions {
         'app.avaliation.viewReportPDF' => self::ACL_AVALIATION_VIEW,
         'app.avaliation.htmlModalSendWhats' => self::ACL_AVALIATION_EDIT,
         'app.avaliation.doModalSendWhats' => self::ACL_AVALIATION_EDIT,
+        'app.avaliation.htmlModalSendMail' => self::ACL_AVALIATION_EDIT,
+        'app.avaliation.doModalSendMail' => self::ACL_AVALIATION_EDIT,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

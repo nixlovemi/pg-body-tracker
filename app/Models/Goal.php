@@ -220,6 +220,7 @@ class Goal extends Model
             $Goal->save();
             $Goal->refresh();
         } catch (\Exception $e) {
+            \App\Helpers\LocalLogger::log('Goal save error', ['exception' => $e->getMessage()]);
             return new ApiResponse(true, __('messages.saveModelErrorSaving', [
                 'modelName' => __('messages.models.Goal.name'),
             ]));

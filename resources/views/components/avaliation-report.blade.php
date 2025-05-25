@@ -38,7 +38,33 @@
         height: 671px;
         overflow-y: hidden;
     }
+    .is-pdf-picture-col {
+        height: 622px;
+    }
+    #uinfo-logo {
+        max-width: 200px;
+    }
 </style>
+
+@if (!$isPdf)
+    <style>
+        @media (max-width: 1200px) {
+            #uinfo-logo,
+            #uinfo-info {
+                width: 100% !important;
+                text-align: center !important;
+                float: none !important;
+            }
+            #uinfo-logo {
+                position: relative;
+                margin: 0 auto;
+            }
+            #uinfo-info {
+                margin-top: 10px;
+            }
+        }
+    </style>
+@endif
 
 <div class="avaliation-report-body card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -65,16 +91,109 @@
                         href="javascript:;" id="avaliation-send-link-whatsapp"
                         data-cid="{{ urlencode($Avaliation->codedId) }}"
                     >
-                        <i class="fab fa-whatsapp-square"></i>&nbsp;
+                        {!! $Icons::WHATSAPP !!}&nbsp;
                         {{ __('messages.components.avaliationReport.sendWhatsLink') }}
+                    </a>
+                    <a class="dropdown-item"
+                        href="javascript:;" id="avaliation-send-link-email"
+                        data-cid="{{ urlencode($Avaliation->codedId) }}"
+                    >
+                        {!! $Icons::ENVELOP !!}&nbsp;
+                        {{ __('messages.pages.client.table.colEmail') }}
                     </a>
                 </div>
             </div>
         @endif
     </div>
     <div class="card-body">
-        <div class="row">
-            <div @class(['col-12 mb-3 col-lg-4 mb-lg-0' => !$isPdf, 'col-5 mb-3' => $isPdf])>
+        <!-- General Info -->
+        <div class="row mb-xl-3">
+            <div @class(['col-12 mb-3 col-xl-8 mb-xl-0' => !$isPdf, 'col-12 mb-3' => $isPdf])>
+                <div @class(['card border-left-secondary shadow py-2', 'h-100' => !$isPdf])>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col text-left">
+                                <div id="uinfo-logo" class="w-25 float-left">
+                                    <img class="img-fluid" src="{{ $Avaliation->client->user?->info?->getLogoBase64() }}" />
+                                </div>
+                                <div id="uinfo-info" class="float-left pl-3 w-75">
+                                    <div class="text-sm font-weight-bold text-secondary text-uppercase mb-1">
+                                        {{ __('messages.pages.avaliation.viewReport.contact') }}: {{ $Avaliation->client->user->getFullName() }}
+                                    </div>
+
+                                    <div class="h6 mb-1 text-gray-800">
+                                        {{ $Avaliation->client->user->email }}
+                                    </div>
+
+                                    @php
+                                        $arrInfoLoop = [
+                                            'title',
+                                            'license_text',
+                                        ];
+                                    @endphp
+                                    @foreach ($arrInfoLoop as $field)
+                                        @if (!empty($Avaliation->client->user?->info?->{$field}))
+                                            <div class="h6 mb-1 text-gray-800">
+                                                {{ $Avaliation->client->user?->info?->{$field} }}
+                                            </div>
+                                        @endif
+                                    @endforeach
+
+                                    <!-- social -->
+                                    @php
+                                        $arrSocialLoop = [
+                                            ['field' => 'link_telegram', 'icon' => 'fab fa-telegram'],
+                                            ['field' => 'link_facebook', 'icon' => 'fab fa-facebook'],
+                                            ['field' => 'link_instagram', 'icon' => 'fab fa-instagram'],
+                                            ['field' => 'link_twitter', 'icon' => 'fab fa-twitter'],
+                                            ['field' => 'link_youtube', 'icon' => 'fab fa-youtube'],
+                                            ['field' => 'link_website', 'icon' => 'fas fa-globe']
+                                        ];
+
+                                        // remove empty
+                                        $arrSocialLoop = array_filter($arrSocialLoop, function ($item) use ($Avaliation) {
+                                            return !empty($Avaliation->client->user?->info?->{$item['field']});
+                                        });
+
+                                        // group by 2
+                                        $arrSocialLoop2 = array_chunk($arrSocialLoop, 2);
+                                    @endphp
+
+                                    <table @class(['table table-borderless d-none d-xl-block', 'd-block' => $isPdf]) style="font-size:80%;">
+                                        <tbody>
+                                            @foreach ($arrSocialLoop2 as $row)
+                                                <tr class="border-bottom">
+                                                    @foreach ($row as $item)
+                                                        <td class="align-middle" scope="row">
+                                                            <i class="{{ $item['icon'] }}"></i>&nbsp;
+                                                            {{ $Avaliation->client->user?->info?->{$item['field']} }}
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+
+                                    <table @class(['table table-borderless d-xl-none', 'd-none' => $isPdf]) style="font-size:80%; width:100%;">
+                                        <tbody style="width:100%;">
+                                            @foreach ($arrSocialLoop as $item)
+                                                <tr class="border-bottom">
+                                                    <td style="text-align:center;" class="align-middle" scope="row">
+                                                        <i class="{{ $item['icon'] }}"></i>&nbsp;
+                                                        {{ $Avaliation->client->user?->info?->{$item['field']} }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div @class(['col-12 mb-0 col-xl-4' => !$isPdf, 'col-5 mb-3' => $isPdf])>
                 <div @class(['card border-left-secondary shadow py-2', 'h-100' => !$isPdf])>
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -117,7 +236,7 @@
                 </div>
             </div>
 
-            <div @class(['col-12 mb-3 col-lg-8 mb-lg-0' => !$isPdf, 'col-7 mb-3' => $isPdf])>
+            <div @class(['col-12 mt-3' => !$isPdf, 'col-7 mb-3' => $isPdf])>
                 <div @class(['card border-left-secondary shadow py-2', 'h-100' => !$isPdf])>
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -181,7 +300,8 @@
             </div>
         </div>
 
-        <div class="row mt-0 mt-lg-3">
+        <!-- Info Cards -->
+        <div class="row mt-3">
             @php
             $arrInfoLoop = [
                 [
@@ -262,13 +382,14 @@
                         'IS_PDF' => $isPdf,
                     ])
                 </div>
+
+                @if ($loop->index == 7 && $isPdf)
+                    <!-- page break -->
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                @endif
             @endforeach
         </div>
-
-        @if ($isPdf)
-            <!-- first page break -->
-            <p>&nbsp;</p>
-        @endif
 
         @php
         $arrGraph = [
@@ -291,6 +412,7 @@
         ];
         @endphp
 
+        <!-- Graphs -->
         <div class="row">
             @foreach ($arrGraph as $graph)
                 <div class="col-12 col-lg-6 mb-3">
@@ -305,7 +427,114 @@
                         </div>
                     </div>
                 </div>
+
+                @if ($loop->index == 0 && $isPdf)
+                    <!-- page break -->
+                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                @endif
+
+                @if ($loop->index == 4 && $isPdf)
+                    <p class="mb-0">&nbsp;</p>
+                @endif
             @endforeach
         </div>
+
+        @if ($isPdf)
+            <!-- page break -->
+            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+            <p>&nbsp;</p><p>&nbsp;</p><p class="mb-0">&nbsp;</p>
+        @endif
+
+        <!-- pictures -->
+        <div class="row">
+            <div class="col-12">
+                <div @class(['card border-left-secondary shadow py-2'])>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-sm font-weight-bold text-secondary text-uppercase mb-1">
+                                    {{ __('messages.pages.avaliation.modalAddAvaliation.pageSixTitle') }}
+                                </div>
+
+                                @php
+                                    $arrPhotoLoop = [
+                                        [
+                                            'fieldName' => 'photo_front_url',
+                                            'inputName' => 'f-photo_front_url',
+                                            'defaultImg' => '/images/photo_front.jpg',
+                                            'imgAlt' => __('messages.models.Avaliation.fields.photo_front_url'),
+                                        ],
+                                        [
+                                            'fieldName' => 'photo_right_url',
+                                            'inputName' => 'f-photo_right_url',
+                                            'defaultImg' => '/images/photo_right.jpg',
+                                            'imgAlt' => __('messages.models.Avaliation.fields.photo_right_url'),
+                                        ],
+                                        [
+                                            'fieldName' => 'photo_rear_url',
+                                            'inputName' => 'f-photo_rear_url',
+                                            'defaultImg' => '/images/photo_rear.jpg',
+                                            'imgAlt' => __('messages.models.Avaliation.fields.photo_rear_url'),
+                                        ],
+                                        [
+                                            'fieldName' => 'photo_left_url',
+                                            'inputName' => 'f-photo_left_url',
+                                            'defaultImg' => '/images/photo_left.jpg',
+                                            'imgAlt' => __('messages.models.Avaliation.fields.photo_left_url'),
+                                        ]
+                                    ];
+                                @endphp
+
+                                <div class="row">
+                                    @foreach ($arrPhotoLoop as $item)
+                                        <div @class(['mb-3', 'col-12 col-lg-6' => !$isPdf, 'col-6 is-pdf-picture-col' => $isPdf])>
+                                            @include('app.avaliation.partials.photoInput', [
+                                                'MODEL' => $Avaliation,
+                                                'FIELD_NAME' => $item['fieldName'],
+                                                'INPUT_NAME' => $item['inputName'],
+                                                'INPUT_DEFAULT_IMAGE' => $item['defaultImg'],
+                                                'IMG_ALT' => $item['imgAlt'],
+                                                'CAN_EDIT' => false,
+                                            ])
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- observation -->
+        @if (!empty($Avaliation->client_notes))
+            @if ($isPdf)
+                <!-- first page break -->
+                <p>&nbsp;</p>
+            @endif
+
+            <div @class(['row', 'mt-3' => !$isPdf])>
+                <div class="col-12">
+                    <div @class(['card border-left-secondary shadow py-2'])>
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-sm font-weight-bold text-secondary text-uppercase mb-1">
+                                        {{ __('messages.pages.avaliation.modalAddAvaliation.pageFiveTitle') }}
+                                    </div>
+
+                                    <p>
+                                        {!! nl2br($Avaliation->client_notes) !!}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </div>

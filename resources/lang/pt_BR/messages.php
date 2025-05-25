@@ -7,6 +7,7 @@ return [
     'selectEmptyOption' => 'Selecione...',
     'dontHavePermission' => 'Você não tem acesso a esse conteúdo! Faça o login novamente.',
     'userNameDash' => 'Usuário',
+    'profile' => 'Perfil',
     'logout' => 'Sair',
     'buttonSave' => 'Salvar',
     'buttonBackToList' => 'Voltar para lista',
@@ -39,6 +40,8 @@ return [
     'okipaDateRangeLabel' => 'Data',
     'okipaDateRangePlaceholderStart' => 'Inicial',
     'okipaDateRangePlaceholderEnd' => 'Final',
+    'yes' => 'Sim',
+    'no' => 'Não',
 
     'helpers' => [
         'modelValidation' => [
@@ -185,6 +188,21 @@ return [
             'skinFoldFormula7FoldsJacksonPollock' => 'Jackson & Pollock - 7 Dobras Cutâneas',
             'skinFoldFormula4FoldsDurninWomersley' => 'Durnin & Womersley - 4 Dobras Cutâneas',
         ],
+
+        'UserInfo' => [
+            'name' => 'Informações do Usuário',
+            'fields' => [
+                'title' => 'Título',
+                'license_text' => 'Texto da Licença',
+                'whatsapp_phone' => 'WhatsApp',
+                'link_telegram' => 'Telegram',
+                'link_facebook' => 'Facebook',
+                'link_instagram' => 'Instagram',
+                'link_twitter' => 'X (Twitter)',
+                'link_youtube' => 'YouTube',
+                'link_website' => 'Website',
+            ],
+        ],
     ],
 
     'pages' => [
@@ -194,6 +212,25 @@ return [
             'loginButton' => 'Entrar',
             'loginGoogle' => 'Entrar com Google',
             'forgotPassword' => 'Esqueceu a senha?',
+            'forgot' => [
+                'title' => 'Recuperar Senha',
+                'description' => 'Digite seu e-mail para receber um link de recuperação de senha.',
+                'sendButton' => 'Enviar',
+                'successMessage' => 'E-mail enviado com sucesso! Verifique sua caixa de entrada.',
+                'errorMessage' => 'Erro ao enviar o e-mail! Tente novamente.',
+                'returnLogin' => 'Voltar para o Login',
+                'errorMailNotValid' => 'E-mail inválido! Verifique se o e-mail está correto.',
+                'mailTitle' => 'Recuperação de Senha',
+                'mailLine1' => 'Esqueceu a sua senha?',
+                'mailLine2' => 'Você recebeu este e-mail porque recebemos um pedido de recuperação de senha para sua conta.',
+                'mailLine3' => 'Caso não tenha sido você, ignore esse e-mail. Mas fique tranquilo, a sua conta está segura com a gente!',
+                'mailActionLink' => 'Clique aqui para redefinir sua senha',
+            ],
+            'resetPwd' => [
+                'title' => 'Redefinir Senha',
+                'description' => 'Use o formulário abaixo para redefinir sua senha.',
+                'invalidKey' => 'Chave inválida! Verifique o link enviado para o seu e-mail.',
+            ],
         ],
 
         '404' => [
@@ -318,6 +355,7 @@ return [
             ],
             'viewReport' => [
                 'title' => 'Visualizar Avaliação',
+                'contact' => 'Contato',
             ],
             'modalSendWhats' => [
                 'title' => 'Enviar Link: :type',
@@ -327,6 +365,32 @@ return [
                 'successMessage' => 'Link enviado com sucesso!',
                 'whatsMessage' => 'Olá, :clientName! Aqui estão os resultados da sua avaliação. Confira no link! :link',
             ],
+            'sendAvaliationLink' => [
+                'emailTitle' => 'Sua Avaliação',
+                'title' => 'Veja sua avaliação',
+                'bodyLine1' => 'Olá, :clientName! Aqui estão os resultados da sua avaliação.',
+                'bodyLine2' => 'Confira no link abaixo:',
+                'bodyLine3' => 'Se você não solicitou essa avaliação, ignore este e-mail.',
+                'bodyLine4' => 'Obrigado por utilizar nossos serviços!',
+                'mailActionLink' => 'VER AVALIAÇÃO',
+            ],
+        ],
+
+        'profile' => [
+            'userSince' => 'Usuário desde',
+            'cardMoreInfo' => 'Informações Adicionais',
+            'cardMoreInfoObsText' => 'As informações adicionais estarão visíveis na avaliação do cliente.',
+            'userInfoTitlePlaceholder' => 'Exemplo: Nutricionista, Personal Trainer, etc.',
+            'userInfoLicensePlaceholder' => 'Exemplo: CRN 123432, CREF 123432, etc.',
+        ],
+
+        'changePsw' => [
+            'title' => 'Alterar Senha',
+            'currentPassword' => 'Senha Atual',
+            'newPassword' => 'Nova Senha',
+            'confirmNewPassword' => 'Confirmar Nova Senha',
+            'passwordChangedSuccess' => 'Senha alterada com sucesso!',
+            'passwordChangedError' => 'Erro ao alterar a senha! Tente novamente.',
         ],
     ],
 
@@ -423,6 +487,17 @@ return [
         ],
         'AvaliationLowerLimbsGraph' => [
             'title' => 'Membros Inferiores',
+        ],
+        'ValidatePassword' => [
+            'title' => 'Validação de Senha',
+            'minChar' => 'Mínimo de 8 caracteres',
+            'hasNumber' => 'Letras e números',
+            'notValidHtml' => 'Senha não é válida. Verifique:<br /> :text',
+            'validHtml' => 'Senha validada com sucesso!',
+            'passwordRulesTitle' => 'A senha deve conter:',
+            'currentPasswordWrong' => 'Senha atual inválida!',
+            'retypePasswordWrong' => 'As senhas não conferem!',
+            'passwordChangedSuccess' => 'Senha alterada com sucesso!',
         ],
     ],
 ];

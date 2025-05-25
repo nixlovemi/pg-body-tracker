@@ -2,11 +2,12 @@
 /*
 View variables:
 ===============
-    - $AVALIATION: ?Avaliation
+    - $MODEL: ?Model
     - $FIELD_NAME: string
     - $INPUT_NAME: string
     - $INPUT_DEFAULT_IMAGE: string
     - $IMG_ALT: string
+    - $CUSTOM_CLASS: ?string
     - $CAN_EDIT: bool
 */
 $INPUT_NAME = $INPUT_NAME ?? '';
@@ -29,12 +30,8 @@ $CAN_EDIT = $CAN_EDIT ?? false;
     @endif
 
     <img
-        class="img-fluid"
-        @if ($AVALIATION?->{$FIELD_NAME})
-            src="{{ route('app.avaliation.showPhoto', ['fileName' => basename($AVALIATION?->{$FIELD_NAME})]) }}?v={{ time() }}"
-        @else
-            src="{{ $INPUT_DEFAULT_IMAGE }}"
-        @endif
+        class="img-fluid {{$CUSTOM_CLASS ?? ''}}"
+        src="{{ $MODEL?->getPhotoBase64($FIELD_NAME, $INPUT_DEFAULT_IMAGE) }}"
         alt="{{ $IMG_ALT }}"
     />
 </div>

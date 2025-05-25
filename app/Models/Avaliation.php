@@ -11,12 +11,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
-use Image;
+use Intervention\Image\Facades\Image;
+use App\Mail\SendAvaliationLink;
+use Illuminate\Support\Facades\Mail;
 
 class Avaliation extends Model
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;
+    use \App\Traits\HasPhotoField;
 
     public const CALCULATE_PERC_FAT_BY_BIOIMPEDANCE = 'BIOIMPEDANCE';
     public const CALCULATE_PERC_FAT_BY_SKINFOLD = 'SKINFOLD';
@@ -846,7 +849,7 @@ class Avaliation extends Model
         }
 
         // check folder
-        $destinationPath = storage_path(self::fGetOsPhotosFolder());
+        $destinationPath = storage_path(self::fGetOsPhotosFolder(self::BASE_PHOTOS_FOLDER));
         if (!File::exists($destinationPath)) {
             File::makeDirectory($destinationPath, 0755, true);
         }
@@ -873,7 +876,7 @@ class Avaliation extends Model
     {
         // remove file
         $fileName = basename($this->{$field});
-        $filePath = storage_path(self::fGetOsPhotosFolder() . DIRECTORY_SEPARATOR . $fileName);
+        $filePath = storage_path(self::fGetOsPhotosFolder(self::BASE_PHOTOS_FOLDER) . DIRECTORY_SEPARATOR . $fileName);
         if (File::exists($filePath)) {
             File::delete($filePath);
         }
@@ -1078,6 +1081,35 @@ class Avaliation extends Model
         return $BAInfo->getFieldInfo();
     }
     // =======
+
+    public function sendLinkByMail(string $email, string $link): ApiResponse
+    {
+        if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return new ApiResponse(true, __('messages.pages.login.forgot.errorMailNotValid'));
+        }
+
+        $headerImg = "images/mail-avaliation-link-{$this->client->gender}.jpg";
+
+        // send email
+        Mail::to($email)
+            ->send(
+                new SendAvaliationLink([
+                    'EMAIL_TITLE' => __('messages.pages.avaliation.sendAvaliationLink.emailTitle'),
+                    'TITLE' => __('messages.pages.avaliation.sendAvaliationLink.title'),
+                    'HEADER_IMG_FULL_BASE64' => SysUtils::getImageBase64($headerImg),
+                    'ARR_TEXT_LINES' => [
+                        __('messages.pages.avaliation.sendAvaliationLink.bodyLine1', ['clientName' => $this->client->getName()]),
+                        __('messages.pages.avaliation.sendAvaliationLink.bodyLine2'),
+                        __('messages.pages.avaliation.sendAvaliationLink.bodyLine3'),
+                        __('messages.pages.avaliation.sendAvaliationLink.bodyLine4'),
+                    ],
+                    'ACTION_BUTTON_URL' => $link,
+                    'ACTION_BUTTON_TEXT' => __('messages.pages.avaliation.sendAvaliationLink.mailActionLink'),
+                ])
+            );
+
+        return new ApiResponse(false, __('messages.pages.login.forgot.successMessage'));
+    }
     // ===============
 
     // static functions
@@ -1151,6 +1183,7 @@ class Avaliation extends Model
             $Avaliation->save();
             $Avaliation->refresh();
         } catch (\Exception $e) {
+            \App\Helpers\LocalLogger::log('Avaliation save error', ['exception' => $e->getMessage()]);
             return new ApiResponse(true, __('messages.saveModelErrorSaving', [
                 'modelName' => __('messages.models.Avaliation.name'),
             ]));
@@ -1242,12 +1275,6 @@ class Avaliation extends Model
         }
 
         return true;
-    }
-
-    public static function fGetOsPhotosFolder(): string
-    {
-        $basePath = str_replace('/', DIRECTORY_SEPARATOR, self::BASE_PHOTOS_FOLDER);
-        return 'app'.$basePath;
     }
 
     public static function fGetDbPhotosFolder(): string

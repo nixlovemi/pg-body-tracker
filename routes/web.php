@@ -28,6 +28,10 @@ Route::prefix('')->group(function () {
 Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     Route::get('/', 'App\Http\Controllers\Login@index')->name('app.login');
     Route::post('/doLogin', 'App\Http\Controllers\Login@doLogin')->name('app.doLogin');
+    Route::get('/forgot', 'App\Http\Controllers\Login@forgot')->name('app.forgot');
+    Route::post('/doForgot', 'App\Http\Controllers\Login@doForgot')->name('app.doForgot');
+    Route::get('/resetPwd/{idKey}', 'App\Http\Controllers\Login@resetPwd')->name('app.resetPwd')->middleware('signed');
+    Route::post('/doResetPwd', 'App\Http\Controllers\Login@doResetPwd')->name('app.doResetPwd')->middleware('signed');
     Route::get('/avaliation/showMyAvaliation/{codedId}', 'App\Http\Controllers\Avaliation@showMyAvaliation')->name('app.avaliation.showMyAvaliation')->middleware('signed');
     Route::get('/s/{key}', 'App\Http\Controllers\UrlShortController@redirect')->name('app.urlShortController.redirect');
 
@@ -36,6 +40,10 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     // ================================================
     Route::middleware(['authWeb'])->group(function () {
         Route::get('/dashboard', 'App\Http\Controllers\Dashboard@index')->name('app.dashboard.index');
+        Route::get('/profile', 'App\Http\Controllers\User@profile')->name('app.user.profile');
+        Route::post('/doProfile', 'App\Http\Controllers\User@doProfile')->name('app.user.doProfile');
+        Route::get('/changePsw', 'App\Http\Controllers\User@changePsw')->name('app.user.changePsw');
+        Route::post('/doChangePsw', 'App\Http\Controllers\User@doChangePsw')->name('app.user.doChangePsw');
 
         Route::prefix('client')->group(function () {
             Route::get('/', 'App\Http\Controllers\Client@index')->name('app.client.index');
@@ -64,6 +72,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/viewReportPDF/{codedId}', 'App\Http\Controllers\Avaliation@viewReportPDF')->name('app.avaliation.viewReportPDF');
             Route::get('/htmlModalSendWhats', 'App\Http\Controllers\Avaliation@htmlModalSendWhats')->name('app.avaliation.htmlModalSendWhats');
             Route::post('/doModalSendWhats', 'App\Http\Controllers\Avaliation@doModalSendWhats')->name('app.avaliation.doModalSendWhats');
+            Route::get('/htmlModalSendMail', 'App\Http\Controllers\Avaliation@htmlModalSendMail')->name('app.avaliation.htmlModalSendMail');
+            Route::post('/doModalSendMail', 'App\Http\Controllers\Avaliation@doModalSendMail')->name('app.avaliation.doModalSendMail');
         });
     });
 
