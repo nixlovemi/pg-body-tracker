@@ -91,8 +91,15 @@
                         href="javascript:;" id="avaliation-send-link-whatsapp"
                         data-cid="{{ urlencode($Avaliation->codedId) }}"
                     >
-                        <i class="fab fa-whatsapp-square"></i>&nbsp;
+                        {!! $Icons::WHATSAPP !!}&nbsp;
                         {{ __('messages.components.avaliationReport.sendWhatsLink') }}
+                    </a>
+                    <a class="dropdown-item"
+                        href="javascript:;" id="avaliation-send-link-email"
+                        data-cid="{{ urlencode($Avaliation->codedId) }}"
+                    >
+                        {!! $Icons::ENVELOP !!}&nbsp;
+                        {{ __('messages.pages.client.table.colEmail') }}
                     </a>
                 </div>
             </div>

@@ -12,6 +12,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
+use App\Mail\SendAvaliationLink;
+use Illuminate\Support\Facades\Mail;
 
 class Avaliation extends Model
 {
@@ -1079,6 +1081,35 @@ class Avaliation extends Model
         return $BAInfo->getFieldInfo();
     }
     // =======
+
+    public function sendLinkByMail(string $email, string $link): ApiResponse
+    {
+        if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return new ApiResponse(true, __('messages.pages.login.forgot.errorMailNotValid'));
+        }
+
+        $headerImg = "images/mail-avaliation-link-{$this->client->gender}.jpg";
+
+        // send email
+        Mail::to($email)
+            ->send(
+                new SendAvaliationLink([
+                    'EMAIL_TITLE' => __('messages.pages.avaliation.sendAvaliationLink.emailTitle'),
+                    'TITLE' => __('messages.pages.avaliation.sendAvaliationLink.title'),
+                    'HEADER_IMG_FULL_BASE64' => SysUtils::getImageBase64($headerImg),
+                    'ARR_TEXT_LINES' => [
+                        __('messages.pages.avaliation.sendAvaliationLink.bodyLine1', ['clientName' => $this->client->getName()]),
+                        __('messages.pages.avaliation.sendAvaliationLink.bodyLine2'),
+                        __('messages.pages.avaliation.sendAvaliationLink.bodyLine3'),
+                        __('messages.pages.avaliation.sendAvaliationLink.bodyLine4'),
+                    ],
+                    'ACTION_BUTTON_URL' => $link,
+                    'ACTION_BUTTON_TEXT' => __('messages.pages.avaliation.sendAvaliationLink.mailActionLink'),
+                ])
+            );
+
+        return new ApiResponse(false, __('messages.pages.login.forgot.successMessage'));
+    }
     // ===============
 
     // static functions

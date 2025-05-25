@@ -737,6 +737,30 @@
         }, `/${JS_APP_PREFIX}/avaliation/doModalSendWhats`);
     });
 
+    $(document).on('click', '.avaliation-report-body #avaliation-send-link-email', function(e) {
+        let cid = $(this).data('cid');
+
+        showJsonAjaxModal('GET', `/${JS_APP_PREFIX}/avaliation/htmlModalSendMail`, {
+            'cid': cid,
+            'json': 1
+        });
+    });
+
+    $(document).on('click', 'form#frm-modal-send-mail .btn-modal-submit', function(e) {
+        e.preventDefault();
+        const FORM = $(this).closest('form');
+
+        submitModalForm(FORM, function(retorno) {
+
+            showSuccessAlert({
+                'title': JS_ALERT_SUCCESS_TITLE,
+                'text': retorno.message
+            });
+            closeModal(FORM.closest('div.modal').parent());
+
+        }, `/${JS_APP_PREFIX}/avaliation/doModalSendMail`);
+    });
+
     function initChartJs(elementId, config)
     {
         // get canvas element

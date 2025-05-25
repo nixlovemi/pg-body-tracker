@@ -365,6 +365,15 @@ return [
                 'successMessage' => 'Link enviado com sucesso!',
                 'whatsMessage' => 'Olá, :clientName! Aqui estão os resultados da sua avaliação. Confira no link! :link',
             ],
+            'sendAvaliationLink' => [
+                'emailTitle' => 'Sua Avaliação',
+                'title' => 'Veja sua avaliação',
+                'bodyLine1' => 'Olá, :clientName! Aqui estão os resultados da sua avaliação.',
+                'bodyLine2' => 'Confira no link abaixo:',
+                'bodyLine3' => 'Se você não solicitou essa avaliação, ignore este e-mail.',
+                'bodyLine4' => 'Obrigado por utilizar nossos serviços!',
+                'mailActionLink' => 'VER AVALIAÇÃO',
+            ],
         ],
 
         'profile' => [

@@ -11,7 +11,7 @@ use App\Helpers\SysUtils;
 use App\Helpers\ApiResponse;
 use App\Models\Client;
 use App\Models\Avaliation as mAvaliation;
-use PDF;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 use App\Helpers\Constants;
 use Illuminate\Support\Facades\URL;
 
@@ -20,6 +20,7 @@ class Avaliation extends Controller
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     private const SEND_WHATS_HOURS = 168; // 7 days
+    private const SEND_MAIL_HOURS = self::SEND_WHATS_HOURS; // 7 days
 
     public function index()
     {
@@ -136,7 +137,7 @@ class Avaliation extends Controller
     public function showPhoto(string $fileName)
     {
         // TODO: similar to Avaliation->getPhotoBase64(string $fieldName)???
-        $path = storage_path(mAvaliation::fGetOsPhotosFolder() . DIRECTORY_SEPARATOR . $fileName);
+        $path = storage_path(mAvaliation::fGetOsPhotosFolder(mAvaliation::BASE_PHOTOS_FOLDER) . DIRECTORY_SEPARATOR . $fileName);
 
         if (!file_exists($path)) {
             abort(404);
@@ -165,7 +166,7 @@ class Avaliation extends Controller
             return $this->redirectWithError('app.client.index', __('messages.modelErrorNoAccess'));
         }
 
-        $pdf = PDF::loadView('app.avaliation.viewReportPDF', [
+        $pdf = SnappyPdf::loadView('app.avaliation.viewReportPDF', [
             'AVALIATION' => $Avaliation,
         ]);
         $pdf->setOption('margin-bottom', 2)
@@ -203,52 +204,73 @@ class Avaliation extends Controller
     public function doModalSendWhats(Request $request)
     {
         $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
-        if (null === $Avaliation) {
-            return $this->returnResponse(
-                true,
-                __('messages.saveModelNotFound', [
-                    'modelName' => __('messages.models.Avaliation.name')
-                ]),
-                [],
-                Response::HTTP_OK
-            );
+        if (!$Avaliation) {
+            return $this->modelNotFoundResponse();
         }
 
-        // variables
         $code = $request->input('country_code', '');
-        $phone = $code . $request->input('phone', '');
-        $phone = preg_replace('/[^0-9]/', '', $phone); // only numbers on phone
+        $phone = preg_replace('/[^0-9]/', '', $code . $request->input('phone', ''));
 
-        // cache if same phone + same cid
-        $cacheKey = 'avalation_send_whats_' . $Avaliation->id . '_' . $phone;
-        if (cache()->has($cacheKey)) {
-            $pdfUrl = cache()->get($cacheKey);
-        } else {
-            $hours = self::SEND_WHATS_HOURS;
-            $portalLink = URL::temporarySignedRoute(
-                'app.avaliation.showMyAvaliation',
-                now()->addHours($hours),
-                ['codedId' => $Avaliation->codedId]
-            );
-            $pdfUrl = \App\Models\UrlShort::make($portalLink);
+        $link = $this->getCachedAvaliationLink($Avaliation, 'whats', $phone, self::SEND_WHATS_HOURS);
 
-            // add to cache
-            cache()->put($cacheKey, $pdfUrl, $hours * 60 * 60);
-        }
-
-        // prepare return message
         $message = __('messages.pages.avaliation.modalSendWhats.whatsMessage', [
             'clientName' => $Avaliation->client->getName(),
-            'link' => $pdfUrl,
+            'link' => $link,
         ]);
         $url = sprintf(Constants::WHATS_LINK_URL, $phone, urlencode($message));
 
         return $this->returnResponse(
             false,
             __('messages.pages.avaliation.modalSendWhats.successMessage'),
-            [
-                'url' => $url,
-            ],
+            ['url' => $url],
+            Response::HTTP_OK
+        );
+    }
+
+    public function htmlModalSendMail(Request $request)
+    {
+        $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
+        if (null === $Avaliation) {
+            return $this->redirectWithError('app.avaliation.index', __('messages.modelErrorNoAccess'));
+        }
+
+        $view = view('app.avaliation.modalSendMail', [
+            'AVALIATION' => $Avaliation,
+        ]);
+
+        if (1 == $request->input('json', 0)) {
+            return $this->returnResponse(
+                false,
+                __('messages.htmlReturned'),
+                [
+                    'html' => $view->render()
+                ],
+                Response::HTTP_OK
+            );
+        }
+
+        return $view;
+    }
+
+    public function doModalSendMail(Request $request)
+    {
+        $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
+        if (!$Avaliation) {
+            return $this->modelNotFoundResponse();
+        }
+
+        $email = $request->input('email', '');
+        $link = $this->getCachedAvaliationLink($Avaliation, 'mail', $email, self::SEND_MAIL_HOURS);
+
+        $ret = $Avaliation->sendLinkByMail($email, $link);
+        if ($ret->isError()) {
+            return $this->returnResponse(true, $ret->getMessage(), [], Response::HTTP_OK);
+        }
+
+        return $this->returnResponse(
+            false,
+            __('messages.pages.avaliation.modalSendWhats.successMessage'),
+            [],
             Response::HTTP_OK
         );
     }
@@ -440,5 +462,37 @@ class Avaliation extends Controller
             $file = $request->file($loop['name']);
             $Avaliation->{$loop['method']}($file);
         }
+    }
+
+    private function getCachedAvaliationLink(mAvaliation $Avaliation, string $channel, string $key, int $ttlHours): string
+    {
+        $cacheKey = 'avalation_send_' . $channel . '_' . $Avaliation->id . '_' . $key;
+
+        if (cache()->has($cacheKey)) {
+            return cache()->get($cacheKey);
+        }
+
+        $portalLink = URL::temporarySignedRoute(
+            'app.avaliation.showMyAvaliation',
+            now()->addHours($ttlHours),
+            ['codedId' => $Avaliation->codedId]
+        );
+        $shortUrl = \App\Models\UrlShort::make($portalLink);
+
+        cache()->put($cacheKey, $shortUrl, $ttlHours * 60 * 60);
+
+        return $shortUrl;
+    }
+
+    private function modelNotFoundResponse(): \Illuminate\Http\JsonResponse
+    {
+        return $this->returnResponse(
+            true,
+            __('messages.saveModelNotFound', [
+                'modelName' => __('messages.models.Avaliation.name')
+            ]),
+            [],
+            Response::HTTP_OK
+        );
     }
 }

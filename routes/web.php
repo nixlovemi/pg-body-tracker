@@ -72,6 +72,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/viewReportPDF/{codedId}', 'App\Http\Controllers\Avaliation@viewReportPDF')->name('app.avaliation.viewReportPDF');
             Route::get('/htmlModalSendWhats', 'App\Http\Controllers\Avaliation@htmlModalSendWhats')->name('app.avaliation.htmlModalSendWhats');
             Route::post('/doModalSendWhats', 'App\Http\Controllers\Avaliation@doModalSendWhats')->name('app.avaliation.doModalSendWhats');
+            Route::get('/htmlModalSendMail', 'App\Http\Controllers\Avaliation@htmlModalSendMail')->name('app.avaliation.htmlModalSendMail');
+            Route::post('/doModalSendMail', 'App\Http\Controllers\Avaliation@doModalSendMail')->name('app.avaliation.doModalSendMail');
         });
     });
 

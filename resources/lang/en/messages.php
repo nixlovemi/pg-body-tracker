@@ -365,6 +365,15 @@ return [
                 'successMessage' => 'Link sent successfully!',
                 'whatsMessage' => 'Hello, :clientName! Here are the results of your avaliation. Check on the link! :link',
             ],
+            'sendAvaliationLink' => [
+                'emailTitle' => 'Your Avaliation Results',
+                'title' => 'Check your Avaliation',
+                'bodyLine1' => 'Hello, :clientName! Here are the results of your avaliation.',
+                'bodyLine2' => 'Check out the link below:',
+                'bodyLine3' => 'If you did not request this, please ignore this email.',
+                'bodyLine4' => 'Thank you for using our services!',
+                'mailActionLink' => 'CHECK AVALIATION',
+            ],
         ],
 
         'profile' => [
