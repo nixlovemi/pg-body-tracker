@@ -16,4 +16,18 @@ class Dashboard extends Controller
             'PAGE_TITLE' => 'Dashboard',
         ]);
     }
+
+    public function clientsWithoutAvaliation30Days()
+    {
+        return view('app.dashboard.clientsWithoutAvaliation30Days', [
+            'PAGE_TITLE' => __('messages.components.DashCardClientsWithoutAvaliation30Days.title'),
+        ]);
+    }
+
+    public function clientsWithGoalsDueThisWeek()
+    {
+        return view('app.dashboard.clientsWithGoalsDueThisWeek', [
+            'PAGE_TITLE' => __('messages.components.DashCardClientsWithGoalsDueThisWeek.title'),
+        ]);
+    }
 }

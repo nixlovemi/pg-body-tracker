@@ -210,7 +210,7 @@ trait BaseModelTrait {
         });
 
         static::deleting(function ($model) {
-            if (!self::fHasAccess($model) || TRUE) {
+            if (!self::fHasAccess($model)) {
                 throw new \LogicException(__('messages.saveModelErrorSavingOther', [
                     'modelName' => self::getModelNameMsg(),
                 ]));

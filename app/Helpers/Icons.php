@@ -20,4 +20,8 @@ final class Icons {
     public const HOME = '<i class="fas fa-home"></i>';
     public const ENVELOP = '<i class="fas fa-envelope"></i>';
     public const WHATSAPP = '<i class="fab fa-whatsapp-square"></i>';
+    public const TACHOMETER = '<i class="fas fa-fw fa-tachometer-alt"></i>';
+    public const USERS = '<i class="fas fa-fw fa-users"></i>';
+    public const USER_CLOCK = '<i class="fas fa-user-clock"></i>';
+    public const BULLS_EYE = '<i class="fas fa-bullseye"></i>';
 }

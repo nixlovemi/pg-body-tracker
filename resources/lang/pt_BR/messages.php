@@ -499,5 +499,18 @@ return [
             'retypePasswordWrong' => 'As senhas não conferem!',
             'passwordChangedSuccess' => 'Senha alterada com sucesso!',
         ],
+        'DashCardMonthAvaliations' => [
+            'title' => 'Avaliações no Mês',
+        ],
+        'DashCardMonthClients' => [
+            'title' => 'Novos Clientes no Mês',
+        ],
+        'DashCardClientsWithoutAvaliation30Days' => [
+            'title' => 'Clientes sem Avaliação nos Últimos 30 Dias',
+        ],
+        'DashCardClientsWithGoalsDueThisWeek' => [
+            'title' => 'Clientes com Objetivos Vencendo Esta Semana',
+            'tableColGoalDeadline' => 'Prazo do Objetivo',
+        ],
     ],
 ];

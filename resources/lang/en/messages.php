@@ -499,5 +499,18 @@ return [
             'retypePasswordWrong' => 'Password confirmation does not match!',
             'passwordChangedSuccess' => 'Password changed successfully!',
         ],
+        'DashCardMonthAvaliations' => [
+            'title' => 'Avaliations this Month',
+        ],
+        'DashCardMonthClients' => [
+            'title' => 'New Clients this Month',
+        ],
+        'DashCardClientsWithoutAvaliation30Days' => [
+            'title' => 'Clients without Avaliation in the Last 30 Days',
+        ],
+        'DashCardClientsWithGoalsDueThisWeek' => [
+            'title' => 'Clients with Goals Due This Week',
+            'tableColGoalDeadline' => 'Goal Deadline',
+        ],
     ],
 ];
