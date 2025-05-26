@@ -61,7 +61,7 @@ class ChartClientGoal extends Component
 
         // add avaliations data
         $avaliationsBtwStartAndDeadline = $this->Client->avaliations
-            ->where('date', '>', $currentGoal->created_at)
+            ->where('date', '>=', $currentGoal->created_at->format('Y-m-d'))
             ->where('date', '<=', $currentGoal->deadline)
             ->sortBy('date')
             ->slice(-8);

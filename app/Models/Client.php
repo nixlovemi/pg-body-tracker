@@ -181,80 +181,18 @@ class Client extends Model
         ];
     }
 
-    public static function fSave(array $form, ?string $codedId = null): ApiResponse
+    public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
-        // get model for insert or update
-        if (!empty($codedId)) {
-            $Client = self::getModelByCodedId($codedId);
-            if ($Client === null) {
-                return new ApiResponse(true, __('messages.saveModelNotFound', [
-                    'modelName' => __('messages.models.Client.name')
-                ]));
-            }
-        } else {
-            $Client = new self();
-        }
-        $isEdit = ($Client->id > 0);
-
-        // check if user can save
-        if (!self::fHasAccess($Client)) {
-            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
-                'modelName' => __('messages.models.Client.name')
-            ]));
-        }
-
-        // fill model
-        $Client->fill($form);
-
-        // validate model
-        $validation = $Client->validateModel();
-        if ($validation->isError()) {
-            return $validation;
-        }
-
-        // save model
-        try {
-            $Client->save();
-            $Client->refresh();
-        } catch (\Exception $e) {
-            \App\Helpers\LocalLogger::log('Client save error', ['exception' => $e->getMessage()]);
-            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
-                'modelName' => __('messages.models.Client.name')
-            ]));
-        }
-
-        // all good, return success
-        $msg = $isEdit ? __('messages.saveModelSuccessEditing', ['modelName' => __('messages.models.Client.name')]) : __('messages.saveModelSuccessAdding', ['modelName' => __('messages.models.Client.name')]);
-        return new ApiResponse(false, $msg, [
-            'Client' => $Client,
-            'isEdit' => $isEdit,
-        ]);
-    }
-
-    public static function fHasAccess(self $Client): bool
-    {
-        // adding user is ok
-        if (empty($Client->id)) {
-            return true;
-        }
-
-        // check logged user
-        $lggdUser = SysUtils::getLoggedInUser();
-        if (null === $lggdUser) {
-            return false;
-        }
-
-        // root can save any client
-        if ($lggdUser->role === User::ROLE_ROOT) {
-            return true;
-        }
-
-        // check if user is trying to edit a client that is not his
-        if ($Client->id > 0 && $Client->user_id !== $lggdUser->id) {
+        if ($model->id > 0 && $model->user_id !== $user->id) {
             return false;
         }
 
         return true;
+    }
+
+    public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
+    {
+        return null;
     }
     // ================
 }

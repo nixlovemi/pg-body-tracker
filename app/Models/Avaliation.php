@@ -1136,65 +1136,20 @@ class Avaliation extends Model
         return json_encode(self::SKIN_FOLDS_FORMULA_INPUT_CODE);
     }
 
-    public static function fSave(array $form, ?string $codedId = null): ApiResponse
+    public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
     {
-        // get model for insert or update
-        if (!empty($codedId)) {
-            $Avaliation = self::getModelByCodedId($codedId);
-            if ($Avaliation === null) {
-                return new ApiResponse(true, __('messages.saveModelNotFound', [
-                    'modelName' => __('messages.models.Avaliation.name'),
-                ]));
-            }
-        } else {
-            $Avaliation = new self();
-        }
-        $isEdit = ($Avaliation->id > 0);
-
-        // check if user can save
-        if (!self::fHasAccess($Avaliation)) {
-            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
-                'modelName' => __('messages.models.Avaliation.name'),
-            ]));
-        }
-
-        // fill model
-        $Avaliation->fill($form);
-
         // fix skin_folds values
-        self::fFixSkinFoldsValues($Avaliation);
+        self::fFixSkinFoldsValues($model);
 
         // default value for height_cm = Client current height
-        if (!$isEdit) {
-            $Client = Client::find($Avaliation->client_id);
-            $Avaliation->height_cm = $Client?->height_cm;
-            $Avaliation->age = $Client?->getAge();
+        if (null === $model->id) {
+            $Client = Client::find($model->client_id);
+            $model->height_cm = $Client?->height_cm;
+            $model->age = $Client?->getAge();
         }
 
-        // validate model
-        $validation = $Avaliation->validateModel();
-        if ($validation->isError()) {
-            return $validation;
-        }
-
-        // save model
-        try {
-            $Avaliation->timestamps = false;
-            $Avaliation->save();
-            $Avaliation->refresh();
-        } catch (\Exception $e) {
-            \App\Helpers\LocalLogger::log('Avaliation save error', ['exception' => $e->getMessage()]);
-            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
-                'modelName' => __('messages.models.Avaliation.name'),
-            ]));
-        }
-
-        // all good, return success
-        $msg = $isEdit ? __('messages.saveModelSuccessEditing', ['modelName' => __('messages.models.Avaliation.name')]) : __('messages.saveModelSuccessAdding', ['modelName' => __('messages.models.Avaliation.name')]);
-        return new ApiResponse(false, $msg, [
-            'Avaliation' => $Avaliation,
-            'isEdit' => $isEdit,
-        ]);
+        $model->timestamps = false;
+        return null;
     }
 
     private static function fFixSkinFoldsValues(self &$Avaliation): void
@@ -1251,26 +1206,9 @@ class Avaliation extends Model
         }
     }
 
-    public static function fHasAccess(self $Avaliation): bool
+    public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
-        // adding user is ok
-        if (!$Avaliation->id > 0) {
-            return true;
-        }
-
-        // check logged user
-        $lggdUser = SysUtils::getLoggedInUser();
-        if (null === $lggdUser) {
-            return false;
-        }
-
-        // root can save any client
-        if ($lggdUser->role === User::ROLE_ROOT) {
-            return true;
-        }
-
-        // check if user is trying to edit a goal from a client that is not his
-        if ($Avaliation->id > 0 && $Avaliation->client->user_id !== $lggdUser->id) {
+        if ($model->id > 0 && $model->client->user_id !== $user->id) {
             return false;
         }
 

@@ -17,6 +17,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable
 {
@@ -221,56 +222,6 @@ class User extends Authenticatable
     // ===============
 
     // static functions
-    public static function fSave(array $form, ?string $codedId = null): ApiResponse
-    {
-        // get model for insert or update
-        if (!empty($codedId)) {
-            $User = self::getModelByCodedId($codedId);
-            if ($User === null) {
-                return new ApiResponse(true, __('messages.saveModelNotFound', [
-                    'modelName' => __('messages.models.User.name'),
-                ]));
-            }
-        } else {
-            $User = new self();
-        }
-        $isEdit = ($User->id > 0);
-
-        // check if user can save
-        if (!self::fHasAccess($User)) {
-            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
-                'modelName' => __('messages.models.User.name'),
-            ]));
-        }
-
-        // fill model
-        $User->fill($form);
-
-        // validate model
-        $validation = $User->validateModel();
-        if ($validation->isError()) {
-            return $validation;
-        }
-
-        // save model
-        try {
-            $User->save();
-            $User->refresh();
-        } catch (\Exception $e) {
-            \App\Helpers\LocalLogger::log('User save error', ['exception' => $e->getMessage()]);
-            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
-                'modelName' => __('messages.models.User.name'),
-            ]));
-        }
-
-        // all good, return success
-        $msg = $isEdit ? __('messages.saveModelSuccessEditing', ['modelName' => __('messages.models.User.name')]) : __('messages.saveModelSuccessAdding', ['modelName' => __('messages.models.User.name')]);
-        return new ApiResponse(false, $msg, [
-            'User' => $User,
-            'isEdit' => $isEdit,
-        ]);
-    }
-
     public static function fHasAccess(self $User): bool
     {
         // adding user is ok
@@ -421,6 +372,20 @@ class User extends Authenticatable
         }
 
         return $User->changePassword($newPassword, $newPasswordRetype);
+    }
+
+    public static function fHasAccessCustom(Model $model, ?User $user = null): bool
+    {
+        if ($model->id > 0 && $model->id !== $user->id) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
+    {
+        return null;
     }
     // ================
 }
