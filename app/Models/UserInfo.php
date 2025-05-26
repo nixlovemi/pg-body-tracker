@@ -122,80 +122,18 @@ class UserInfo extends Model
     // ===============
 
     // static functions
-    public static function fSave(array $form, ?string $codedId = null): ApiResponse
+    public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
-        // get model for insert or update
-        if (!empty($codedId)) {
-            $UserInfo = self::getModelByCodedId($codedId);
-            if ($UserInfo === null) {
-                return new ApiResponse(true, __('messages.saveModelNotFound', [
-                    'modelName' => __('messages.models.UserInfo.name'),
-                ]));
-            }
-        } else {
-            $UserInfo = new self();
-        }
-        $isEdit = ($UserInfo->id > 0);
-
-        // check if user can save
-        if (!self::fHasAccess($UserInfo)) {
-            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
-                'modelName' => __('messages.models.UserInfo.name'),
-            ]));
-        }
-
-        // fill model
-        $UserInfo->fill($form);
-
-        // validate model
-        $validation = $UserInfo->validateModel();
-        if ($validation->isError()) {
-            return $validation;
-        }
-
-        // save model
-        try {
-            $UserInfo->save();
-            $UserInfo->refresh();
-        } catch (\Exception $e) {
-            \App\Helpers\LocalLogger::log('UserInfo save error', ['exception' => $e->getMessage()]);
-            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
-                'modelName' => __('messages.models.UserInfo.name'),
-            ]));
-        }
-
-        // all good, return success
-        $msg = $isEdit ? __('messages.saveModelSuccessEditing', ['modelName' => __('messages.models.UserInfo.name')]) : __('messages.saveModelSuccessAdding', ['modelName' => __('messages.models.UserInfo.name')]);
-        return new ApiResponse(false, $msg, [
-            'UserInfo' => $UserInfo,
-            'isEdit' => $isEdit,
-        ]);
-    }
-
-    public static function fHasAccess(self $UserInfo): bool
-    {
-        // adding user is ok
-        if (empty($UserInfo->id)) {
-            return true;
-        }
-
-        // check logged user
-        $lggdUser = SysUtils::getLoggedInUser();
-        if (null === $lggdUser) {
-            return false;
-        }
-
-        // root can save any client
-        if ($lggdUser->role === User::ROLE_ROOT) {
-            return true;
-        }
-
-        // check if user is trying to edit a goal from a client that is not his
-        if ($UserInfo->id > 0 && $UserInfo->user_id !== $lggdUser->id) {
+        if ($model->id > 0 && $model->user_id !== $user->id) {
             return false;
         }
 
         return true;
+    }
+
+    public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
+    {
+        return null;
     }
     // ================
 }

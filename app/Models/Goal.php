@@ -129,8 +129,11 @@ class Goal extends Model
             ->where('date', '<=', $this->deadline)
             ->orderBy('date', 'DESC')
             ->first();
-        $last = $lastAvaliation?->weight_kg ?? 0;
+        if (!$lastAvaliation || $lastAvaliation?->weight_kg == 0) {
+            return 0;
+        }
 
+        $last = $lastAvaliation?->weight_kg;
         if ($this->isObjectiveWeightLoss()) {
             return $initial - $last;
         } else {
@@ -158,7 +161,7 @@ class Goal extends Model
             return 0;
         }
 
-        return number_format($progress * 100, 2);
+        return round($progress * 100, 2);
     }
     // ===============
 
@@ -172,117 +175,25 @@ class Goal extends Model
         ];
     }
 
-    public static function fSave(array $form, ?string $codedId = null): ApiResponse
+    public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
     {
-        // get model for insert or update
-        if (!empty($codedId)) {
-            $Goal = self::getModelByCodedId($codedId);
-            if ($Goal === null) {
-                return new ApiResponse(true, __('messages.saveModelNotFound', [
-                    'modelName' => __('messages.models.Goal.name'),
-                ]));
-            }
-        } else {
-            $Goal = new self();
-        }
-        $isEdit = ($Goal->id > 0);
-
-        // check if user can save
-        if (!self::fHasAccess($Goal)) {
-            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
-                'modelName' => __('messages.models.Goal.name'),
-            ]));
-        }
-
-        // fill model
-        $Goal->fill($form);
-
-        // default value for initial_weight_kg = Client current weight
-        if (!$isEdit) {
-            $Client = Client::find($Goal->client_id);
+        if (null === $model->id && empty($model->initial_weight_kg)) {
+            $Client = Client::find($model->client_id);
             if (!$Client) {
                 return new ApiResponse(true, __('messages.saveModelNotFound', [
                     'modelName' => __('messages.models.Client.name')
                 ]));
             }
 
-            $Goal->initial_weight_kg = $Client?->getCurrentWeight();
+            $model->initial_weight_kg = $Client?->getCurrentWeight();
         }
 
-        // validate model
-        $validation = $Goal->validateModel();
-        if ($validation->isError()) {
-            return $validation;
-        }
-
-        // save model
-        try {
-            $Goal->save();
-            $Goal->refresh();
-        } catch (\Exception $e) {
-            \App\Helpers\LocalLogger::log('Goal save error', ['exception' => $e->getMessage()]);
-            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
-                'modelName' => __('messages.models.Goal.name'),
-            ]));
-        }
-
-        // all good, return success
-        $msg = $isEdit ? __('messages.saveModelSuccessEditing', ['modelName' => __('messages.models.Goal.name')]) : __('messages.saveModelSuccessAdding', ['modelName' => __('messages.models.Goal.name')]);
-        return new ApiResponse(false, $msg, [
-            'Goal' => $Goal,
-            'isEdit' => $isEdit,
-        ]);
+        return null;
     }
 
-    public static function fRemove(string $codedId): ApiResponse
+    public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
-        $Goal = self::getModelByCodedId($codedId);
-        if ($Goal === null) {
-            return new ApiResponse(true, __('messages.saveModelNotFound', [
-                'modelName' => __('messages.models.Goal.name'),
-            ]));
-        }
-
-        // check if user can save
-        if (!self::fHasAccess($Goal)) {
-            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
-                'modelName' => __('messages.models.Goal.name'),
-            ]));
-        }
-
-        // remove model
-        try {
-            $Goal->delete();
-        } catch (\Exception $e) {
-            return new ApiResponse(true, __('messages.saveModelErrorSaving', [
-                'modelName' => __('messages.models.Goal.name'),
-            ]));
-        }
-
-        // all good, return success
-        return new ApiResponse(false, __('messages.saveModelSuccessRemoving', ['modelName' => __('messages.models.Goal.name')]));
-    }
-
-    public static function fHasAccess(self $Goal): bool
-    {
-        // adding user is ok
-        if (empty($Goal->id)) {
-            return true;
-        }
-
-        // check logged user
-        $lggdUser = SysUtils::getLoggedInUser();
-        if (null === $lggdUser) {
-            return false;
-        }
-
-        // root can save any client
-        if ($lggdUser->role === User::ROLE_ROOT) {
-            return true;
-        }
-
-        // check if user is trying to edit a goal from a client that is not his
-        if ($Goal->id > 0 && $Goal->client->user_id !== $lggdUser->id) {
+        if ($model->id > 0 && $model->client->user_id !== $user->id) {
             return false;
         }
 

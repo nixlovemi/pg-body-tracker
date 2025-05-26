@@ -179,6 +179,7 @@ class AvaliationsTable extends AbstractTableConfiguration
 
     private function getDeleteRowAction(Avaliation $Avaliation): DestroyRowAction
     {
+        // TODO: check how to intercep an exception when deleting to display a message
         return (new DestroyRowAction())
             ->when(
                 $this->canEdit &&
