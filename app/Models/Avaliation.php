@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use App\Mail\SendAvaliationLink;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class Avaliation extends Model
 {
@@ -1218,6 +1219,27 @@ class Avaliation extends Model
     public static function fGetDbPhotosFolder(): string
     {
         return 'storage' . self::BASE_PHOTOS_FOLDER;
+    }
+
+    public static function fGetNbrAvaliationThisMonth(?int $userId = null): int
+    {
+        if (null === $userId) {
+            $userId = SysUtils::getLoggedInUser()->id ?? 0;
+        }
+
+        // get first day of current month
+        $firstDayOfMonth = Carbon::now()->startOfMonth();
+
+        // get last day of current month
+        $lastDayOfMonth = Carbon::now()->endOfMonth();
+
+        // count avaliation for this client in this month
+        return self::with('client')
+            ->whereHas('client', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->whereBetween('date', [$firstDayOfMonth, $lastDayOfMonth])
+            ->count();
     }
     // ================
 }

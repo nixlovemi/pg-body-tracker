@@ -236,7 +236,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                     <button type="submit" class="btn primary btn-user">{{ __('messages.buttonSave') }}</button>
                 @endif
 
-                <a href="{{ route('app.client.index') }}" class="btn btn-light">{{ __('messages.buttonBackToList') }}</a>
+                <a href="{{ url()->previous() }}" class="btn btn-light">{{ __('messages.buttonBackToList') }}</a>
             </div>
         </div>
     </form>

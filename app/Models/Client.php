@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use App\Models\User;
+use Carbon\Carbon;
 
 class Client extends Model
 {
@@ -193,6 +194,66 @@ class Client extends Model
     public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
     {
         return null;
+    }
+
+    public static function fGetNbrNewClientsThisMonth(?int $userId = null): int
+    {
+        if (null === $userId) {
+            $userId = SysUtils::getLoggedInUser()->id ?? 0;
+        }
+
+        // get first day of current month
+        $firstDayOfMonth = Carbon::now()->startOfMonth();
+
+        // get last day of current month
+        $lastDayOfMonth = Carbon::now()->endOfMonth();
+
+        $query = self::query()
+            ->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
+            ->where('user_id', $userId);
+
+        return $query->count();
+    }
+
+    public static function fGetClientsWithoutAvaliation30Days(?int $userId = null): \Illuminate\Database\Eloquent\Builder
+    {
+        if (null === $userId) {
+            $userId = SysUtils::getLoggedInUser()->id ?? 0;
+        }
+
+        $date30DaysAgo = Carbon::now()->subDays(30);
+
+        return self::query()
+            ->where('user_id', $userId)
+            ->whereDoesntHave('avaliations', function ($query) use ($date30DaysAgo) {
+                $query->where('date', '>=', $date30DaysAgo);
+            });
+    }
+
+    public static function fGetNbrClientsWithoutAvaliation30Days(?int $userId = null): int
+    {
+        return self::fGetClientsWithoutAvaliation30Days($userId)->count();
+    }
+
+    public static function fGetClientsWithGoalsDueThisWeek(?int $userId = null): \Illuminate\Database\Eloquent\Builder
+    {
+        if (null === $userId) {
+            $userId = SysUtils::getLoggedInUser()->id ?? 0;
+        }
+
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
+
+        return self::query()
+            ->where('user_id', $userId)
+            ->whereHas('goals', function ($query) use ($startOfWeek, $endOfWeek) {
+                $query->whereBetween('deadline', [$startOfWeek, $endOfWeek]);
+            });
+    }
+
+    public static function fGetNbrClientsWithGoalsDueThisWeek(?int $userId = null): int
+    {
+        return self::fGetClientsWithGoalsDueThisWeek($userId)->count();
     }
     // ================
 }

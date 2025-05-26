@@ -30,13 +30,9 @@ class ClientsTable extends AbstractTableConfiguration
         return Table::make()
             ->model(Client::class)
             ->query(function(Builder $query) {
-                return $query->where('user_id', '=', $this->User->id ?? 0);
+                return $this->getQueryFilter($query);
             })
-            ->rowActions(fn(Client $client) => [
-                $this->getViewRowAction($client),
-                $this->getEditRowAction($client),
-                $this->getDeleteRowAction($client),
-            ]);
+            ->rowActions(fn(Client $client) => $this->getRowActions($client));
     }
 
     protected function columns(): array
@@ -75,7 +71,21 @@ class ClientsTable extends AbstractTableConfiguration
         ];
     }
 
-    private function getViewRowAction(Client $Client): ShowRowAction
+    protected function getQueryFilter(Builder &$query): Builder
+    {
+        return $query->where('user_id', '=', $this->User->id ?? 0);
+    }
+
+    protected function getRowActions(Client $Client): array
+    {
+        return [
+            $this->getViewRowAction($Client),
+            $this->getEditRowAction($Client),
+            $this->getDeleteRowAction($Client),
+        ];
+    }
+
+    protected function getViewRowAction(Client $Client): ShowRowAction
     {
         $routeName = 'app.client.view';
 
@@ -86,7 +96,7 @@ class ClientsTable extends AbstractTableConfiguration
         ->when(Permissions::checkPermission($routeName, $this->User));
     }
 
-    private function getEditRowAction(Client $Client): EditRowAction
+    protected function getEditRowAction(Client $Client): EditRowAction
     {
         $routeName = 'app.client.edit';
 
@@ -97,7 +107,7 @@ class ClientsTable extends AbstractTableConfiguration
         ->when(Permissions::checkPermission($routeName, $this->User));
     }
 
-    private function getDeleteRowAction(Client $Client): DestroyRowAction
+    protected function getDeleteRowAction(Client $Client): DestroyRowAction
     {
         return (new DestroyRowAction())
             ->when(Permissions::checkPermission(Permissions::ACL_CLIENT_EDIT, $this->User))

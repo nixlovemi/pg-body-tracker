@@ -6,6 +6,7 @@ use Illuminate\View\Component;
 use App\Models\User;
 use App\Helpers\SysUtils;
 use App\Helpers\Permissions;
+use App\Helpers\Icons;
 
 class MainMenu extends Component
 {
@@ -29,19 +30,19 @@ class MainMenu extends Component
             'dashboard' => [
                 'route' => route('app.dashboard.index'),
                 'routeName' => 'app.dashboard.index',
-                'icon' => 'fas fa-fw fa-tachometer-alt',
+                'icon' => $this->getClassesFromIcon(Icons::TACHOMETER),
                 'label' => __('messages.menu.dashboard'),
             ],
             'client' => [
                 'route' => route('app.client.index'),
                 'routeName' => 'app.client.index',
-                'icon' => 'fas fa-fw fa-users',
+                'icon' => $this->getClassesFromIcon(Icons::USERS),
                 'label' => __('messages.menu.client'),
             ],
             'avaliation' => [
                 'route' => route('app.avaliation.index'),
                 'routeName' => 'app.avaliation.index',
-                'icon' => 'fas fa-fw fa-chart-line',
+                'icon' => $this->getClassesFromIcon(Icons::FILE_CHART),
                 'label' => __('messages.menu.avaliation'),
             ],
         ];
@@ -60,6 +61,13 @@ class MainMenu extends Component
                 unset($menuItems[$key]);
             }
         }
+    }
+
+    private function getClassesFromIcon(string $icon): string
+    {
+        // Extract classes from the icon string
+        preg_match('/class="([^"]+)"/', $icon, $matches);
+        return $matches[1] ?? '';
     }
 
     /**

@@ -40,6 +40,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     // ================================================
     Route::middleware(['authWeb'])->group(function () {
         Route::get('/dashboard', 'App\Http\Controllers\Dashboard@index')->name('app.dashboard.index');
+        Route::get('/dashboard/clientsWithoutAvaliation30Days', 'App\Http\Controllers\Dashboard@clientsWithoutAvaliation30Days')->name('app.dashboard.clientsWithoutAvaliation30Days');
+        Route::get('/dashboard/clientsWithGoalsDueThisWeek', 'App\Http\Controllers\Dashboard@clientsWithGoalsDueThisWeek')->name('app.dashboard.clientsWithGoalsDueThisWeek');
         Route::get('/profile', 'App\Http\Controllers\User@profile')->name('app.user.profile');
         Route::post('/doProfile', 'App\Http\Controllers\User@doProfile')->name('app.user.doProfile');
         Route::get('/changePsw', 'App\Http\Controllers\User@changePsw')->name('app.user.changePsw');

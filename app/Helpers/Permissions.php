@@ -32,6 +32,8 @@ final class Permissions {
 
     private const ROUTE_ACL = [
         'app.dashboard.index' => self::ACL_DASHBOARD_INDEX,
+        'app.dashboard.clientsWithoutAvaliation30Days' => self::ACL_DASHBOARD_INDEX,
+        'app.dashboard.clientsWithGoalsDueThisWeek' => self::ACL_DASHBOARD_INDEX,
         'app.user.profile' => self::ACL_DASHBOARD_INDEX,
         'app.user.doProfile' => self::ACL_DASHBOARD_INDEX,
         'app.user.changePsw' => self::ACL_DASHBOARD_INDEX,
