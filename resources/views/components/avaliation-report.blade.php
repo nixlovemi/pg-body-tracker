@@ -24,9 +24,6 @@
         text-align: center;
         color: #5a5c69;
     }
-    .avaliation-report-body .arrow-progress {
-        margin-top: -10px;
-    }
     .is-pdf-progress-div {
         width: 12.5%;
         height: 50px;
@@ -107,7 +104,7 @@
     </div>
     <div class="card-body">
         <!-- General Info -->
-        <div class="row mb-xl-3">
+        <div @class(['row', 'mb-xl-3' => !$isPdf, 'mb-0' => $isPdf])>
             <div @class(['col-12 mb-3 col-xl-8 mb-xl-0' => !$isPdf, 'col-12 mb-3' => $isPdf])>
                 <div @class(['card border-left-secondary shadow py-2', 'h-100' => !$isPdf])>
                     <div class="card-body">
@@ -259,7 +256,7 @@
                                 </div>
 
                                 <div>
-                                    <div class="progress mt-5">
+                                    <div @class(['progress', 'mt-5' => !$isPdf, 'mt-1' => $isPdf])>
                                         @php
                                             $arrBars = $Constants::getRankBarInfo();
                                             $bci = $Avaliation->getBciInfo();
@@ -268,7 +265,7 @@
                                         @foreach ($arrBars as $bar)
                                             @if ($isPdf)
                                                 <div class="is-pdf-progress-div" style="background-color:{{ $bar['color'] }};">
-                                                    <span style="position:relative; top:21.5px;">{{ $bar['label'] }}</span>
+                                                    <span style="position:relative; top:25px;">{{ $bar['label'] }}</span>
                                                 </div>
                                             @else
                                                 <div style="background-color:{{ $bar['color'] }};" class="progress-bar" role="progressbar" aria-valuenow="12.5" aria-valuemin="0" aria-valuemax="100">
@@ -279,12 +276,12 @@
                                         @endforeach
                                     </div>
 
-                                    <div class="progress arrow-progress">
+                                    <div class="progress arrow-progress" style="margin:0; padding:0">
                                         @foreach ($arrBars as $bar)
                                             @if ($isPdf)
                                                 <div class="is-pdf-progress-div">
                                                     @if ($loop->index+1 == ($bci['rank'] ?? null))
-                                                        <span id="arrow-progress" style="color:#5a5c69; font-size:150%; position:relative; top:16px;">{!! $Icons::ARROW_UP !!}</span>
+                                                        <span id="arrow-progress" style="color:#5a5c69; font-size:250%; position:relative; top:0;">{!! $Icons::ARROW_UP !!}</span>
                                                     @endif
                                                 </div>
                                             @else
@@ -305,7 +302,7 @@
         </div>
 
         <!-- Info Cards -->
-        <div class="row mt-3">
+        <div @class(['row', 'mt-3' => !$isPdf, 'mt-0' => $isPdf])>
             @php
             $arrInfoLoop = [
                 [

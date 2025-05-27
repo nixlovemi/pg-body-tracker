@@ -34,13 +34,17 @@ View variables:
         display: block;
         width: 100%;
         clear: both;
+        margin: 0;
+        padding: 1px;
+        overflow: hidden;
     }
 
     [class*="col-"] {
         display: inline-block;
         vertical-align: top;
-        padding: 5px;
         float: none !important;
+        margin: 0;
+        padding: 1px;
     }
 
     .col-1 { width: 8.33%; }
@@ -49,7 +53,7 @@ View variables:
     .col-4 { width: 33.33%; }
     .col-5 { width: 41.66%; }
     .col-6 { width: 50%; }
-    .col-7 { width: 58.33%; }
+    .col-7 { width: 57.385%; }
     .col-8 { width: 66.66%; }
     .col-9 { width: 75%; }
     .col-10 { width: 83.33%; }
@@ -59,19 +63,17 @@ View variables:
         border: 1px solid #ccc;
         border-radius: 4px;
         padding: 10px;
-        margin-bottom: 10px;
     }
 
     .card-header {
         font-weight: bold;
-        margin-bottom: 5px;
         background: #f8f8f8;
-        padding: 5px;
+        padding: 1px;
         border-bottom: 1px solid #ddd;
     }
 
     .card-body {
-        padding: 5px;
+        padding: 1px;
     }
 
     .text-right { text-align: right; }
@@ -87,10 +89,6 @@ View variables:
     .mt-3 { margin-top: 15px; }
 
     .bold { font-weight: bold; }
-
-    .row > [class*="col-"] {
-        margin-right: 1%; /* opcional */
-    }
 </style>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
