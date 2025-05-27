@@ -11,7 +11,7 @@ use App\Helpers\SysUtils;
 use App\Helpers\ApiResponse;
 use App\Models\Client;
 use App\Models\Avaliation as mAvaliation;
-use Barryvdh\Snappy\Facades\SnappyPdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\Constants;
 use Illuminate\Support\Facades\URL;
 
@@ -166,14 +166,10 @@ class Avaliation extends Controller
             return $this->redirectWithError('app.client.index', __('messages.modelErrorNoAccess'));
         }
 
-        $pdf = SnappyPdf::loadView('app.avaliation.viewReportPDF', [
+        $pdf = Pdf::loadView('app.avaliation.viewReportPDF', [
             'AVALIATION' => $Avaliation,
         ]);
-        $pdf->setOption('margin-bottom', 2)
-            ->setOption('margin-left', 2)
-            ->setOption('margin-right', 2)
-            ->setOption('margin-top', 2);
-        return $pdf->inline();
+        return $pdf->stream();
     }
 
     public function htmlModalSendWhats(Request $request)

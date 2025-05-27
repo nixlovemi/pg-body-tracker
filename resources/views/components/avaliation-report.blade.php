@@ -159,33 +159,37 @@
                                         $arrSocialLoop2 = array_chunk($arrSocialLoop, 2);
                                     @endphp
 
-                                    <table @class(['table table-borderless d-none d-xl-block', 'd-block' => $isPdf]) style="font-size:80%;">
-                                        <tbody>
-                                            @foreach ($arrSocialLoop2 as $row)
-                                                <tr class="border-bottom">
-                                                    @foreach ($row as $item)
-                                                        <td class="align-middle" scope="row">
+                                    <div @class(['d-none d-xl-block', 'd-block' => $isPdf])>
+                                        <table @class(['table table-borderless']) style="font-size:80%;">
+                                            <tbody>
+                                                @foreach ($arrSocialLoop2 as $row)
+                                                    <tr class="border-bottom">
+                                                        @foreach ($row as $item)
+                                                            <td class="align-middle" scope="row">
+                                                                <i class="{{ $item['icon'] }}"></i>&nbsp;
+                                                                {{ $Avaliation->client->user?->info?->{$item['field']} }}
+                                                            </td>
+                                                        @endforeach
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div @class(['d-xl-none', 'd-none' => $isPdf])>
+                                        <table @class(['table table-borderless']) style="font-size:80%; width:100%;">
+                                            <tbody style="width:100%;">
+                                                @foreach ($arrSocialLoop as $item)
+                                                    <tr class="border-bottom">
+                                                        <td style="text-align:center;" class="align-middle" scope="row">
                                                             <i class="{{ $item['icon'] }}"></i>&nbsp;
                                                             {{ $Avaliation->client->user?->info?->{$item['field']} }}
                                                         </td>
-                                                    @endforeach
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-
-                                    <table @class(['table table-borderless d-xl-none', 'd-none' => $isPdf]) style="font-size:80%; width:100%;">
-                                        <tbody style="width:100%;">
-                                            @foreach ($arrSocialLoop as $item)
-                                                <tr class="border-bottom">
-                                                    <td style="text-align:center;" class="align-middle" scope="row">
-                                                        <i class="{{ $item['icon'] }}"></i>&nbsp;
-                                                        {{ $Avaliation->client->user?->info?->{$item['field']} }}
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
