@@ -827,7 +827,7 @@ class Avaliation extends Model
         $this->setPhotoUrl('photo_rear_url', $file);
     }
 
-    public function removePhotoReartUrl(): void
+    public function removePhotoRearUrl(): void
     {
         $this->removePhotoUrl('photo_rear_url');
     }

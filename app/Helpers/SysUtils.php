@@ -171,7 +171,7 @@ final class SysUtils {
         }
 
         // check if file exists in public
-        $publicPath = str_replace('app' . DIRECTORY_SEPARATOR, '', public_path(self::getOsPhotosFolder($filePath)));
+        $publicPath = str_replace(env('APP_PREFIX_FOLDER') . DIRECTORY_SEPARATOR, '', public_path(self::getOsPhotosFolder($filePath, env('APP_PREFIX_FOLDER'))));
         if (file_exists($publicPath)) {
             return self::getBase64String($publicPath);
         }
@@ -194,9 +194,11 @@ final class SysUtils {
         return "data:$mimeType;base64,$base64";
     }
 
-    public static function getOsPhotosFolder(string $basePath): string
+    public static function getOsPhotosFolder(string $basePath, string $prefix='app'): string
     {
+        // Because of the chance I did from /app to /admin, because if I use /app in the server we get /public/app
+        // here the public folder is under /admin (ENV config) BUT all other things for storage are under /storage/app
         $basePath = str_replace('/', DIRECTORY_SEPARATOR, $basePath);
-        return env('APP_PREFIX_FOLDER').$basePath;
+        return $prefix.$basePath;
     }
 }
