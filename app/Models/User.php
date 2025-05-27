@@ -335,14 +335,12 @@ class User extends Authenticatable
         $shortResetLink = \App\Models\UrlShort::make($resetLink);
 
         // send mail
-        $forgotImg = 'images/mail-forgot-password.jpg';
-
         Mail::to($User->email)
             ->send(
                 new ResetPassword([
                     'EMAIL_TITLE' => __('messages.pages.login.forgot.mailTitle'),
                     'TITLE' => __('messages.pages.login.forgot.mailTitle'),
-                    'HEADER_IMG_FULL_BASE64' => SysUtils::getImageBase64($forgotImg),
+                    'HEADER_IMG_FULL' => '/public/images/mail-forgot-password.jpg',
                     'ARR_TEXT_LINES' => [
                         __('messages.pages.login.forgot.mailLine1'),
                         __('messages.pages.login.forgot.mailLine2'),

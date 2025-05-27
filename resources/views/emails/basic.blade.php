@@ -1,9 +1,11 @@
+@inject('SysUtils', 'App\Helpers\SysUtils')
+
 <?php
 /*
 Variables
     - $TITLE: string
     - $PRE_HEADER: string
-    - $HEADER_IMG_FULL_BASE64: string
+    - $HEADER_IMG_FULL: string
     - $ARR_TEXT_LINES: array[] string
     - $ACTION_BUTTON_URL: string
     - $ACTION_BUTTON_TEXT: string
@@ -11,7 +13,7 @@ Variables
 
 $TITLE = $TITLE ?? 'Title';
 $PRE_HEADER = $PRE_HEADER ?? '';
-$HEADER_IMG_FULL_BASE64 = $HEADER_IMG_FULL_BASE64 ?? '';
+$HEADER_IMG_FULL = $HEADER_IMG_FULL ?? '';
 $ARR_TEXT_LINES = $ARR_TEXT_LINES ?? [];
 $ACTION_BUTTON_URL = $ACTION_BUTTON_URL ?? '';
 $ACTION_BUTTON_TEXT = $ACTION_BUTTON_TEXT ?? 'Click here';
@@ -137,8 +139,16 @@ $siteString = env('APP_URL');
                   <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                     <tr>
                       <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
-                        @if ($HEADER_IMG_FULL_BASE64 != '')
-                            <img style="display: block; width: 516px !important; max-width: 100% !important;" width="516" src="<?=$HEADER_IMG_FULL_BASE64?>" />
+                        @if ($HEADER_IMG_FULL != '')
+                            @php
+                            if (app()->environment('production')) {
+                                $HEADER_IMG_FULL = env('APP_URL') . $HEADER_IMG_FULL;
+                            } else {
+                                $HEADER_IMG_FULL = $SysUtils::getImageBase64($HEADER_IMG_FULL);
+                            }
+                            @endphp
+
+                            <img style="display: block; width: 516px !important; max-width: 100% !important;" width="516" src="<?=$HEADER_IMG_FULL?>" />
                             <br />
                         @endif
 
@@ -184,7 +194,9 @@ $siteString = env('APP_URL');
               <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                 <tr>
                   <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;"><?=env('SITE_DISPLAY_NAME') . ' @ Todos os direitos reservados'?></span>
+                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;"><?=env('SITE_DISPLAY_NAME') . ' @ ' . __('messages.allRightsReserved')?></span>
+                    <br />
+                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;"><?=__('messages.noReplyEmail')?></span>
                     <br />
                     <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">
                         <? echo $siteString ?>

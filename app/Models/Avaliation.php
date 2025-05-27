@@ -1089,15 +1089,13 @@ class Avaliation extends Model
             return new ApiResponse(true, __('messages.pages.login.forgot.errorMailNotValid'));
         }
 
-        $headerImg = "images/mail-avaliation-link-{$this->client->gender}.jpg";
-
         // send email
         Mail::to($email)
             ->send(
                 new SendAvaliationLink([
                     'EMAIL_TITLE' => __('messages.pages.avaliation.sendAvaliationLink.emailTitle'),
                     'TITLE' => __('messages.pages.avaliation.sendAvaliationLink.title'),
-                    'HEADER_IMG_FULL_BASE64' => SysUtils::getImageBase64($headerImg),
+                    'HEADER_IMG_FULL' => "/public/images/mail-avaliation-link-{$this->client->gender}.jpg",
                     'ARR_TEXT_LINES' => [
                         __('messages.pages.avaliation.sendAvaliationLink.bodyLine1', ['clientName' => $this->client->getName()]),
                         __('messages.pages.avaliation.sendAvaliationLink.bodyLine2'),
