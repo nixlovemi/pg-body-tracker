@@ -40,7 +40,7 @@
         overflow-y: hidden;
     }
     .is-pdf-picture-col {
-        height: 622px;
+        height: 500px;
     }
     #uinfo-logo {
         max-width: 200px;
@@ -437,7 +437,6 @@
                     </div>
                 </div>
 
-                <!-- page break for PDF first page and every other 2 -->
                 @if ($isPdf)
                     <div class="page-break"></div>
                     <br />
