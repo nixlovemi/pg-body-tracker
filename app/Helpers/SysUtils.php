@@ -171,7 +171,7 @@ final class SysUtils {
         }
 
         // check if file exists in public
-        $publicPath = str_replace('app' . DIRECTORY_SEPARATOR, '', public_path(self::getOsPhotosFolder($filePath)));
+        $publicPath = str_replace(env('APP_PREFIX_FOLDER') . DIRECTORY_SEPARATOR, '', public_path(self::getOsPhotosFolder($filePath)));
         if (file_exists($publicPath)) {
             return self::getBase64String($publicPath);
         }
@@ -197,6 +197,6 @@ final class SysUtils {
     public static function getOsPhotosFolder(string $basePath): string
     {
         $basePath = str_replace('/', DIRECTORY_SEPARATOR, $basePath);
-        return env('APP_PREFIX_FOLDER').$basePath;
+        return 'app'.$basePath;
     }
 }
