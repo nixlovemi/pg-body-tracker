@@ -52,7 +52,7 @@ View variables:
     .col-3 { width: 25%; }
     .col-4 { width: 33.33%; }
     .col-5 { width: 41.66%; }
-    .col-6 { width: 50%; }
+    .col-6 { width: 49.5%; }
     .col-7 { width: 57.385%; }
     .col-8 { width: 66.66%; }
     .col-9 { width: 75%; }
@@ -89,6 +89,9 @@ View variables:
     .mt-3 { margin-top: 15px; }
 
     .bold { font-weight: bold; }
+    .page-break {
+        page-break-after: always;
+    }
 </style>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

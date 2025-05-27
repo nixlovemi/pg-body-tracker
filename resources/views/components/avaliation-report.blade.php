@@ -384,10 +384,9 @@
                     ])
                 </div>
 
-                @if ($loop->index == 7 && $isPdf)
-                    <!-- page break -->
-                    <p>&nbsp;</p>
-                    <p>&nbsp;</p>
+                @if ($loop->index == 9 && $isPdf)
+                    <div class="page-break"></div>
+                    <br />
                 @endif
             @endforeach
         </div>
