@@ -21,7 +21,8 @@ class AvaliationGraph extends Component
         public bool $isPdf = false,
     ) {
         /** AvaliationGraphAbstract $helper */
-        $this->helper = new $this->helperClass($this->avaliationId);
+        $this->helper = new $this->helperClass($this->avaliationId, $this->isPdf);
+        $this->helper->fullHtmlTable = $this->isPdf;
     }
 
     /**

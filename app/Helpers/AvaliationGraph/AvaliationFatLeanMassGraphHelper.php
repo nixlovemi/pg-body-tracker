@@ -11,8 +11,10 @@ final class AvaliationFatLeanMassGraphHelper extends AvaliationGraphAbstract
     private const COLOR_FAT = Constants::GRAPH_COLOR_LIGHT_PINK;
 
     public function __construct(
-        private int $avaliationId,
+        protected int $avaliationId,
+        protected bool $isForPdf = false
     ) {
+        parent::__construct($avaliationId, $isForPdf);
         $this->addTableHeaders();
         $this->buildTableBody();
     }
@@ -99,11 +101,9 @@ final class AvaliationFatLeanMassGraphHelper extends AvaliationGraphAbstract
 
     private function makeTableRow(string $typeKey, string $value, float $percent, string $color): void
     {
-        $label = sprintf(
-            '<a href="javascript:;" class="btn btn-primary btn-circle btn-sm" style="margin-right:4px; width:18px; height:18px; background-color:%s; border-color:%s;">&nbsp;</a>%s',
-            $color,
-            $color,
-            __('messages.models.Avaliation.label' . $typeKey)
+        $label = $this->getTableRowLabel(
+            __('messages.models.Avaliation.label' . $typeKey),
+            $color
         );
 
         $this->addBodyItem($label, $value, number_format($percent, 2) . ' %');

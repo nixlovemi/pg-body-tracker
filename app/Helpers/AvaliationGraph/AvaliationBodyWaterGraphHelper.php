@@ -12,8 +12,10 @@ final class AvaliationBodyWaterGraphHelper extends AvaliationGraphAbstract
     private BodyWater $BodyWater;
 
     public function __construct(
-        private int $avaliationId,
+        protected int $avaliationId,
+        protected bool $isForPdf = false
     ) {
+        parent::__construct($avaliationId, $isForPdf);
         $this->BodyWater = new BodyWater($this->getAvaliation());
         $this->addTableHeaders();
     }

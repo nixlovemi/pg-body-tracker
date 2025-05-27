@@ -8,8 +8,10 @@ use App\Helpers\Constants;
 final class AvaliationBodyCompositionGraphHelper extends AvaliationGraphAbstract
 {
     public function __construct(
-        private int $avaliationId,
+        protected int $avaliationId,
+        protected bool $isForPdf = false
     ) {
+        parent::__construct($avaliationId, $isForPdf);
         $this->addTableHeaders();
         $this->buildTableBody();
     }
@@ -179,11 +181,9 @@ final class AvaliationBodyCompositionGraphHelper extends AvaliationGraphAbstract
 
     private function makeTableRow(string $label, string $value, float $percent, string $color): void
     {
-        $label = sprintf(
-            '<a href="javascript:;" class="btn btn-primary btn-circle btn-sm" style="margin-right:4px; width:18px; height:18px; background-color:%s; border-color:%s;">&nbsp;</a>%s',
-            $color,
-            $color,
-            $label
+        $label = $this->getTableRowLabel(
+            $label,
+            $color
         );
 
         $this->addBodyItem($label, $value, number_format($percent, 2) . ' %');

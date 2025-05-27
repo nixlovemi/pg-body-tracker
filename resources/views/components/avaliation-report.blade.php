@@ -32,7 +32,11 @@
         float: left;
     }
     .is-pdf-card-graph {
-        height: 671px;
+        height: 1000px;
+        overflow-y: hidden;
+    }
+    .is-pdf-card-graph-first {
+        height: 800px;
         overflow-y: hidden;
     }
     .is-pdf-picture-col {
@@ -416,7 +420,12 @@
         <div class="row">
             @foreach ($arrGraph as $graph)
                 <div class="col-12 col-lg-6 mb-3">
-                    <div @class(['card border-left-secondary shadow py-2', 'h-100' => !$isPdf, 'is-pdf-card-graph' => $isPdf])>
+                    <div @class([
+                        'card border-left-secondary shadow py-2',
+                        'h-100' => !$isPdf,
+                        'is-pdf-card-graph-first' => $isPdf && $loop->index === 0,
+                        'is-pdf-card-graph' => $isPdf && $loop->index !== 0,
+                    ])>
                         <div class="card-body">
                             <x-avaliation-graph
                                 :avaliationId="$Avaliation->id"
@@ -428,25 +437,13 @@
                     </div>
                 </div>
 
-                @if ($loop->index == 0 && $isPdf)
-                    <!-- page break -->
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                @endif
-
-                @if ($loop->index == 4 && $isPdf)
-                    <p class="mb-0">&nbsp;</p>
+                <!-- page break for PDF first page and every other 2 -->
+                @if ($isPdf)
+                    <div class="page-break"></div>
+                    <br />
                 @endif
             @endforeach
         </div>
-
-        @if ($isPdf)
-            <!-- page break -->
-            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-            <p>&nbsp;</p><p>&nbsp;</p><p class="mb-0">&nbsp;</p>
-        @endif
 
         <!-- pictures -->
         <div class="row">

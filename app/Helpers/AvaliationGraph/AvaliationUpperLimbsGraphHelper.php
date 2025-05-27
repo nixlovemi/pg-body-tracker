@@ -30,8 +30,11 @@ final class AvaliationUpperLimbsGraphHelper extends AvaliationGraphAbstract
         ],
     ];
 
-    public function __construct(private int $avaliationId)
-    {
+    public function __construct(
+        protected int $avaliationId,
+        protected bool $isForPdf = false
+    ) {
+        parent::__construct($avaliationId, $isForPdf);
         $this->addTableHeaders();
     }
 
@@ -121,11 +124,10 @@ final class AvaliationUpperLimbsGraphHelper extends AvaliationGraphAbstract
             $color = $segment['color'];
             $label = __('messages.pages.avaliation.modalAddAvaliation.' . $segment['label']);
 
-            $header = sprintf(
-                '<a href="javascript:;" class="btn btn-primary btn-circle btn-sm" style="margin-right:4px; width:18px; height:18px; background-color:%s; border-color:%s;">&nbsp;</a>%s',
-                $color, $color, $label
+            $header = $this->getTableRowLabel(
+                $label,
+                $color
             );
-
             $this->addHeadItem($header);
         }
     }
