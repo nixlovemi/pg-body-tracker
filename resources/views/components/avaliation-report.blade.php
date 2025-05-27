@@ -24,9 +24,6 @@
         text-align: center;
         color: #5a5c69;
     }
-    .avaliation-report-body .arrow-progress {
-        margin-top: -10px;
-    }
     .is-pdf-progress-div {
         width: 12.5%;
         height: 50px;
@@ -35,11 +32,15 @@
         float: left;
     }
     .is-pdf-card-graph {
-        height: 671px;
+        height: 1000px;
+        overflow-y: hidden;
+    }
+    .is-pdf-card-graph-first {
+        height: 800px;
         overflow-y: hidden;
     }
     .is-pdf-picture-col {
-        height: 622px;
+        height: 500px;
     }
     #uinfo-logo {
         max-width: 200px;
@@ -107,7 +108,7 @@
     </div>
     <div class="card-body">
         <!-- General Info -->
-        <div class="row mb-xl-3">
+        <div @class(['row', 'mb-xl-3' => !$isPdf, 'mb-0' => $isPdf])>
             <div @class(['col-12 mb-3 col-xl-8 mb-xl-0' => !$isPdf, 'col-12 mb-3' => $isPdf])>
                 <div @class(['card border-left-secondary shadow py-2', 'h-100' => !$isPdf])>
                     <div class="card-body">
@@ -159,33 +160,37 @@
                                         $arrSocialLoop2 = array_chunk($arrSocialLoop, 2);
                                     @endphp
 
-                                    <table @class(['table table-borderless d-none d-xl-block', 'd-block' => $isPdf]) style="font-size:80%;">
-                                        <tbody>
-                                            @foreach ($arrSocialLoop2 as $row)
-                                                <tr class="border-bottom">
-                                                    @foreach ($row as $item)
-                                                        <td class="align-middle" scope="row">
+                                    <div @class(['d-none d-xl-block', 'd-block' => $isPdf])>
+                                        <table @class(['table table-borderless']) style="font-size:80%;">
+                                            <tbody>
+                                                @foreach ($arrSocialLoop2 as $row)
+                                                    <tr class="border-bottom">
+                                                        @foreach ($row as $item)
+                                                            <td class="align-middle" scope="row">
+                                                                <i class="{{ $item['icon'] }}"></i>&nbsp;
+                                                                {{ $Avaliation->client->user?->info?->{$item['field']} }}
+                                                            </td>
+                                                        @endforeach
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div @class(['d-xl-none', 'd-none' => $isPdf])>
+                                        <table @class(['table table-borderless']) style="font-size:80%; width:100%;">
+                                            <tbody style="width:100%;">
+                                                @foreach ($arrSocialLoop as $item)
+                                                    <tr class="border-bottom">
+                                                        <td style="text-align:center;" class="align-middle" scope="row">
                                                             <i class="{{ $item['icon'] }}"></i>&nbsp;
                                                             {{ $Avaliation->client->user?->info?->{$item['field']} }}
                                                         </td>
-                                                    @endforeach
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-
-                                    <table @class(['table table-borderless d-xl-none', 'd-none' => $isPdf]) style="font-size:80%; width:100%;">
-                                        <tbody style="width:100%;">
-                                            @foreach ($arrSocialLoop as $item)
-                                                <tr class="border-bottom">
-                                                    <td style="text-align:center;" class="align-middle" scope="row">
-                                                        <i class="{{ $item['icon'] }}"></i>&nbsp;
-                                                        {{ $Avaliation->client->user?->info?->{$item['field']} }}
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -255,7 +260,7 @@
                                 </div>
 
                                 <div>
-                                    <div class="progress mt-5">
+                                    <div @class(['progress', 'mt-5' => !$isPdf, 'mt-1' => $isPdf])>
                                         @php
                                             $arrBars = $Constants::getRankBarInfo();
                                             $bci = $Avaliation->getBciInfo();
@@ -264,7 +269,7 @@
                                         @foreach ($arrBars as $bar)
                                             @if ($isPdf)
                                                 <div class="is-pdf-progress-div" style="background-color:{{ $bar['color'] }};">
-                                                    <span style="position:relative; top:21.5px;">{{ $bar['label'] }}</span>
+                                                    <span style="position:relative; top:25px;">{{ $bar['label'] }}</span>
                                                 </div>
                                             @else
                                                 <div style="background-color:{{ $bar['color'] }};" class="progress-bar" role="progressbar" aria-valuenow="12.5" aria-valuemin="0" aria-valuemax="100">
@@ -275,12 +280,12 @@
                                         @endforeach
                                     </div>
 
-                                    <div class="progress arrow-progress">
+                                    <div class="progress arrow-progress" style="margin:0; padding:0">
                                         @foreach ($arrBars as $bar)
                                             @if ($isPdf)
                                                 <div class="is-pdf-progress-div">
                                                     @if ($loop->index+1 == ($bci['rank'] ?? null))
-                                                        <span id="arrow-progress" style="color:#5a5c69; font-size:150%; position:relative; top:16px;">{!! $Icons::ARROW_UP !!}</span>
+                                                        <span id="arrow-progress" style="color:#5a5c69; font-size:250%; position:relative; top:0;">{!! $Icons::ARROW_UP !!}</span>
                                                     @endif
                                                 </div>
                                             @else
@@ -301,7 +306,7 @@
         </div>
 
         <!-- Info Cards -->
-        <div class="row mt-3">
+        <div @class(['row', 'mt-3' => !$isPdf, 'mt-0' => $isPdf])>
             @php
             $arrInfoLoop = [
                 [
@@ -383,10 +388,9 @@
                     ])
                 </div>
 
-                @if ($loop->index == 7 && $isPdf)
-                    <!-- page break -->
-                    <p>&nbsp;</p>
-                    <p>&nbsp;</p>
+                @if ($loop->index == 9 && $isPdf)
+                    <div class="page-break"></div>
+                    <br />
                 @endif
             @endforeach
         </div>
@@ -416,7 +420,12 @@
         <div class="row">
             @foreach ($arrGraph as $graph)
                 <div class="col-12 col-lg-6 mb-3">
-                    <div @class(['card border-left-secondary shadow py-2', 'h-100' => !$isPdf, 'is-pdf-card-graph' => $isPdf])>
+                    <div @class([
+                        'card border-left-secondary shadow py-2',
+                        'h-100' => !$isPdf,
+                        'is-pdf-card-graph-first' => $isPdf && $loop->index === 0,
+                        'is-pdf-card-graph' => $isPdf && $loop->index !== 0,
+                    ])>
                         <div class="card-body">
                             <x-avaliation-graph
                                 :avaliationId="$Avaliation->id"
@@ -428,25 +437,12 @@
                     </div>
                 </div>
 
-                @if ($loop->index == 0 && $isPdf)
-                    <!-- page break -->
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                @endif
-
-                @if ($loop->index == 4 && $isPdf)
-                    <p class="mb-0">&nbsp;</p>
+                @if ($isPdf)
+                    <div class="page-break"></div>
+                    <br />
                 @endif
             @endforeach
         </div>
-
-        @if ($isPdf)
-            <!-- page break -->
-            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-            <p>&nbsp;</p><p>&nbsp;</p><p class="mb-0">&nbsp;</p>
-        @endif
 
         <!-- pictures -->
         <div class="row">

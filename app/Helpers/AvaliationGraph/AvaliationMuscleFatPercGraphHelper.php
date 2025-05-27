@@ -15,8 +15,10 @@ final class AvaliationMuscleFatPercGraphHelper extends AvaliationGraphAbstract
     private const SKELETAL_MUSCLE_COLOR = Constants::GRAPH_COLOR_LIGHT_BLUE;
 
     public function __construct(
-        private int $avaliationId,
+        protected int $avaliationId,
+        protected bool $isForPdf = false
     ) {
+        parent::__construct($avaliationId, $isForPdf);
         $this->addTableHeaders();
     }
 
@@ -105,18 +107,14 @@ final class AvaliationMuscleFatPercGraphHelper extends AvaliationGraphAbstract
         $data['datasets'][self::DATASET_FAT_IDX]['data'][] = $fat;
         $data['datasets'][self::DATASET_SKELETAL_MUSCLE_IDX]['data'][] = $skeletalMuscle;
 
-        $fatLabel = sprintf(
-            '<a href="javascript:;" class="btn btn-primary btn-circle btn-sm" style="margin-right:4px; width:18px; height:18px; background-color:%s; border-color:%s;">&nbsp;</a>%s',
-            self::FAT_COLOR,
-            self::FAT_COLOR,
-            SysUtils::formatDbToNumber($fat, 1) . self::PREFIX
+        $fatLabel = $this->getTableRowLabel(
+            SysUtils::formatDbToNumber($fat, 1) . self::PREFIX,
+            self::FAT_COLOR
         );
 
-        $skeletalLabel = sprintf(
-            '<a href="javascript:;" class="btn btn-primary btn-circle btn-sm" style="margin-right:4px; width:18px; height:18px; background-color:%s; border-color:%s;">&nbsp;</a>%s',
-            self::SKELETAL_MUSCLE_COLOR,
-            self::SKELETAL_MUSCLE_COLOR,
-            SysUtils::formatDbToNumber($skeletalMuscle, 1) . self::PREFIX
+        $skeletalLabel = $this->getTableRowLabel(
+            SysUtils::formatDbToNumber($skeletalMuscle, 1) . self::PREFIX,
+            self::SKELETAL_MUSCLE_COLOR
         );
 
         // table data

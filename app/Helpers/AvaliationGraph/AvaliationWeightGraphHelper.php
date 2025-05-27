@@ -12,8 +12,10 @@ final class AvaliationWeightGraphHelper extends AvaliationGraphAbstract
     private Weight $Weight;
 
     public function __construct(
-        private int $avaliationId,
+        protected int $avaliationId,
+        protected bool $isForPdf = false
     ) {
+        parent::__construct($avaliationId, $isForPdf);
         $this->Weight = new Weight($this->getAvaliation());
         $this->addTableHeaders();
     }

@@ -7,13 +7,18 @@ use App\Helpers\Constants;
 
 abstract class AvaliationGraphAbstract
 {
-    protected bool $fullHtmlTable = false;
+    public bool $fullHtmlTable = false;
 
     private array $tableData = [
         'head' => [],
         'body' => [],
     ];
     protected string $defaultColor = Constants::RANK_COLOR_DEFAULT;
+
+    public function __construct(
+        protected int $avaliationId,
+        protected bool $isForPdf = false
+    ) { }
 
     abstract protected function getAvaliation(): Avaliation;
     abstract protected function getConfig(): array;
@@ -44,6 +49,24 @@ abstract class AvaliationGraphAbstract
             ->orderByDesc('date')
             ->limit($limit)
             ->get();
+    }
+
+    protected final function getTableRowLabel(string $label, string $color): string
+    {
+        if ($this->isForPdf) {
+            $str = '<div style="position:relative; top-8px; padding-bottom:2px; border-bottom:solid 6px; ';
+            $str .= ' border-bottom-color:%s; border-bottom-color:%s;">%s</div>';
+        } else {
+            $str = '<a href="javascript:;" class="btn btn-primary btn-circle btn-sm" style="margin-right:4px; ';
+            $str .= ' width:18px; height:18px; background-color:%s; border-color:%s;">&nbsp;</a>%s';
+        }
+
+        return sprintf(
+            $str,
+            $color,
+            $color,
+            $label
+        );
     }
 
     private function getDataTableHtml(): string
