@@ -13,7 +13,7 @@ abstract class BaseMail extends Mailable
     protected $emailTitle;
     protected $title;
     protected $preHeader;
-    protected $headerImgFullBase64;
+    protected $headerImgFull;
     protected $arrTextLines;
     protected $actionButtonUrl;
     protected $actionButtonText;
@@ -28,7 +28,7 @@ abstract class BaseMail extends Mailable
         $this->emailTitle = $arrParam['EMAIL_TITLE'] ?? 'Novo Email';
         $this->title = $arrParam['TITLE'] ?? 'Mensagem';
         $this->preHeader = $arrParam['PRE_HEADER'] ?? '';
-        $this->headerImgFullBase64 = $arrParam['HEADER_IMG_FULL_BASE64'] ?? '';
+        $this->headerImgFull = $arrParam['HEADER_IMG_FULL'] ?? '';
         $this->arrTextLines = $arrParam['ARR_TEXT_LINES'] ?? [];
         $this->actionButtonUrl = $arrParam['ACTION_BUTTON_URL'] ?? '';
         $this->actionButtonText = $arrParam['ACTION_BUTTON_TEXT'] ?? '';
@@ -46,7 +46,7 @@ abstract class BaseMail extends Mailable
                 ->with([
                     'TITLE' => $this->title,
                     'PRE_HEADER' => $this->preHeader,
-                    'HEADER_IMG_FULL_BASE64' => $this->headerImgFullBase64,
+                    'HEADER_IMG_FULL' => $this->headerImgFull,
                     'ARR_TEXT_LINES' => $this->arrTextLines,
                     'ACTION_BUTTON_URL' => $this->actionButtonUrl,
                     'ACTION_BUTTON_TEXT' => $this->actionButtonText,

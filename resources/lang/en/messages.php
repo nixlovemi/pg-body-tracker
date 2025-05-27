@@ -42,6 +42,8 @@ return [
     'okipaDateRangePlaceholderEnd' => 'End',
     'yes' => 'Yes',
     'no' => 'No',
+    'allRightsReserved' => 'All rights reserved.',
+    'noReplyEmail' => 'This is an automated email, please do not reply.',
 
     'helpers' => [
         'modelValidation' => [

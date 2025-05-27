@@ -170,6 +170,11 @@ final class SysUtils {
             return self::getBase64String($filePath);
         }
 
+        // remove /public/ if it exists in the path
+        if (strpos($filePath, '/public') === 0) {
+            $filePath = str_replace('/public', '', $filePath);
+        }
+
         // check if file exists in public
         $publicPath = str_replace(env('APP_PREFIX_FOLDER') . DIRECTORY_SEPARATOR, '', public_path(self::getOsPhotosFolder($filePath, env('APP_PREFIX_FOLDER'))));
         if (file_exists($publicPath)) {
