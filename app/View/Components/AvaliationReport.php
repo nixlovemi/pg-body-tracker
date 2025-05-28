@@ -28,6 +28,10 @@ class AvaliationReport extends Component
      */
     public function render()
     {
-        return view('components.avaliation-report');
+        if ($this->isPdf) {
+            return view('components.avaliationReport.avaliation-report-pdf');
+        }
+
+        return view('components.avaliationReport.avaliation-report-web');
     }
 }
