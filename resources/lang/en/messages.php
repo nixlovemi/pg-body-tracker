@@ -10,6 +10,7 @@ return [
     'profile' => 'Profile',
     'logout' => 'Logout',
     'buttonSave' => 'Save',
+    'buttonBack' => 'Back',
     'buttonBackToList' => 'Back to list',
     'buttonLoadMore' => 'Load more',
     'buttonNext' => 'Next',

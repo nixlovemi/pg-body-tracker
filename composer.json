@@ -15,6 +15,7 @@
         "h4cc/wkhtmltopdf-amd64": "0.12.4",
         "ianw/quickchart": "^1.3",
         "intervention/image": "^2.7",
+        "jenssegers/agent": "^2.6",
         "laravel/framework": "^8.75",
         "laravel/tinker": "^2.5",
         "okipa/laravel-table": "5.2.2",

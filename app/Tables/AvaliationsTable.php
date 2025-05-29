@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Tables\Filters\DateRangeFilter;
 use Okipa\LaravelTable\RowActions\RedirectRowAction;
 use App\Helpers\Constants;
+use Jenssegers\Agent\Agent;
 
 class AvaliationsTable extends AbstractTableConfiguration
 {
@@ -25,6 +26,7 @@ class AvaliationsTable extends AbstractTableConfiguration
     public bool $canEdit = false;
     private ?Client $Client;
     private User $User;
+    private Agent $Agent;
 
     /**
      * @throws Exception
@@ -33,6 +35,7 @@ class AvaliationsTable extends AbstractTableConfiguration
     {
         $this->User = SysUtils::getLoggedInUser();
         $this->Client = Client::find($this->clientId);
+        $this->Agent = new Agent();
     }
 
     protected function table(): Table
@@ -151,7 +154,7 @@ class AvaliationsTable extends AbstractTableConfiguration
             ['link-info'],
             null,
             null,
-            true
+            !$this->Agent->isMobile()
         ))->when(Permissions::checkPermission($routeName), $this->User);
     }
 

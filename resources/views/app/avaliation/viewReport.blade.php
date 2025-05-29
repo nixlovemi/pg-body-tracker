@@ -16,6 +16,12 @@ View variables:
 ])
 
 @section('DASH_BODY_CONTENT')
+    <div class="text-left mb-3">
+        <a href="{{ url()->previous() }}" class="btn btn-light">
+            {{ __('messages.buttonBack') }}
+        </a>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <x-avaliation-report

@@ -10,6 +10,7 @@ return [
     'profile' => 'Perfil',
     'logout' => 'Sair',
     'buttonSave' => 'Salvar',
+    'buttonBack' => 'Voltar',
     'buttonBackToList' => 'Voltar para lista',
     'buttonLoadMore' => 'Carregar mais',
     'buttonNext' => 'Próximo',

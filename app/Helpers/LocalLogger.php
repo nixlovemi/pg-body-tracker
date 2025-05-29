@@ -24,7 +24,7 @@ final class LocalLogger
     public static function getLogVars(): array
     {
         return [
-            'userId' => /*SysUtils::getLoggedInUser()?->id*/ null, // TODO: Uncomment this line
+            'userId' => SysUtils::getLoggedInUser()?->id ?? null,
             'reqMethod' => $_SERVER['REQUEST_METHOD'] ?? null,
             'route' => Route::currentRouteName(),
             'request' => $_REQUEST,
