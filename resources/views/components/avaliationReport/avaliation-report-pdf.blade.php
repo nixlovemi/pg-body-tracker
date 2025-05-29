@@ -34,3 +34,10 @@ View variables from component (App\View\Components\AvaliationReport):
         'DIV_CARD_HAS_BREAK_CLASS' => true,
     ])
 @endsection
+
+@section('AVALIATION_REPORT_PICTURES')
+    @include('components.avaliationReport.partials.pictures', [
+        'AVALIATION' => $Avaliation,
+        'DIV_PHOTO_INPUT_CLASSES' => 'mb-3 col-6 is-pdf-picture-col',
+    ])
+@endsection

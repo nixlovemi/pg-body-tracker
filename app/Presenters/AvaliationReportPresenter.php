@@ -147,4 +147,34 @@ final class AvaliationReportPresenter
             ['title' => __('messages.components.AvaliationLowerLimbsGraph.title'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationLowerLimbsGraphHelper']
         ];
     }
+
+    public static function getImagesData(): array
+    {
+        return  [
+            [
+                'fieldName' => 'photo_front_url',
+                'inputName' => 'f-photo_front_url',
+                'defaultImg' => '/images/photo_front.jpg',
+                'imgAlt' => __('messages.models.Avaliation.fields.photo_front_url'),
+            ],
+            [
+                'fieldName' => 'photo_right_url',
+                'inputName' => 'f-photo_right_url',
+                'defaultImg' => '/images/photo_right.jpg',
+                'imgAlt' => __('messages.models.Avaliation.fields.photo_right_url'),
+            ],
+            [
+                'fieldName' => 'photo_rear_url',
+                'inputName' => 'f-photo_rear_url',
+                'defaultImg' => '/images/photo_rear.jpg',
+                'imgAlt' => __('messages.models.Avaliation.fields.photo_rear_url'),
+            ],
+            [
+                'fieldName' => 'photo_left_url',
+                'inputName' => 'f-photo_left_url',
+                'defaultImg' => '/images/photo_left.jpg',
+                'imgAlt' => __('messages.models.Avaliation.fields.photo_left_url'),
+            ]
+        ];
+    }
 }

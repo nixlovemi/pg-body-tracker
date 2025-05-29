@@ -77,3 +77,7 @@ body {
 .page-break {
     page-break-after: always;
 }
+
+.is-pdf-picture-col {
+    height: 500px;
+}

@@ -9,6 +9,17 @@ View variables:
 */
 @endphp
 
+<style>
+    .is-pdf-card-graph {
+        height: 1000px;
+        overflow-y: hidden;
+    }
+    .is-pdf-card-graph-first {
+        height: 800px;
+        overflow-y: hidden;
+    }
+</style>
+
 <div class="row">
     @foreach ($ARPresenter::getGraphData() as $graph)
         <div class="col-12 col-lg-6 mb-3">

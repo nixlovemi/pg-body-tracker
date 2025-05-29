@@ -12,6 +12,10 @@ View variables from component (App\View\Components\AvaliationReport):
 @section('AVALIATION_REPORT_GENERAL_INFO')
     <link rel='stylesheet' href='{{ url('/') }}template/start-bootstrap/css/avaliation-report-general-info.css' type='text/css' media='all' />
     <style>
+        #uinfo-logo {
+            max-width: 200px;
+        }
+
         @media (max-width: 1200px) {
             #uinfo-logo,
             #uinfo-info {
@@ -49,5 +53,12 @@ View variables from component (App\View\Components\AvaliationReport):
         'AVALIATION' => $Avaliation,
         'DIV_CARD_CLASSES' => 'card border-left-secondary shadow py-2 h-100',
         'DIV_CARD_HAS_BREAK_CLASS' => false,
+    ])
+@endsection
+
+@section('AVALIATION_REPORT_PICTURES')
+    @include('components.avaliationReport.partials.pictures', [
+        'AVALIATION' => $Avaliation,
+        'DIV_PHOTO_INPUT_CLASSES' => 'mb-3 col-12 col-lg-6',
     ])
 @endsection

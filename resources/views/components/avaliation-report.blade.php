@@ -1,23 +1,6 @@
 @inject('Icons', 'App\Helpers\Icons')
 @inject('Constants', 'App\Helpers\Constants')
 
-<style>
-    .is-pdf-card-graph {
-        height: 1000px;
-        overflow-y: hidden;
-    }
-    .is-pdf-card-graph-first {
-        height: 800px;
-        overflow-y: hidden;
-    }
-    .is-pdf-picture-col {
-        height: 500px;
-    }
-    #uinfo-logo {
-        max-width: 200px;
-    }
-</style>
-
 <div class="avaliation-report-body card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">
@@ -46,65 +29,7 @@
         @yield('AVALIATION_REPORT_GRAPHS')
 
         <!-- pictures -->
-        <div class="row">
-            <div class="col-12">
-                <div @class(['card border-left-secondary shadow py-2'])>
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-sm font-weight-bold text-secondary text-uppercase mb-1">
-                                    {{ __('messages.pages.avaliation.modalAddAvaliation.pageSixTitle') }}
-                                </div>
-
-                                @php
-                                    $arrPhotoLoop = [
-                                        [
-                                            'fieldName' => 'photo_front_url',
-                                            'inputName' => 'f-photo_front_url',
-                                            'defaultImg' => '/images/photo_front.jpg',
-                                            'imgAlt' => __('messages.models.Avaliation.fields.photo_front_url'),
-                                        ],
-                                        [
-                                            'fieldName' => 'photo_right_url',
-                                            'inputName' => 'f-photo_right_url',
-                                            'defaultImg' => '/images/photo_right.jpg',
-                                            'imgAlt' => __('messages.models.Avaliation.fields.photo_right_url'),
-                                        ],
-                                        [
-                                            'fieldName' => 'photo_rear_url',
-                                            'inputName' => 'f-photo_rear_url',
-                                            'defaultImg' => '/images/photo_rear.jpg',
-                                            'imgAlt' => __('messages.models.Avaliation.fields.photo_rear_url'),
-                                        ],
-                                        [
-                                            'fieldName' => 'photo_left_url',
-                                            'inputName' => 'f-photo_left_url',
-                                            'defaultImg' => '/images/photo_left.jpg',
-                                            'imgAlt' => __('messages.models.Avaliation.fields.photo_left_url'),
-                                        ]
-                                    ];
-                                @endphp
-
-                                <div class="row">
-                                    @foreach ($arrPhotoLoop as $item)
-                                        <div @class(['mb-3', 'col-12 col-lg-6' => !$isPdf, 'col-6 is-pdf-picture-col' => $isPdf])>
-                                            @include('app.avaliation.partials.photoInput', [
-                                                'MODEL' => $Avaliation,
-                                                'FIELD_NAME' => $item['fieldName'],
-                                                'INPUT_NAME' => $item['inputName'],
-                                                'INPUT_DEFAULT_IMAGE' => $item['defaultImg'],
-                                                'IMG_ALT' => $item['imgAlt'],
-                                                'CAN_EDIT' => false,
-                                            ])
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @yield('AVALIATION_REPORT_PICTURES')
 
         <!-- observation -->
         @if (!empty($Avaliation->client_notes))
