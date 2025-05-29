@@ -125,4 +125,26 @@ final class AvaliationReportPresenter
             ];
         }, $data);
     }
+
+    public static function getGraphData(): array
+    {
+        return [
+            ['title' => __('messages.models.Client.fields.weight'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationWeightGraphHelper'],
+            ['title' => __('messages.components.avaliationFatLeanMassGraph.title', [
+                'fatMass' => __('messages.models.Avaliation.labelFatMass'),
+                'leanMass' => __('messages.models.Avaliation.labelLeanMass'),
+            ]), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationFatLeanMassGraphHelper'],
+            ['title' => __('messages.components.AvaliationBodyCompositionGraph.title', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationBodyCompositionGraphHelper'],
+            ['title' => __('messages.components.AvaliationMuscleFatPercGraph.title', [
+                'fatMass' => __('messages.models.Avaliation.labelFatMass'),
+                'skeletalMuscle' => __('messages.components.avaliationReport.skeletalMuscle'),
+            ]), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationMuscleFatPercGraphHelper'],
+            ['title' => __('messages.components.AvaliationFatBySegmentGraph.title', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationFatBySegmentGraphHelper'],
+            ['title' => __('messages.components.AvaliationLeanBySegmentGraph.title', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationLeanBySegmentGraphHelper'],
+            ['title' => __('messages.components.avaliationReport.bodyWater', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationBodyWaterGraphHelper'],
+            ['title' => __('messages.models.Avaliation.fields.body_age', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationBodyAgeGraphHelper'],
+            ['title' => __('messages.components.AvaliationUpperLimbsGraph.title'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationUpperLimbsGraphHelper'],
+            ['title' => __('messages.components.AvaliationLowerLimbsGraph.title'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationLowerLimbsGraphHelper']
+        ];
+    }
 }

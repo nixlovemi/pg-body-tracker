@@ -1,3 +1,12 @@
+@php
+/*
+View variables from component (App\View\Components\AvaliationReport):
+=====================================================================
+    - $Avaliation: Avaliation
+    - isPdf: bool
+*/
+@endphp
+
 @extends('components.avaliation-report')
 
 @section('AVALIATION_REPORT_GENERAL_INFO')
@@ -32,5 +41,13 @@
         'DIV_CLIENT_INFO_EXTRA_SPACE' => false,
         'DIV_COL_PROGRESS_CLASSES' => 'col-12 mt-3',
         'PROGRESS_BAR_VIEW_NAME' => 'components.avaliationReport.partials.progress-bar-web',
+    ])
+@endsection
+
+@section('AVALIATION_REPORT_GRAPHS')
+    @include('components.avaliationReport.partials.graphs', [
+        'AVALIATION' => $Avaliation,
+        'DIV_CARD_CLASSES' => 'card border-left-secondary shadow py-2 h-100',
+        'DIV_CARD_HAS_BREAK_CLASS' => false,
     ])
 @endsection

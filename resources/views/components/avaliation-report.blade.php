@@ -42,54 +42,8 @@
             'IS_PDF' => $isPdf
         ])
 
-        @php
-        $arrGraph = [
-            ['title' => __('messages.models.Client.fields.weight'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationWeightGraphHelper'],
-            ['title' => __('messages.components.avaliationFatLeanMassGraph.title', [
-                'fatMass' => __('messages.models.Avaliation.labelFatMass'),
-                'leanMass' => __('messages.models.Avaliation.labelLeanMass'),
-            ]), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationFatLeanMassGraphHelper'],
-            ['title' => __('messages.components.AvaliationBodyCompositionGraph.title', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationBodyCompositionGraphHelper'],
-            ['title' => __('messages.components.AvaliationMuscleFatPercGraph.title', [
-                'fatMass' => __('messages.models.Avaliation.labelFatMass'),
-                'skeletalMuscle' => __('messages.components.avaliationReport.skeletalMuscle'),
-            ]), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationMuscleFatPercGraphHelper'],
-            ['title' => __('messages.components.AvaliationFatBySegmentGraph.title', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationFatBySegmentGraphHelper'],
-            ['title' => __('messages.components.AvaliationLeanBySegmentGraph.title', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationLeanBySegmentGraphHelper'],
-            ['title' => __('messages.components.avaliationReport.bodyWater', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationBodyWaterGraphHelper'],
-            ['title' => __('messages.models.Avaliation.fields.body_age', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationBodyAgeGraphHelper'],
-            ['title' => __('messages.components.AvaliationUpperLimbsGraph.title'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationUpperLimbsGraphHelper'],
-            ['title' => __('messages.components.AvaliationLowerLimbsGraph.title'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationLowerLimbsGraphHelper']
-        ];
-        @endphp
-
         <!-- Graphs -->
-        <div class="row">
-            @foreach ($arrGraph as $graph)
-                <div class="col-12 col-lg-6 mb-3">
-                    <div @class([
-                        'card border-left-secondary shadow py-2',
-                        'h-100' => !$isPdf,
-                        'is-pdf-card-graph-first' => $isPdf && $loop->index === 0,
-                        'is-pdf-card-graph' => $isPdf && $loop->index !== 0,
-                    ])>
-                        <div class="card-body">
-                            <x-avaliation-graph
-                                :avaliationId="$Avaliation->id"
-                                :isPdf="$isPdf"
-                                title="{{ $graph['title'] }}"
-                                helperClass="{{  $graph['helperClass'] }}"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                @if ($isPdf)
-                    <div class="page-break"></div>
-                    <br />
-                @endif
-            @endforeach
-        </div>
+        @yield('AVALIATION_REPORT_GRAPHS')
 
         <!-- pictures -->
         <div class="row">
