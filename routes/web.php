@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('')->group(function () {
-    Route::match(array('GET','POST'), '/', function(){ echo 'SITE HOME!'; })->name('site.home');
+    Route::match(array('GET','POST'), '/', 'App\Http\Controllers\Site@home')->name('site.home');
 
     Route::group([], function(){
         Route::fallback(function () {
