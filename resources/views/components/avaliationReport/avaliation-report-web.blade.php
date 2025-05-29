@@ -62,3 +62,11 @@ View variables from component (App\View\Components\AvaliationReport):
         'DIV_PHOTO_INPUT_CLASSES' => 'mb-3 col-12 col-lg-6',
     ])
 @endsection
+
+@section('AVALIATION_REPORT_CLIENT_NOTES')
+    @include('components.avaliationReport.partials.client-notes', [
+        'AVALIATION' => $Avaliation,
+        'HAS_PAGE_BREAK' => false,
+        'DIV_ROW_CLASSES' => 'row mt-3',
+    ])
+@endsection

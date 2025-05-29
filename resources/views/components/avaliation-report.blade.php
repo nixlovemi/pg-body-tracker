@@ -32,31 +32,6 @@
         @yield('AVALIATION_REPORT_PICTURES')
 
         <!-- observation -->
-        @if (!empty($Avaliation->client_notes))
-            @if ($isPdf)
-                <!-- first page break -->
-                <p>&nbsp;</p>
-            @endif
-
-            <div @class(['row', 'mt-3' => !$isPdf])>
-                <div class="col-12">
-                    <div @class(['card border-left-secondary shadow py-2'])>
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-sm font-weight-bold text-secondary text-uppercase mb-1">
-                                        {{ __('messages.pages.avaliation.modalAddAvaliation.pageFiveTitle') }}
-                                    </div>
-
-                                    <p>
-                                        {!! nl2br($Avaliation->client_notes) !!}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
+        @yield('AVALIATION_REPORT_CLIENT_NOTES')
     </div>
 </div>
