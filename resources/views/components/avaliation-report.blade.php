@@ -37,94 +37,10 @@
         @yield('AVALIATION_REPORT_GENERAL_INFO')
 
         <!-- Info Cards -->
-        <div @class(['row', 'mt-3' => !$isPdf, 'mt-0' => $isPdf])>
-            @php
-            $arrInfoLoop = [
-                [
-                    'method' => 'getWeightInfo',
-                    'title' => __('messages.models.Client.fields.weight'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getSkeletalMuscleInfo',
-                    'title' => __('messages.components.avaliationReport.skeletalMuscle'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getBodyWaterInfo',
-                    'title' => __('messages.components.avaliationReport.bodyWater'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getBoneMassInfo',
-                    'title' => __('messages.models.Avaliation.fields.bone_mass_kg'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getBodyAgeInfo',
-                    'title' => __('messages.models.Avaliation.fields.body_age'),
-                    'showReference' => false
-                ],
-                [
-                    'method' => 'getFFMIInfo',
-                    'title' => __('messages.components.avaliationReport.FFMI'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getBmiInfo',
-                    'title' => __('messages.components.avaliationReport.bmi'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getBodyFatInfo',
-                    'title' => __('messages.components.avaliationReport.bodyFat'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getBAInfo',
-                    'title' => __('messages.components.avaliationReport.BAI'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getVisceralFatInfo',
-                    'title' => __('messages.models.Avaliation.fields.visceral_fat_kg'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getBasalMetabolismInfo',
-                    'title' => __('messages.models.Avaliation.fields.basal_metabolism'),
-                    'showReference' => true
-                ],
-                [
-                    'method' => 'getWaistToHipRatioInfo',
-                    'title' => __('messages.components.avaliationReport.WaistToHipRatio'),
-                    'showReference' => true
-                ]
-            ];
-            @endphp
-
-            @foreach ($arrInfoLoop as $item)
-                @php
-                $info = $Avaliation->{$item['method']}();
-                @endphp
-
-                <div @class(['mb-3', 'col-12 col-lg-4' => !$isPdf, 'col-6' => $isPdf])>
-                    @include('components.avaliation-report-info-card', [
-                        'TITLE' => $item['title'],
-                        'COLOR' => $info[$Constants::FI_RANK_COLOR] ?? '',
-                        'RESULT' => $info[$Constants::FI_FIELD_LABEL] ?? '',
-                        'DIAGNOSIS' => $info[$Constants::FI_RANK_LABEL] ?? '',
-                        'REFERENCE' => $item['showReference'] ? ($info[$Constants::FI_IDEAL_LABEL] ?? '') : null,
-                        'IS_PDF' => $isPdf,
-                    ])
-                </div>
-
-                @if ($loop->index == 9 && $isPdf)
-                    <div class="page-break"></div>
-                    <br />
-                @endif
-            @endforeach
-        </div>
+        @include('components.avaliationReport.partials.info-cards', [
+            'AVALIATION' => $Avaliation,
+            'IS_PDF' => $isPdf
+        ])
 
         @php
         $arrGraph = [
