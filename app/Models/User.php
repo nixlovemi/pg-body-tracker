@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
+use App\Mail\ConfirmationLink;
+use Laravel\Socialite\Two\User as SocialiteUser;
 
 class User extends Authenticatable
 {
@@ -40,8 +42,10 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'password',
         'role',
         'active',
+        'confirmation',
     ];
 
     /**
@@ -50,7 +54,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        # 'password', // TODO: if hidden we cant assign value to it, try to find a way to hide it when loading model
         'password_reset_token',
     ];
 
@@ -103,7 +107,7 @@ class User extends Authenticatable
         $validation->addField('last_name', ['required', 'string', 'min:2', 'max:80'], __('messages.models.User.fields.lastName'));
         $validation->addEmailField('email', 'E-mail', ['required', 'string', 'min:3', 'max:255']);
         $validation->addField('picture_url', ['nullable', 'string', 'min:5', 'max:255'], __('messages.models.User.fields.pictureUrl'));
-        $validation->addField('password', ['filled', 'string', 'min:8', 'max:255', function ($attribute, $value, $fail) {
+        $validation->addField('password', ['required', 'string', function ($attribute, $value, $fail) {
             $ValidadePwd = new ValidatePassword($value);
             $retValidate = $ValidadePwd->validate();
             if (true === $retValidate->isError()) {
@@ -119,6 +123,7 @@ class User extends Authenticatable
             }
         }], __('messages.models.User.fields.role'));
         $validation->addField('active', ['required', 'boolean'], __('messages.models.User.fields.active'));
+        $validation->addField('confirmation', ['required', 'boolean'], __('messages.models.User.fields.confirmation'));
 
         return $validation->validate();
     }
@@ -219,9 +224,71 @@ class User extends Authenticatable
 
         return $this->password_reset_token;
     }
+
+    public function sendConfirmationEmail(): void
+    {
+        // send confirmation email
+        Mail::to($this->email)
+            ->send(
+                new ConfirmationLink([
+                    'EMAIL_TITLE' => __('messages.models.User.ConfirmationLink.subject'),
+                    'TITLE' => __('messages.models.User.ConfirmationLink.subject'),
+                    'HEADER_IMG_FULL' => '/public/images/logo-azul.png',
+                    'ARR_TEXT_LINES' => [
+                        __('messages.models.User.ConfirmationLink.line1', ['name' => $this->getFullName()]),
+                        __('messages.models.User.ConfirmationLink.line2'),
+                        __('messages.models.User.ConfirmationLink.line3'),
+                    ],
+                    'ACTION_BUTTON_URL' => URL::temporarySignedRoute(
+                        'app.confirmUser',
+                        now()->addHours(1),
+                        ['key' => $this->getConfirmationKey()]
+                    ),
+                    'ACTION_BUTTON_TEXT' => __('messages.models.User.ConfirmationLink.actionLink'),
+                ])
+            );
+    }
+
+    public function getConfirmationKey(): string
+    {
+        // enconde changes to @@
+        return SysUtils::encodeStr(date('YmdHis') . '--' . $this->id);
+    }
+
+    public function setPictureFromUrl(string $url): void
+    {
+        // download image
+        $file = file_get_contents($url);
+        if (false === $file) {
+            return;
+        }
+
+        // create a temporary file
+        $tempFile = tmpfile();
+        fwrite($tempFile, $file);
+        $metaData = stream_get_meta_data($tempFile);
+        $tempFilePath = $metaData['uri'];
+
+        // set picture url
+        $this->setPictureUrl(new UploadedFile($tempFilePath, 'user_picture.jpg'));
+
+        // close and delete the temporary file
+        fclose($tempFile);
+    }
     // ===============
 
     // static functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (!empty($user->password)) {
+                $user->password = Hash::make($user->password);
+            }
+        });
+    }
+
     public static function fHasAccess(self $User): bool
     {
         // adding user is ok
@@ -289,6 +356,12 @@ class User extends Authenticatable
             return new ApiResponse(true, __('messages.models.User.fLogin.invalidCredentials'));
         }
 
+        // check confirmation
+        if (false == $User->confirmation) {
+            $User->sendConfirmationEmail();
+            return new ApiResponse(true, __('messages.models.User.fLogin.userNotConfirmed'));
+        }
+
         // all good, register everything
         if (false === SysUtils::loginUser($User)) {
             return new ApiResponse(true, __('messages.models.User.fLogin.loginUserError'));
@@ -302,6 +375,48 @@ class User extends Authenticatable
         return new ApiResponse(false, __('messages.models.User.fLogin.loginSuccess'), [
             'User' => $User
         ]);
+    }
+
+    public static function fLoginWithGoogle(SocialiteUser $SocialiteUser): ApiResponse
+    {
+        $userArray = $SocialiteUser->getRaw();
+        $GoogleUser = new \App\Helpers\GoogleUserLogin($userArray);
+        if (empty($GoogleUser->getEmail()) || !filter_var($GoogleUser->getEmail(), FILTER_VALIDATE_EMAIL)) {
+            return new ApiResponse(true, __('messages.models.User.fLogin.invalidEmail'));
+        }
+
+        if (!$User = User::where('email', $GoogleUser->getEmail())->first()) {
+            // create new user
+            $User = new User();
+            $User->first_name = $GoogleUser->getGivenName() ?? '';
+            $User->last_name = $GoogleUser->getFamilyName() ?? '';
+            $User->email = $GoogleUser->getEmail();
+            $User->password = $GoogleUser->getId();
+            $User->role = User::ROLE_MANAGER;
+            $User->active = true;
+            $User->confirmation = true;
+            $User->google_login = json_encode($userArray);
+            $User->save();
+        } else {
+            // update user
+            $User->first_name = $GoogleUser->getGivenName() ?? '';
+            $User->last_name = $GoogleUser->getFamilyName() ?? '';
+            $User->google_login = json_encode($userArray);
+            $User->update();
+        }
+
+        // profile picture from Google
+        if (
+            (empty($User->picture_url) || $User->picture_url === Constants::USER_DEFAULT_IMAGE_PATH) &&
+            !empty($GoogleUser->getPicture())
+        ) {
+            $User->setPictureFromUrl($GoogleUser->getPicture());
+        }
+
+        return User::fLogin(
+            $User->email,
+            $GoogleUser->getId()
+        );
     }
 
     public static function fRecoverPwd(string $email): ApiResponse
@@ -384,6 +499,36 @@ class User extends Authenticatable
     public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
     {
         return null;
+    }
+
+    public static function fConfirmUser(string $key): ApiResponse
+    {
+        $decoded = SysUtils::decodeStr($key);
+        if (empty($decoded)) {
+            return new ApiResponse(true, __('messages.models.User.ConfirmationLink.invalidKey'));
+        }
+
+        // changes -- to @@
+        $parts = explode('@@', $decoded);
+        if (count($parts) !== 2) {
+            return new ApiResponse(true, __('messages.models.User.ConfirmationLink.invalidKey'));
+        }
+
+        $id = (int) $parts[1];
+        $User = User::where('id', $id)
+            ->where('active', true)
+            ->first();
+        if (!$User) {
+            return new ApiResponse(true, __('messages.models.User.ConfirmationLink.userNotFound'));
+        }
+
+        // confirm user
+        $User->confirmation = true;
+        $User->update();
+
+        return new ApiResponse(false, __('messages.models.User.ConfirmationLink.successMessage'), [
+            'User' => $User,
+        ]);
     }
     // ================
 }

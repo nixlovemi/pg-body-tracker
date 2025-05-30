@@ -24,4 +24,5 @@ final class Icons {
     public const USERS = '<i class="fas fa-fw fa-users"></i>';
     public const USER_CLOCK = '<i class="fas fa-user-clock"></i>';
     public const BULLS_EYE = '<i class="fas fa-bullseye"></i>';
+    public const USER_PLUS = '<i class="fas fa-user-plus"></i>';
 }

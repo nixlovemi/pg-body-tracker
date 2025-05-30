@@ -31,20 +31,23 @@ View variables:
             {{ __('messages.pages.login.loginButton') }}
         </button>
 
-        @if (app()->environment('local'))
-            <hr />
-            <a href="#" class="btn btn-google btn-user btn-block">
-                {!! $Icons::GOOGLE !!}
-                {{ __('messages.pages.login.loginGoogle') }}
-            </a>
-        @endif
+        <hr />
+        <a href="{{ route('app.googleLogin') }}" class="btn btn-google btn-user btn-block">
+            {!! $Icons::GOOGLE !!}
+            {{ __('messages.pages.login.loginGoogle') }}
+        </a>
     </form>
 
     <hr />
     <div class="text-center">
-        <a class="small" href="{{  route('app.forgot') }}">
+        <a class="" href="{{  route('app.forgot') }}">
             {!! $Icons::KEY_GREY !!}
             {{ __('messages.pages.login.forgotPassword') }}
+        </a>
+        <br />
+        <a class="" href="{{  route('app.register') }}">
+            <span class="text-gray-400 mr-1">{!! $Icons::USER_PLUS !!}</span>
+            {{ __('messages.pages.login.newAccount') }}
         </a>
     </div>
 

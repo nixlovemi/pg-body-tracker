@@ -43,13 +43,37 @@ class UserFactory extends Factory
             'first_name' => $this->faker->firstName($gender),
             'last_name' => $this->faker->lastName($gender),
             'email' => $this->faker->unique()->safeEmail(),
-            'picture_url' => function(array $user) use ($gender) {
+            'picture_url' => function() use ($gender) {
                 return $this->faker->randomElement($this->userImages[$gender]);
             },
             'password' => User::fPasswordHash('Mudar123'),
             'password_reset_token' => null,
             'role' => $this->faker->randomElement(array_keys(User::fGetRoles())),
             'active' => $this->faker->randomElement([true, false]),
+            'confirmation' => function() {
+                if ($this->faker->boolean(80)) {
+                    return true; // 80% chance of being confirmed
+                }
+
+                return false;
+            },
+            'google_login' => function(array $attributes) {
+                if ($this->faker->boolean(80)) {
+                    return json_encode([
+                        'id' => $this->faker->uuid(),
+                        'nickname' => null,
+                        'email' => $attributes['email'],
+                        'name' => $attributes['first_name'] . ' ' . $attributes['last_name'],
+                        'avatar' => 'https://lh3.googleusercontent.com/a/ACg8ocL99McCCFirk-AVWTXjZpM699z_yOPKfg6D7Z2Ns2baNYURBTE=s96-c',
+                        'user' => [
+                            'given_name' => $attributes['first_name'],
+                            'family_name' => $attributes['last_name'],
+                        ],
+                    ]);
+                }
+
+                return null;
+            },
         ];
     }
 }
