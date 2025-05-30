@@ -19,6 +19,7 @@ use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
 use App\Mail\ConfirmationLink;
+use Laravel\Socialite\Two\User as SocialiteUser;
 
 class User extends Authenticatable
 {
@@ -253,6 +254,27 @@ class User extends Authenticatable
         // enconde changes to @@
         return SysUtils::encodeStr(date('YmdHis') . '--' . $this->id);
     }
+
+    public function setPictureFromUrl(string $url): void
+    {
+        // download image
+        $file = file_get_contents($url);
+        if (false === $file) {
+            return;
+        }
+
+        // create a temporary file
+        $tempFile = tmpfile();
+        fwrite($tempFile, $file);
+        $metaData = stream_get_meta_data($tempFile);
+        $tempFilePath = $metaData['uri'];
+
+        // set picture url
+        $this->setPictureUrl(new UploadedFile($tempFilePath, 'user_picture.jpg'));
+
+        // close and delete the temporary file
+        fclose($tempFile);
+    }
     // ===============
 
     // static functions
@@ -353,6 +375,48 @@ class User extends Authenticatable
         return new ApiResponse(false, __('messages.models.User.fLogin.loginSuccess'), [
             'User' => $User
         ]);
+    }
+
+    public static function fLoginWithGoogle(SocialiteUser $SocialiteUser): ApiResponse
+    {
+        $userArray = $SocialiteUser->getRaw();
+        $GoogleUser = new \App\Helpers\GoogleUserLogin($userArray);
+        if (empty($GoogleUser->getEmail()) || !filter_var($GoogleUser->getEmail(), FILTER_VALIDATE_EMAIL)) {
+            return new ApiResponse(true, __('messages.models.User.fLogin.invalidEmail'));
+        }
+
+        if (!$User = User::where('email', $GoogleUser->getEmail())->first()) {
+            // create new user
+            $User = new User();
+            $User->first_name = $GoogleUser->getGivenName() ?? '';
+            $User->last_name = $GoogleUser->getFamilyName() ?? '';
+            $User->email = $GoogleUser->getEmail();
+            $User->password = $GoogleUser->getId();
+            $User->role = User::ROLE_MANAGER;
+            $User->active = true;
+            $User->confirmation = true;
+            $User->google_login = json_encode($userArray);
+            $User->save();
+        } else {
+            // update user
+            $User->first_name = $GoogleUser->getGivenName() ?? '';
+            $User->last_name = $GoogleUser->getFamilyName() ?? '';
+            $User->google_login = json_encode($userArray);
+            $User->update();
+        }
+
+        // profile picture from Google
+        if (
+            (empty($User->picture_url) || $User->picture_url === Constants::USER_DEFAULT_IMAGE_PATH) &&
+            !empty($GoogleUser->getPicture())
+        ) {
+            $User->setPictureFromUrl($GoogleUser->getPicture());
+        }
+
+        return User::fLogin(
+            $User->email,
+            $GoogleUser->getId()
+        );
     }
 
     public static function fRecoverPwd(string $email): ApiResponse
