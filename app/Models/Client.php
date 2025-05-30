@@ -174,6 +174,24 @@ class Client extends Model
     // ===============
 
     // static functions
+    /**
+     * The "booted" method of the model.
+     * 'retrieved', 'creating', 'created', 'updating', 'updated', 'saving', 'saved', 'restoring', 'restored', 'replicating', 'deleting', 'deleted', 'forceDeleted', 'trashed'
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $ret = self::fValidateClientLimit($model);
+            if ($ret->isError()) {
+                throw new \Exception($ret->getMessage());
+            }
+        });
+    }
+
     public static function fGetGenders(): array
     {
         return [
@@ -193,6 +211,11 @@ class Client extends Model
 
     public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
     {
+        $ret = self::fValidateClientLimit($model);
+        if ($ret->isError()) {
+            return $ret;
+        }
+
         return null;
     }
 
@@ -254,6 +277,16 @@ class Client extends Model
     public static function fGetNbrClientsWithGoalsDueThisWeek(?int $userId = null): int
     {
         return self::fGetClientsWithGoalsDueThisWeek($userId)->count();
+    }
+
+    public static function fValidateClientLimit(Client $Client, ?User $User = null): ApiResponse
+    {
+        $clientLimit = new \App\Helpers\Feature\ClientLimit($User);
+        if (!$Client->exists && !$clientLimit->validate()) {
+            return new ApiResponse(true, $clientLimit->getValidateMsg());
+        }
+
+        return new ApiResponse(false, '');
     }
     // ================
 }

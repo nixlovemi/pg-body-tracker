@@ -535,5 +535,13 @@ return [
             'title' => 'Clients with Goals Due This Week',
             'tableColGoalDeadline' => 'Goal Deadline',
         ],
+        'Features' => [
+            'userDropdownPlanText' => 'Plan: :planType',
+            'labelFreePlan' => 'Free',
+            'labelPremiumPlan' => 'Premium',
+            'ClientLimit' => [
+                'validateMessage' => 'You have reached the limit of allowed clients (:limit clients). To add more clients, upgrade to premium.',
+            ]
+        ],
     ],
 ];

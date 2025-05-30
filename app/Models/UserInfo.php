@@ -7,7 +7,6 @@ use App\Helpers\ModelValidation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use App\Helpers\SysUtils;
 use Illuminate\Http\UploadedFile;
 use App\Helpers\Constants;
 

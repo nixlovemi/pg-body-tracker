@@ -535,5 +535,13 @@ return [
             'title' => 'Clientes com Objetivos Vencendo Esta Semana',
             'tableColGoalDeadline' => 'Prazo do Objetivo',
         ],
+        'Features' => [
+            'userDropdownPlanText' => 'Plano: :planType',
+            'labelFreePlan' => 'Grátis',
+            'labelPremiumPlan' => 'Premium',
+            'ClientLimit' => [
+                'validateMessage' => 'Você atingiu o limite de clientes permitidos (:limit clientes). Para adicionar mais clientes, atualize para o premium.',
+            ]
+        ],
     ],
 ];
