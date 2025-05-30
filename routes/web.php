@@ -32,6 +32,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     Route::post('/doForgot', 'App\Http\Controllers\Login@doForgot')->name('app.doForgot');
     Route::get('/register', 'App\Http\Controllers\Login@register')->name('app.register');
     Route::post('/doRegister', 'App\Http\Controllers\Login@doRegister')->name('app.doRegister');
+    Route::get('/googleLogin', 'App\Http\Controllers\Login@googleLogin')->name('app.googleLogin');
+    Route::get('/googleLoginCallback', 'App\Http\Controllers\Login@googleLoginCallback')->name('app.googleLoginCallback');
     Route::get('/resetPwd/{idKey}', 'App\Http\Controllers\Login@resetPwd')->name('app.resetPwd')->middleware('signed');
     Route::post('/doResetPwd', 'App\Http\Controllers\Login@doResetPwd')->name('app.doResetPwd')->middleware('signed');
     Route::get('/confirmUser/{key}', 'App\Http\Controllers\Login@confirmUser')->name('app.confirmUser')->middleware('signed');

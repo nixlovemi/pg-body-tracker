@@ -9,6 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Helpers\SysUtils;
 use App\Models\User;
 use App\Helpers\ApiResponse;
+use Laravel\Socialite\Facades\Socialite;
 
 class Login extends Controller
 {
@@ -139,5 +140,21 @@ class Login extends Controller
         }
 
         return $this->redirectSuccess('app.login', $ret->getMessage());
+    }
+
+    public function googleLogin()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function googleLoginCallback()
+    {
+        $googleUser = Socialite::driver('google')->stateless()->user();
+        $response = User::fLoginWithGoogle($googleUser);
+        if ($response->isError()) {
+            return $this->redirectWithError('app.login', $response->getMessage());
+        }
+
+        return redirect()->route('app.dashboard.index');
     }
 }
