@@ -16,13 +16,13 @@ View variables:
     <p>
         {{ __('messages.pages.login.register.description')}}
     </p>
-
+    
     <a href="{{ route('app.googleLogin') }}" class="btn btn-google btn-user btn-block">
         {!! $Icons::GOOGLE !!}
         {{ __('messages.pages.login.loginGoogle') }}
     </a>
     <hr />
-
+    
     <form action="{{ route('app.doRegister') }}" class="user" method="post">
         @csrf
         <div class="form-group">
