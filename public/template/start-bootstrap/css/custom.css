@@ -228,6 +228,10 @@ a#userDropdown span {
 .sidebar:not(.toggled) .sidebar-brand-icon img {
     display: none;
 }
+.bg-info {
+  background-color: #4a6fa5 !important;
+  border-color: #4a6fa5 !important;
+}
 @media (max-width: 768px) {
     .sidebar .sidebar-brand-icon img {
         display: block !important;

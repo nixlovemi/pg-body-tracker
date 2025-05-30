@@ -43,13 +43,20 @@ class UserFactory extends Factory
             'first_name' => $this->faker->firstName($gender),
             'last_name' => $this->faker->lastName($gender),
             'email' => $this->faker->unique()->safeEmail(),
-            'picture_url' => function(array $user) use ($gender) {
+            'picture_url' => function() use ($gender) {
                 return $this->faker->randomElement($this->userImages[$gender]);
             },
             'password' => User::fPasswordHash('Mudar123'),
             'password_reset_token' => null,
             'role' => $this->faker->randomElement(array_keys(User::fGetRoles())),
             'active' => $this->faker->randomElement([true, false]),
+            'confirmation' => function() {
+                if ($this->faker->boolean(80)) {
+                    return true; // 80% chance of being confirmed
+                }
+
+                return false;
+            },
         ];
     }
 }

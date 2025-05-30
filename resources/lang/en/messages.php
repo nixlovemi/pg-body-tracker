@@ -71,6 +71,7 @@ return [
                 'passwordToken' => 'Password Token',
                 'role' => 'Role',
                 'active' => 'Active',
+                'confirmation' => 'Confirmed',
             ],
             'fLogin' => [
                 'invalidEmail' => 'Enter a valid e-mail!',
@@ -78,6 +79,17 @@ return [
                 'invalidCredentials' => 'Invalid user or password!',
                 'loginUserError' => 'Error trying to log in the user!',
                 'loginSuccess' => 'User logged in successfully!',
+                'userNotConfirmed' => 'User not confirmed! Please check your email to confirm your account.',
+            ],
+            'ConfirmationLink' => [
+                'subject' => 'Account Confirmation',
+                'line1' => 'Hello, :name! Thank you for registering in our system.',
+                'line2' => 'To activate your account, click the link below:',
+                'actionLink' => 'Activate Account',
+                'line3' => 'If you have not registered, please ignore this email.',
+                'invalidKey' => 'Invalid key! Check the link sent to your email.',
+                'userNotFound' => 'User not found! Check the link sent to your email.',
+                'successMessage' => 'Account activated successfully! You can now log in.',
             ],
         ],
 
@@ -215,6 +227,7 @@ return [
             'loginButton' => 'Login',
             'loginGoogle' => 'Login with Google',
             'forgotPassword' => 'Forgot your password?',
+            'newAccount' => 'Create a free account!',
             'forgot' => [
                 'title' => 'Recover Password',
                 'description' => 'Enter your email to receive a password recovery link.',
@@ -233,6 +246,13 @@ return [
                 'title' => 'Reset Password',
                 'description' => 'Use the form below to reset your password.',
                 'invalidKey' => 'Invalid key! Check the link sent to your email.',
+            ],
+            'register' => [
+                'title' => 'Register Account',
+                'description' => 'Create a free account and start using our services.',
+                'buttonRegister' => 'Register',
+                'emailExists' => 'We were unable to complete your registration. You may already have an account, or you may be using an invalid email address. If you have any questions, please try to reset your password or contact support.',
+                'successMessage' => 'Account created successfully! Check your email to activate it.',
             ],
         ],
 

@@ -71,6 +71,7 @@ return [
                 'passwordToken' => 'Token de Redefinição de Senha',
                 'role' => 'Função',
                 'active' => 'Ativo',
+                'confirmation' => 'Confirmado',
             ],
             'fLogin' => [
                 'invalidEmail' => 'Informe um e-mail válido!',
@@ -78,6 +79,17 @@ return [
                 'invalidCredentials' => 'Usuário ou senha inválido(s)!',
                 'loginUserError' => 'Erro ao tentar logar o usuário!',
                 'loginSuccess' => 'Usuário logado com sucesso!',
+                'userNotConfirmed' => 'Usuário não confirmado! Verifique seu e-mail para ativar sua conta.',
+            ],
+            'ConfirmationLink' => [
+                'subject' => 'Confirmação de Conta',
+                'line1' => 'Olá, :name! Obrigado por se registrar no nosso sistema.',
+                'line2' => 'Para ativar sua conta, clique no link abaixo:',
+                'actionLink' => 'Ativar Conta',
+                'line3' => 'Se você não se registrou, ignore este e-mail.',
+                'invalidKey' => 'Chave inválida! Verifique o link enviado para o seu e-mail.',
+                'userNotFound' => 'Usuário não encontrado! Verifique o link enviado para o seu e-mail.',
+                'successMessage' => 'Conta ativada com sucesso! Você já pode fazer login.',
             ],
         ],
 
@@ -215,6 +227,7 @@ return [
             'loginButton' => 'Entrar',
             'loginGoogle' => 'Entrar com Google',
             'forgotPassword' => 'Esqueceu a senha?',
+            'newAccount' => 'Crie uma conta gratuita!',
             'forgot' => [
                 'title' => 'Recuperar Senha',
                 'description' => 'Digite seu e-mail para receber um link de recuperação de senha.',
@@ -233,6 +246,13 @@ return [
                 'title' => 'Redefinir Senha',
                 'description' => 'Use o formulário abaixo para redefinir sua senha.',
                 'invalidKey' => 'Chave inválida! Verifique o link enviado para o seu e-mail.',
+            ],
+            'register' => [
+                'title' => 'Registrar Conta',
+                'description' => 'Crie uma conta gratuita e comece a usar nossos serviços.',
+                'buttonRegister' => 'Registrar',
+                'emailExists' => 'Não foi possível concluir seu cadastro. Talvez você já tenha uma conta ou esteja usando um e-mail inválido. Se tiver dúvidas, recupere sua senha ou entre em contato com o suporte.',
+                'successMessage' => 'Conta criada com sucesso! Verifique seu e-mail para ativar sua conta.',
             ],
         ],
 

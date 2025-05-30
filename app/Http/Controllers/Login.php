@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Helpers\SysUtils;
 use App\Models\User;
+use App\Helpers\ApiResponse;
 
 class Login extends Controller
 {
@@ -72,6 +73,69 @@ class Login extends Controller
         if ($ret->isError()) {
             return redirect()->back()
                 ->withErrors(['msg' => $ret->getMessage()]);
+        }
+
+        return $this->redirectSuccess('app.login', $ret->getMessage());
+    }
+
+    public function register()
+    {
+        return view('app.register', [
+            'PAGE_TITLE' => __('messages.pages.login.register.title'),
+        ]);
+    }
+
+    public function doRegister(Request $request)
+    {
+        $form = $this->getDoRegisterForm($request);
+        if (!empty($form['email'])) {
+            if ($error = $this->doRegisterCheckEmailExists($form['email'])) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['msg' => $error]);
+            }
+        }
+
+        $ret = User::fSave($form);
+        if ($ret->isError()) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['msg' => ApiResponse::getValidateMessage($ret)]);
+        }
+
+        $User = $ret->getValueFromResponse('User');
+        $User->sendConfirmationEmail();
+        return $this->redirectSuccess('app.login', __('messages.pages.login.register.successMessage'));
+    }
+
+    private function getDoRegisterForm(Request $request)
+    {
+        $form = [];
+        $form['first_name'] = $request->input('f-name') ?: null;
+        $form['last_name'] = $request->input('f-lastname') ?: null;
+        $form['email'] = $request->input('f-email') ?: null;
+        $form['password'] = $request->input('f-password') ?: null;
+        $form['role'] = User::ROLE_MANAGER;
+        $form['confirmation'] = false;
+
+        return $form;
+    }
+
+    private function doRegisterCheckEmailExists(string $email): ?string
+    {
+        $user = User::where('email', $email)->first();
+        if ($user) {
+            return __('messages.pages.login.register.emailExists');
+        }
+
+        return null;
+    }
+
+    public function confirmUser(string $key)
+    {
+        $ret = User::fConfirmUser($key);
+        if ($ret->isError()) {
+            return $this->redirectWithError('app.login', $ret->getMessage());
         }
 
         return $this->redirectSuccess('app.login', $ret->getMessage());

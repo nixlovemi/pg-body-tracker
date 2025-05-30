@@ -34,7 +34,7 @@ View variables:
 
     <hr />
     <div class="text-center">
-        <a class="small" href="{{  route('app.login') }}">
+        <a class="" href="{{  route('app.login') }}">
             {!! $Icons::HOME !!}
             {{ __('messages.pages.login.forgot.returnLogin') }}
         </a>

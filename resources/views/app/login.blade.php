@@ -42,9 +42,14 @@ View variables:
 
     <hr />
     <div class="text-center">
-        <a class="small" href="{{  route('app.forgot') }}">
+        <a class="" href="{{  route('app.forgot') }}">
             {!! $Icons::KEY_GREY !!}
             {{ __('messages.pages.login.forgotPassword') }}
+        </a>
+        <br />
+        <a class="" href="{{  route('app.register') }}">
+            <span class="text-gray-400 mr-1">{!! $Icons::USER_PLUS !!}</span>
+            {{ __('messages.pages.login.newAccount') }}
         </a>
     </div>
 

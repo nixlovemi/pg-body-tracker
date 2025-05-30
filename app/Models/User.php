@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
+use App\Mail\ConfirmationLink;
 
 class User extends Authenticatable
 {
@@ -40,8 +41,10 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'password',
         'role',
         'active',
+        'confirmation',
     ];
 
     /**
@@ -50,7 +53,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        # 'password', // TODO: if hidden we cant assign value to it, try to find a way to hide it when loading model
         'password_reset_token',
     ];
 
@@ -103,7 +106,7 @@ class User extends Authenticatable
         $validation->addField('last_name', ['required', 'string', 'min:2', 'max:80'], __('messages.models.User.fields.lastName'));
         $validation->addEmailField('email', 'E-mail', ['required', 'string', 'min:3', 'max:255']);
         $validation->addField('picture_url', ['nullable', 'string', 'min:5', 'max:255'], __('messages.models.User.fields.pictureUrl'));
-        $validation->addField('password', ['filled', 'string', 'min:8', 'max:255', function ($attribute, $value, $fail) {
+        $validation->addField('password', ['required', 'string', function ($attribute, $value, $fail) {
             $ValidadePwd = new ValidatePassword($value);
             $retValidate = $ValidadePwd->validate();
             if (true === $retValidate->isError()) {
@@ -119,6 +122,7 @@ class User extends Authenticatable
             }
         }], __('messages.models.User.fields.role'));
         $validation->addField('active', ['required', 'boolean'], __('messages.models.User.fields.active'));
+        $validation->addField('confirmation', ['required', 'boolean'], __('messages.models.User.fields.confirmation'));
 
         return $validation->validate();
     }
@@ -219,9 +223,50 @@ class User extends Authenticatable
 
         return $this->password_reset_token;
     }
+
+    public function sendConfirmationEmail(): void
+    {
+        // send confirmation email
+        Mail::to($this->email)
+            ->send(
+                new ConfirmationLink([
+                    'EMAIL_TITLE' => __('messages.models.User.ConfirmationLink.subject'),
+                    'TITLE' => __('messages.models.User.ConfirmationLink.subject'),
+                    'HEADER_IMG_FULL' => '/public/images/logo-azul.png',
+                    'ARR_TEXT_LINES' => [
+                        __('messages.models.User.ConfirmationLink.line1', ['name' => $this->getFullName()]),
+                        __('messages.models.User.ConfirmationLink.line2'),
+                        __('messages.models.User.ConfirmationLink.line3'),
+                    ],
+                    'ACTION_BUTTON_URL' => URL::temporarySignedRoute(
+                        'app.confirmUser',
+                        now()->addHours(1),
+                        ['key' => $this->getConfirmationKey()]
+                    ),
+                    'ACTION_BUTTON_TEXT' => __('messages.models.User.ConfirmationLink.actionLink'),
+                ])
+            );
+    }
+
+    public function getConfirmationKey(): string
+    {
+        // enconde changes to @@
+        return SysUtils::encodeStr(date('YmdHis') . '--' . $this->id);
+    }
     // ===============
 
     // static functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (!empty($user->password)) {
+                $user->password = Hash::make($user->password);
+            }
+        });
+    }
+
     public static function fHasAccess(self $User): bool
     {
         // adding user is ok
@@ -287,6 +332,12 @@ class User extends Authenticatable
             (!$User->isManager() && !$User->isRoot())
         ) {
             return new ApiResponse(true, __('messages.models.User.fLogin.invalidCredentials'));
+        }
+
+        // check confirmation
+        if (false == $User->confirmation) {
+            $User->sendConfirmationEmail();
+            return new ApiResponse(true, __('messages.models.User.fLogin.userNotConfirmed'));
         }
 
         // all good, register everything
@@ -384,6 +435,36 @@ class User extends Authenticatable
     public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
     {
         return null;
+    }
+
+    public static function fConfirmUser(string $key): ApiResponse
+    {
+        $decoded = SysUtils::decodeStr($key);
+        if (empty($decoded)) {
+            return new ApiResponse(true, __('messages.models.User.ConfirmationLink.invalidKey'));
+        }
+
+        // changes -- to @@
+        $parts = explode('@@', $decoded);
+        if (count($parts) !== 2) {
+            return new ApiResponse(true, __('messages.models.User.ConfirmationLink.invalidKey'));
+        }
+
+        $id = (int) $parts[1];
+        $User = User::where('id', $id)
+            ->where('active', true)
+            ->first();
+        if (!$User) {
+            return new ApiResponse(true, __('messages.models.User.ConfirmationLink.userNotFound'));
+        }
+
+        // confirm user
+        $User->confirmation = true;
+        $User->update();
+
+        return new ApiResponse(false, __('messages.models.User.ConfirmationLink.successMessage'), [
+            'User' => $User,
+        ]);
     }
     // ================
 }
