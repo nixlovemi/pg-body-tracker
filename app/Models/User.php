@@ -229,22 +229,14 @@ class User extends Authenticatable
         // send confirmation email
         Mail::to($this->email)
             ->send(
-                new ConfirmationLink([
-                    'EMAIL_TITLE' => __('messages.models.User.ConfirmationLink.subject'),
-                    'TITLE' => __('messages.models.User.ConfirmationLink.subject'),
-                    'HEADER_IMG_FULL' => '/public/images/logo-azul.png',
-                    'ARR_TEXT_LINES' => [
-                        __('messages.models.User.ConfirmationLink.line1', ['name' => $this->getFullName()]),
-                        __('messages.models.User.ConfirmationLink.line2'),
-                        __('messages.models.User.ConfirmationLink.line3'),
-                    ],
-                    'ACTION_BUTTON_URL' => URL::temporarySignedRoute(
+                new ConfirmationLink(
+                    $this->getFullName(),
+                    URL::temporarySignedRoute(
                         'app.confirmUser',
                         now()->addHours(1),
                         ['key' => $this->getConfirmationKey()]
-                    ),
-                    'ACTION_BUTTON_TEXT' => __('messages.models.User.ConfirmationLink.actionLink'),
-                ])
+                    )
+                )
             );
     }
 
@@ -388,18 +380,7 @@ class User extends Authenticatable
         // send mail
         Mail::to($User->email)
             ->send(
-                new ResetPassword([
-                    'EMAIL_TITLE' => __('messages.pages.login.forgot.mailTitle'),
-                    'TITLE' => __('messages.pages.login.forgot.mailTitle'),
-                    'HEADER_IMG_FULL' => '/public/images/mail-forgot-password.jpg',
-                    'ARR_TEXT_LINES' => [
-                        __('messages.pages.login.forgot.mailLine1'),
-                        __('messages.pages.login.forgot.mailLine2'),
-                        __('messages.pages.login.forgot.mailLine3'),
-                    ],
-                    'ACTION_BUTTON_URL' => $shortResetLink,
-                    'ACTION_BUTTON_TEXT' => __('messages.pages.login.forgot.mailActionLink'),
-                ])
+                new ResetPassword($shortResetLink)
             );
 
         return new ApiResponse(false, __('messages.pages.login.forgot.successMessage'), [
