@@ -23,6 +23,7 @@ use Laravel\Socialite\Two\User as SocialiteUser;
 use App\Models\UserPlans;
 use App\Helpers\Feature\FeatureAbstract;
 use Illuminate\Support\Facades\Cache;
+use App\Helpers\GoogleUserLogin;
 
 class User extends Authenticatable
 {
@@ -281,15 +282,19 @@ class User extends Authenticatable
 
     public function getPlanType(): string
     {
+        if ($this->isRoot()) {
+            return FeatureAbstract::FEATURE_PLAN_TYPE_PREMIUM;
+        }
+
         $cacheKey = $this->getPlanTypeCacheKey();
         $cacheTTL = 60 * 60 * 8; // 8 horas
 
-        // Verifica cache
+        // check cache
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
 
-        // Busca o plano atual
+        // get current plan
         $plan = $this->plans()
             ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
             ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
@@ -298,12 +303,12 @@ class User extends Authenticatable
 
         $planType = $plan->plan_type ?? FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
 
-        // Valida se o plano é conhecido, senão considera como plano free
+        // if we dont have a plan, or the plan type is not valid, set to free
         if (!in_array($planType, FeatureAbstract::fGetPlanTypes())) {
             $planType = FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
         }
 
-        // Salva em cache e retorna
+        // save cache and return
         Cache::put($cacheKey, $planType, $cacheTTL);
         return $planType;
     }
@@ -377,7 +382,7 @@ class User extends Authenticatable
         return $roles;
     }
 
-    public static function fLogin(string $email, string $password): ApiResponse
+    public static function fLogin(string $email, string $password, ?GoogleUserLogin $GoogleUserLogin=null): ApiResponse
     {
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return new ApiResponse(true, __('messages.models.User.fLogin.invalidEmail'));
@@ -392,7 +397,7 @@ class User extends Authenticatable
             ->first();
         if (
             !$User ||
-            false === $User->checkPassword($password) ||
+            (false === $User->checkPassword($password) && !$GoogleUserLogin?->getId()) ||
             (!$User->isManager() && !$User->isRoot())
         ) {
             return new ApiResponse(true, __('messages.models.User.fLogin.invalidCredentials'));
@@ -425,7 +430,7 @@ class User extends Authenticatable
     public static function fLoginWithGoogle(SocialiteUser $SocialiteUser): ApiResponse
     {
         $userArray = $SocialiteUser->getRaw();
-        $GoogleUser = new \App\Helpers\GoogleUserLogin($userArray);
+        $GoogleUser = new GoogleUserLogin($userArray);
         if (empty($GoogleUser->getEmail()) || !filter_var($GoogleUser->getEmail(), FILTER_VALIDATE_EMAIL)) {
             return new ApiResponse(true, __('messages.models.User.fLogin.invalidEmail'));
         }
@@ -460,7 +465,8 @@ class User extends Authenticatable
 
         return User::fLogin(
             $User->email,
-            $GoogleUser->getId()
+            $GoogleUser->getId(),
+            $GoogleUser
         );
     }
 
