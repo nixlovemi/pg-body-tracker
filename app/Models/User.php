@@ -23,6 +23,7 @@ use Laravel\Socialite\Two\User as SocialiteUser;
 use App\Models\UserPlans;
 use App\Helpers\Feature\FeatureAbstract;
 use Illuminate\Support\Facades\Cache;
+use App\Helpers\GoogleUserLogin;
 
 class User extends Authenticatable
 {
@@ -381,7 +382,7 @@ class User extends Authenticatable
         return $roles;
     }
 
-    public static function fLogin(string $email, string $password): ApiResponse
+    public static function fLogin(string $email, string $password, ?GoogleUserLogin $GoogleUserLogin=null): ApiResponse
     {
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return new ApiResponse(true, __('messages.models.User.fLogin.invalidEmail'));
@@ -396,7 +397,7 @@ class User extends Authenticatable
             ->first();
         if (
             !$User ||
-            false === $User->checkPassword($password) ||
+            (false === $User->checkPassword($password) && !$GoogleUserLogin?->getId()) ||
             (!$User->isManager() && !$User->isRoot())
         ) {
             return new ApiResponse(true, __('messages.models.User.fLogin.invalidCredentials'));
@@ -429,7 +430,7 @@ class User extends Authenticatable
     public static function fLoginWithGoogle(SocialiteUser $SocialiteUser): ApiResponse
     {
         $userArray = $SocialiteUser->getRaw();
-        $GoogleUser = new \App\Helpers\GoogleUserLogin($userArray);
+        $GoogleUser = new GoogleUserLogin($userArray);
         if (empty($GoogleUser->getEmail()) || !filter_var($GoogleUser->getEmail(), FILTER_VALIDATE_EMAIL)) {
             return new ApiResponse(true, __('messages.models.User.fLogin.invalidEmail'));
         }
@@ -464,7 +465,8 @@ class User extends Authenticatable
 
         return User::fLogin(
             $User->email,
-            $GoogleUser->getId()
+            $GoogleUser->getId(),
+            $GoogleUser
         );
     }
 
