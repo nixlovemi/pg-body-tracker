@@ -547,6 +547,10 @@ return [
                 'logoPlaceholderTitle' => 'Recurso Premium',
                 'logoPlaceholderText' => 'Adicione seu logotipo personalizado ao relatório de avaliação.',
             ],
+            'AvaliationSendLink' => [
+                'validateMessage' => 'Para enviar o link de avaliação ao cliente, atualize para o plano premium.',
+                'shareMenuPlaceholderTitle' => 'Recurso Premium',
+            ],
         ],
     ],
 ];

@@ -547,6 +547,10 @@ return [
                 'logoPlaceholderTitle' => 'Premium Feature',
                 'logoPlaceholderText' => 'Add your custom logo to the avaliation report.',
             ],
+            'AvaliationSendLink' => [
+                'validateMessage' => 'To send the avaliation link to your client, upgrade to the premium plan.',
+                'shareMenuPlaceholderTitle' => 'Premium Feature',
+            ],
         ],
     ],
 ];
