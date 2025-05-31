@@ -247,34 +247,34 @@ class Avaliation extends Model
         // to Disable created_at
     }
 
-    public function getPhotoFrontUrlAttribute(): ?string
+    public function getPhotoFrontUrlAttribute(?string $value): ?string
     {
-        return $this->getPhotoUrlFromAttribute('photo_front_url');
+        return $this->getPhotoUrlFromAttribute($value);
     }
 
-    public function getPhotoRightUrlAttribute(): ?string
+    public function getPhotoRightUrlAttribute(?string $value): ?string
     {
-        return $this->getPhotoUrlFromAttribute('photo_right_url');
+        return $this->getPhotoUrlFromAttribute($value);
     }
 
-    public function getPhotoRearUrlAttribute(): ?string
+    public function getPhotoRearUrlAttribute(?string $value): ?string
     {
-        return $this->getPhotoUrlFromAttribute('photo_rear_url');
+        return $this->getPhotoUrlFromAttribute($value);
     }
 
-    public function getPhotoLeftUrlAttribute(): ?string
+    public function getPhotoLeftUrlAttribute(?string $value): ?string
     {
-        return $this->getPhotoUrlFromAttribute('photo_left_url');
+        return $this->getPhotoUrlFromAttribute($value);
     }
 
-    private function getPhotoUrlFromAttribute(string $attribute): ?string
+    private function getPhotoUrlFromAttribute(?string $value): ?string
     {
         $ApicFeature = new AvaliationPictures();
         if (!$ApicFeature->validate()) {
             return null;
         }
 
-        return $this->{$attribute};
+        return $value;
     }
 
     public function getBodyAgeCalcAttribute()
