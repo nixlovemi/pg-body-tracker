@@ -281,15 +281,19 @@ class User extends Authenticatable
 
     public function getPlanType(): string
     {
+        if ($this->isRoot()) {
+            return FeatureAbstract::FEATURE_PLAN_TYPE_PREMIUM;
+        }
+
         $cacheKey = $this->getPlanTypeCacheKey();
         $cacheTTL = 60 * 60 * 8; // 8 horas
 
-        // Verifica cache
+        // check cache
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
 
-        // Busca o plano atual
+        // get current plan
         $plan = $this->plans()
             ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
             ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
@@ -298,12 +302,12 @@ class User extends Authenticatable
 
         $planType = $plan->plan_type ?? FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
 
-        // Valida se o plano é conhecido, senão considera como plano free
+        // if we dont have a plan, or the plan type is not valid, set to free
         if (!in_array($planType, FeatureAbstract::fGetPlanTypes())) {
             $planType = FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
         }
 
-        // Salva em cache e retorna
+        // save cache and return
         Cache::put($cacheKey, $planType, $cacheTTL);
         return $planType;
     }
