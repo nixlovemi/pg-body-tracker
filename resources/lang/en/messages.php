@@ -131,7 +131,7 @@ return [
         ],
 
         'Avaliation' => [
-            'name' => 'Avaliation',
+            'name' => 'Evaluation',
             'fields' => [
                 'date' => 'Date',
                 'body_fat_perc' => 'Body Fat Percentage',
@@ -279,11 +279,11 @@ return [
                 'cardInfo' => 'Client Information',
                 'cardMeasures' => 'Initial Measures',
                 'cardGoals' => 'Goals',
-                'cardAvaliations' => 'Avaliations',
+                'cardAvaliations' => 'Evaluations',
                 'noGoals' => 'No active goals! Take the opportunity to add a new one.',
                 'btnNewGoal' => 'New Goal',
                 'btnOldGoals' => 'Old Goals',
-                'btnNewAvaliation' => 'New Avaliation',
+                'btnNewAvaliation' => 'New Evaluation',
                 'labelActualWeight' => 'Actual Weight',
             ],
             'table' => [
@@ -303,7 +303,7 @@ return [
 
         'avaliation' => [
             'index' => [
-                'title' => 'Avaliations',
+                'title' => 'Evaluations',
             ],
             'modalAddAvaliation' => [
                 'skeletal_muscle_perc_info' => 'If :skeletal_muscle_perc is not specified, the formula by "Lee et al" will be used for calculation.',
@@ -368,13 +368,13 @@ return [
                 'midaxillary' => '<strong>Midaxillary:</strong> at midaxillary line horizontal to xiphoid process of the sternum.',
                 'bicep' => '<strong>Bicep:</strong> vertical fold at the midpoint of the anterior side of bicep between shoulder and elbow with arm relaxed at the side.',
             ],
-            'deleteConfirmation' => 'Are you sure you want to delete this avaliation? This operation is permanent and cannot be undone!',
-            'deleteSuccess' => 'Avaliation deleted successfully!',
+            'deleteConfirmation' => 'Are you sure you want to delete this evaluation? This operation is permanent and cannot be undone!',
+            'deleteSuccess' => 'Evaluation deleted successfully!',
             'modalSelectClient' => [
                 'title' => 'Select Client',
                 'btnSelect' => 'Select',
                 'selectClientErrorMessage' => 'Select a client to continue!',
-                'lastAvaliationColumn' => 'Last Avaliation',
+                'lastAvaliationColumn' => 'Last Evaluation',
             ],
             'viewReport' => [
                 'title' => 'View Report',
@@ -386,16 +386,16 @@ return [
                 'fieldCode' => 'Code',
                 'buttonSend' => 'Send',
                 'successMessage' => 'Link sent successfully!',
-                'whatsMessage' => 'Hello, :clientName! Here are the results of your avaliation. Check on the link! :link',
+                'whatsMessage' => 'Hello, :clientName! Here are the results of your evaluation. Check on the link! :link',
             ],
             'sendAvaliationLink' => [
-                'emailTitle' => 'Your Avaliation Results',
-                'title' => 'Check your Avaliation',
-                'bodyLine1' => 'Hello, :clientName! Here are the results of your avaliation.',
+                'emailTitle' => 'Your Evaluation Results',
+                'title' => 'Check your Evaluation',
+                'bodyLine1' => 'Hello, :clientName! Here are the results of your evaluation.',
                 'bodyLine2' => 'Check out the link below:',
                 'bodyLine3' => 'If you did not request this, please ignore this email.',
                 'bodyLine4' => 'Thank you for using our services!',
-                'mailActionLink' => 'CHECK AVALIATION',
+                'mailActionLink' => 'CHECK EVALUATION',
             ],
         ],
 
@@ -420,7 +420,7 @@ return [
     'menu' => [
         'dashboard' => 'Dashboard',
         'client' => 'Clients',
-        'avaliation' => 'Avaliations',
+        'avaliation' => 'Evaluations',
     ],
 
     'components' => [
@@ -431,7 +431,7 @@ return [
             'sendWhatsLink' => 'Whatsapp',
             'dataErrorPrintReport' => 'Insufficient data to generate graph!',
             'notCalculated' => 'Not calculated',
-            'title' => 'Avaliation Report - Client :clientName',
+            'title' => 'Evaluation Report - Client :clientName',
             'progressSub' => 'Takes into consideration :bmi, :bodyFat, :whr and :visceralFat',
             'cardInfo' => 'General Information',
             'skeletalMuscle' => 'Skeletal Muscle',
@@ -523,13 +523,13 @@ return [
             'passwordChangedSuccess' => 'Password changed successfully!',
         ],
         'DashCardMonthAvaliations' => [
-            'title' => 'Avaliations this Month',
+            'title' => 'Evaluations this Month',
         ],
         'DashCardMonthClients' => [
             'title' => 'New Clients this Month',
         ],
         'DashCardClientsWithoutAvaliation30Days' => [
-            'title' => 'Clients without Avaliation in the Last 30 Days',
+            'title' => 'Clients without Evaluation in the Last 30 Days',
         ],
         'DashCardClientsWithGoalsDueThisWeek' => [
             'title' => 'Clients with Goals Due This Week',
@@ -545,14 +545,14 @@ return [
             ],
             'UserReportLogo' => [
                 'validateMessage' => 'To add logo to report, upgrade to premium plan.',
-                'logoPlaceholderText' => 'Add your custom logo to the avaliation report.',
+                'logoPlaceholderText' => 'Add your custom logo to the evaluation report.',
             ],
             'AvaliationSendLink' => [
-                'validateMessage' => 'To send the avaliation link to your client, upgrade to the premium plan.',
+                'validateMessage' => 'To send the evaluation link to your client, upgrade to the premium plan.',
             ],
             'AvaliationPictures' => [
-                'validateMessage' => 'To add client photos to the avaliation, upgrade to the premium plan.',
-                'logoPlaceholderText' => 'Upgrade to the premium plan to add client photos to the avaliation.',
+                'validateMessage' => 'To add client photos to the evaluation, upgrade to the premium plan.',
+                'logoPlaceholderText' => 'Upgrade to the premium plan to add client photos to the evaluation.',
             ],
         ],
     ],
