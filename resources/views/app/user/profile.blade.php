@@ -1,5 +1,6 @@
 @inject('Constants', 'App\Helpers\Constants')
 @inject('SysUtils', 'App\Helpers\SysUtils')
+@inject('UserReportLogo', 'App\Helpers\Feature\UserReportLogo')
 
 @php
 /*
@@ -8,6 +9,7 @@ View variables:
     - $PAGE_TITLE: string
 */
 $USER = $SysUtils::getLoggedInUser() ?? null;
+$URLogoFeature = new $UserReportLogo();
 @endphp
 
 @extends('layout.dashboard', [
@@ -139,14 +141,18 @@ $USER = $SysUtils::getLoggedInUser() ?? null;
             <div class="row">
                 <div class="col-12 col-md-2 text-center">
                     <div class="form-group">
-                        @include('app.avaliation.partials.photoInput', [
-                            'MODEL' => $USER?->info,
-                            'FIELD_NAME' => 'logo_url',
-                            'INPUT_NAME' => 'f-userinfo-logo',
-                            'INPUT_DEFAULT_IMAGE' => $Constants::USER_LOGO_DEFAULT_IMAGE_PATH,
-                            'IMG_ALT' => '',
-                            'CAN_EDIT' => true,
-                        ])
+                        @if ($URLogoFeature->validate())
+                            @include('app.avaliation.partials.photoInput', [
+                                'MODEL' => $USER?->info,
+                                'FIELD_NAME' => 'logo_url',
+                                'INPUT_NAME' => 'f-userinfo-logo',
+                                'INPUT_DEFAULT_IMAGE' => $Constants::USER_LOGO_DEFAULT_IMAGE_PATH,
+                                'IMG_ALT' => '',
+                                'CAN_EDIT' => true,
+                            ])
+                        @else
+                            @include('app.user.partials.companyLogoPlaceholder')
+                        @endif
                     </div>
                 </div>
                 <div class="col-12 col-md-10">

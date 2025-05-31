@@ -299,7 +299,7 @@ class User extends Authenticatable
         $planType = $plan->plan_type ?? FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
 
         // Valida se o plano é conhecido, senão considera como plano free
-        if (!array_key_exists($planType, FeatureAbstract::fGetPlanTypes())) {
+        if (!in_array($planType, FeatureAbstract::fGetPlanTypes())) {
             $planType = FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
         }
 
@@ -413,6 +413,9 @@ class User extends Authenticatable
         $User->password_reset_token = null;
         $User->update();
         $User->refresh();
+
+        // clear cache
+        Cache::forget($User->getPlanTypeCacheKey());
 
         return new ApiResponse(false, __('messages.models.User.fLogin.loginSuccess'), [
             'User' => $User

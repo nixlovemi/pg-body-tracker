@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\UploadedFile;
 use App\Helpers\Constants;
+use App\Helpers\Feature\UserReportLogo;
 
 class UserInfo extends Model
 {
@@ -99,6 +100,11 @@ class UserInfo extends Model
 
     public function setLogoUrl(?UploadedFile $file): void
     {
+        $URLogoFeature = new UserReportLogo();
+        if (!$URLogoFeature->validate()) {
+            return;
+        }
+
         $this->setPhotoUrl(
             'logo_url',
             $file,
@@ -115,6 +121,11 @@ class UserInfo extends Model
 
     public function getLogoBase64(): ?string
     {
+        $URLogoFeature = new UserReportLogo();
+        if (!$URLogoFeature->validate()) {
+            return Constants::USER_LOGO_DEFAULT_IMAGE_PATH;
+        }
+
         $defaultImg = public_path(str_replace('/', DIRECTORY_SEPARATOR, Constants::USER_LOGO_DEFAULT_IMAGE_PATH));
         return $this->getPhotoBase64('logo_url', $defaultImg);
     }

@@ -541,7 +541,12 @@ return [
             'labelPremiumPlan' => 'Premium',
             'ClientLimit' => [
                 'validateMessage' => 'You have reached the limit of allowed clients (:limit clients). To add more clients, upgrade to premium.',
-            ]
+            ],
+            'UserReportLogo' => [
+                'validateMessage' => 'To add logo to report, upgrade to premium plan.',
+                'logoPlaceholderTitle' => 'Premium Feature',
+                'logoPlaceholderText' => 'Add your custom logo to the avaliation report.',
+            ],
         ],
     ],
 ];

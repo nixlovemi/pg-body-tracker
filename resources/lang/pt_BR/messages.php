@@ -541,7 +541,12 @@ return [
             'labelPremiumPlan' => 'Premium',
             'ClientLimit' => [
                 'validateMessage' => 'Você atingiu o limite de clientes permitidos (:limit clientes). Para adicionar mais clientes, atualize para o premium.',
-            ]
+            ],
+            'UserReportLogo' => [
+                'validateMessage' => 'Para adicionar o logotipo no relatório, atualize para o plano premium.',
+                'logoPlaceholderTitle' => 'Recurso Premium',
+                'logoPlaceholderText' => 'Adicione seu logotipo personalizado ao relatório de avaliação.',
+            ],
         ],
     ],
 ];
