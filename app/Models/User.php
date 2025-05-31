@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
 use App\Mail\ConfirmationLink;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use App\Models\UserPlans;
+use App\Helpers\Feature\FeatureAbstract;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable
 {
@@ -90,6 +93,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(
             UserInfo::class, 'user_id',
+            'id'
+        );
+    }
+
+    public function plans()
+    {
+        return $this->hasMany(
+            UserPlans::class, 'user_id',
             'id'
         );
     }
@@ -246,7 +257,7 @@ class User extends Authenticatable
         // enconde changes to @@
         return SysUtils::encodeStr(date('YmdHis') . '--' . $this->id);
     }
-  
+
     public function setPictureFromUrl(string $url): void
     {
         // download image
@@ -266,6 +277,45 @@ class User extends Authenticatable
 
         // close and delete the temporary file
         fclose($tempFile);
+    }
+
+    public function getPlanType(): string
+    {
+        $cacheKey = $this->getPlanTypeCacheKey();
+        $cacheTTL = 60 * 60 * 8; // 8 horas
+
+        // Verifica cache
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
+        // Busca o plano atual
+        $plan = $this->plans()
+            ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
+            ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
+            ->orderBy('end_date', 'desc')
+            ->first();
+
+        $planType = $plan->plan_type ?? FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
+
+        // Valida se o plano é conhecido, senão considera como plano free
+        if (!in_array($planType, FeatureAbstract::fGetPlanTypes())) {
+            $planType = FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
+        }
+
+        // Salva em cache e retorna
+        Cache::put($cacheKey, $planType, $cacheTTL);
+        return $planType;
+    }
+
+    public function getPlanTypeLabel(): string
+    {
+        return FeatureAbstract::fGetLabelPlanType($this->getPlanType());
+    }
+
+    private function getPlanTypeCacheKey(): string
+    {
+        return 'user-plan-type-' . $this->id;
     }
     // ===============
 
@@ -363,6 +413,9 @@ class User extends Authenticatable
         $User->password_reset_token = null;
         $User->update();
         $User->refresh();
+
+        // clear cache
+        Cache::forget($User->getPlanTypeCacheKey());
 
         return new ApiResponse(false, __('messages.models.User.fLogin.loginSuccess'), [
             'User' => $User

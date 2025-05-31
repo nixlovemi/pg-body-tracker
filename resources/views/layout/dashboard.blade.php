@@ -83,6 +83,12 @@ $USER = $mSysUtils::getLoggedInUser();
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <h6 class="dropdown-item text-center">
+                                    {{ __('messages.components.Features.userDropdownPlanText', [
+                                        'planType' => $USER->getPlanTypeLabel(),
+                                    ]) }}
+                                </h6>
+                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('app.user.profile') }}">
                                     {!! $Icons::USER_GREY !!}
                                     {{ __('messages.profile') }}

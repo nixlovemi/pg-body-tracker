@@ -77,10 +77,10 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/photo/{fileName}', 'App\Http\Controllers\Avaliation@showPhoto')->name('app.avaliation.showPhoto');
             Route::get('/viewReport/{codedId}', 'App\Http\Controllers\Avaliation@viewReport')->name('app.avaliation.viewReport');
             Route::get('/viewReportPDF/{codedId}', 'App\Http\Controllers\Avaliation@viewReportPDF')->name('app.avaliation.viewReportPDF');
-            Route::get('/htmlModalSendWhats', 'App\Http\Controllers\Avaliation@htmlModalSendWhats')->name('app.avaliation.htmlModalSendWhats');
-            Route::post('/doModalSendWhats', 'App\Http\Controllers\Avaliation@doModalSendWhats')->name('app.avaliation.doModalSendWhats');
-            Route::get('/htmlModalSendMail', 'App\Http\Controllers\Avaliation@htmlModalSendMail')->name('app.avaliation.htmlModalSendMail');
-            Route::post('/doModalSendMail', 'App\Http\Controllers\Avaliation@doModalSendMail')->name('app.avaliation.doModalSendMail');
+            Route::get('/htmlModalSendWhats', 'App\Http\Controllers\Avaliation@htmlModalSendWhats')->name('app.avaliation.htmlModalSendWhats')->middleware('avaliation.send.link.feature');
+            Route::post('/doModalSendWhats', 'App\Http\Controllers\Avaliation@doModalSendWhats')->name('app.avaliation.doModalSendWhats')->middleware('avaliation.send.link.feature');
+            Route::get('/htmlModalSendMail', 'App\Http\Controllers\Avaliation@htmlModalSendMail')->name('app.avaliation.htmlModalSendMail')->middleware('avaliation.send.link.feature');
+            Route::post('/doModalSendMail', 'App\Http\Controllers\Avaliation@doModalSendMail')->name('app.avaliation.doModalSendMail')->middleware('avaliation.send.link.feature');
         });
     });
 

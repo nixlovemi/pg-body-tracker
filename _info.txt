@@ -2,6 +2,15 @@
 
 [IDEAS]
 - https://chatgpt.com/share/67475b3a-585c-8000-952b-41a52dcb3382
+- Adicionar (?)
+    - Export Data to CSV
+    - User Reports (business focused)
+    - Birthday Calendar
+    - Full Calendar
+    - Client Groups
+    - Avaliation Agenda (Revaluation)
+    - Fully personalized anamnesis (Create Sheets Anamnese personalized and send through WhatsApp, e-mail, etc. to be <b>filled easily</b> by your client.)
+    - If you are not satisfied, canceling within 7 days after payment, we will refund the full amount paid. The RISK is ALL OURS!
 
 [LARAVEL]
 - docker exec "php_audio_video" php artisan migrate:fresh --seed --database=pgsql_test

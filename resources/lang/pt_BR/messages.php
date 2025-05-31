@@ -535,5 +535,25 @@ return [
             'title' => 'Clientes com Objetivos Vencendo Esta Semana',
             'tableColGoalDeadline' => 'Prazo do Objetivo',
         ],
+        'Features' => [
+            'userDropdownPlanText' => 'Plano: :planType',
+            'labelFreePlan' => 'Grátis',
+            'labelPremiumPlan' => 'Premium',
+            'premiumFeature' => 'Recurso Premium',
+            'ClientLimit' => [
+                'validateMessage' => 'Você atingiu o limite de clientes permitidos (:limit clientes). Para adicionar mais clientes, atualize para o premium.',
+            ],
+            'UserReportLogo' => [
+                'validateMessage' => 'Para adicionar o logotipo no relatório, atualize para o plano premium.',
+                'logoPlaceholderText' => 'Adicione seu logotipo personalizado ao relatório de avaliação.',
+            ],
+            'AvaliationSendLink' => [
+                'validateMessage' => 'Para enviar o link de avaliação ao cliente, atualize para o plano premium.',
+            ],
+            'AvaliationPictures' => [
+                'validateMessage' => 'Para adicionar fotos do cliente na avaliação, atualize para o plano premium.',
+                'logoPlaceholderText' => 'Atualize para o plano premium para adicionar fotos do cliente na avaliação.',
+            ],
+        ],
     ],
 ];

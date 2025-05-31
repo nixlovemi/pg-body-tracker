@@ -1,4 +1,5 @@
 @inject('ARPresenter', 'App\Presenters\AvaliationReportPresenter')
+@inject('UserReportLogo', 'App\Helpers\Feature\UserReportLogo')
 
 @php
 /*
@@ -16,6 +17,8 @@ View variables:
     - $DIV_COL_PROGRESS_CLASSES: string
     - $PROGRESS_BAR_VIEW_NAME: string
 */
+
+$URLogoFeature = new $UserReportLogo();
 @endphp
 
 <div class="avaliation-report-general-info {{ $DIV_ROW_CLASSES }}">
@@ -24,10 +27,12 @@ View variables:
             <div class="card-body">
                 <div class="row">
                     <div class="col text-left">
-                        <div id="uinfo-logo" class="w-25 float-left">
-                            <img class="img-fluid" src="{{ $ARPresenter::getUserLogoBase64($Avaliation) }}" />
-                        </div>
-                        <div id="uinfo-info" class="float-left pl-3 w-75">
+                        @if ($URLogoFeature->validate())
+                            <div id="uinfo-logo" class="w-25 float-left">
+                                <img class="img-fluid" src="{{ $ARPresenter::getUserLogoBase64($Avaliation) }}" />
+                            </div>
+                        @endif
+                        <div id="uinfo-info" @class(['float-left pl-3 w-75', 'w-100' => !$URLogoFeature->validate()])>
                             <div class="text-sm font-weight-bold text-secondary text-uppercase mb-1">
                                 {{ __('messages.pages.avaliation.viewReport.contact') }}: {{ $Avaliation->client->user->getFullName() }}
                             </div>

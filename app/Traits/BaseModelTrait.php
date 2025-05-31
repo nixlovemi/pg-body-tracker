@@ -80,7 +80,7 @@ trait BaseModelTrait {
                 'modelName' => $modelNameMsg,
             ]));
         }
-        $isEdit = ($Model->id > 0); // TODO: maybe use wasRecentlyCreated?
+        $isEdit = ($Model->exists);
 
         // check if user can save
         if (!self::fHasAccess($Model)) {

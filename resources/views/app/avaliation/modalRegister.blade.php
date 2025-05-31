@@ -1,6 +1,7 @@
 @inject('SysUtils', 'App\Helpers\SysUtils')
 @inject('mAvaliation', 'App\Models\Avaliation')
 @inject('mClient', 'App\Models\Client')
+@inject('AvaliationPictures', 'App\Helpers\Feature\AvaliationPictures')
 
 @php
 /*
@@ -18,6 +19,7 @@ $CUID = $CUID ?? '';
 $ACTION = $ACTION ?? '';
 $canEdit = (1 == $CEDIT) ? true: false;
 $Client = $mClient::getModelByCodedId($CUID);
+$APicFeature = new $AvaliationPictures();
 @endphp
 
 @extends('layout.modal', [
@@ -1159,70 +1161,78 @@ $Client = $mClient::getModelByCodedId($CUID);
         <div class="d-none" id="raf-page-6" data-idx="6">
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageSixTitle') }}">
                 <div class="form-row">
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.photo_front_url') }}">
-                                {{ __('messages.models.Avaliation.fields.photo_front_url') }}
-                            </label>
+                    @if ($APicFeature->validate())
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.photo_front_url') }}">
+                                    {{ __('messages.models.Avaliation.fields.photo_front_url') }}
+                                </label>
 
-                            @include('app.avaliation.partials.photoInput', [
-                                'MODEL' => $AVALIATION,
-                                'FIELD_NAME' => 'photo_front_url',
-                                'INPUT_NAME' => 'f-photo_front_url',
-                                'INPUT_DEFAULT_IMAGE' => '/images/photo_front.jpg',
-                                'IMG_ALT' => __('messages.models.Avaliation.fields.photo_front_url'),
-                                'CAN_EDIT' => $canEdit
-                            ])
+                                @include('app.avaliation.partials.photoInput', [
+                                    'MODEL' => $AVALIATION,
+                                    'FIELD_NAME' => 'photo_front_url',
+                                    'INPUT_NAME' => 'f-photo_front_url',
+                                    'INPUT_DEFAULT_IMAGE' => '/images/photo_front.jpg',
+                                    'IMG_ALT' => __('messages.models.Avaliation.fields.photo_front_url'),
+                                    'CAN_EDIT' => $canEdit
+                                ])
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.photo_right_url') }}">
-                                {{ __('messages.models.Avaliation.fields.photo_right_url') }}
-                            </label>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.photo_right_url') }}">
+                                    {{ __('messages.models.Avaliation.fields.photo_right_url') }}
+                                </label>
 
-                            @include('app.avaliation.partials.photoInput', [
-                                'MODEL' => $AVALIATION,
-                                'FIELD_NAME' => 'photo_right_url',
-                                'INPUT_NAME' => 'f-photo_right_url',
-                                'INPUT_DEFAULT_IMAGE' => '/images/photo_right.jpg',
-                                'IMG_ALT' => __('messages.models.Avaliation.fields.photo_right_url'),
-                                'CAN_EDIT' => $canEdit
-                            ])
+                                @include('app.avaliation.partials.photoInput', [
+                                    'MODEL' => $AVALIATION,
+                                    'FIELD_NAME' => 'photo_right_url',
+                                    'INPUT_NAME' => 'f-photo_right_url',
+                                    'INPUT_DEFAULT_IMAGE' => '/images/photo_right.jpg',
+                                    'IMG_ALT' => __('messages.models.Avaliation.fields.photo_right_url'),
+                                    'CAN_EDIT' => $canEdit
+                                ])
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.photo_rear_url') }}">
-                                {{ __('messages.models.Avaliation.fields.photo_rear_url') }}
-                            </label>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.photo_rear_url') }}">
+                                    {{ __('messages.models.Avaliation.fields.photo_rear_url') }}
+                                </label>
 
-                            @include('app.avaliation.partials.photoInput', [
-                                'MODEL' => $AVALIATION,
-                                'FIELD_NAME' => 'photo_rear_url',
-                                'INPUT_NAME' => 'f-photo_rear_url',
-                                'INPUT_DEFAULT_IMAGE' => '/images/photo_rear.jpg',
-                                'IMG_ALT' => __('messages.models.Avaliation.fields.photo_rear_url'),
-                                'CAN_EDIT' => $canEdit
-                            ])
+                                @include('app.avaliation.partials.photoInput', [
+                                    'MODEL' => $AVALIATION,
+                                    'FIELD_NAME' => 'photo_rear_url',
+                                    'INPUT_NAME' => 'f-photo_rear_url',
+                                    'INPUT_DEFAULT_IMAGE' => '/images/photo_rear.jpg',
+                                    'IMG_ALT' => __('messages.models.Avaliation.fields.photo_rear_url'),
+                                    'CAN_EDIT' => $canEdit
+                                ])
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.photo_left_url') }}">
-                                {{ __('messages.models.Avaliation.fields.photo_left_url') }}
-                            </label>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.photo_left_url') }}">
+                                    {{ __('messages.models.Avaliation.fields.photo_left_url') }}
+                                </label>
 
-                            @include('app.avaliation.partials.photoInput', [
-                                'MODEL' => $AVALIATION,
-                                'FIELD_NAME' => 'photo_left_url',
-                                'INPUT_NAME' => 'f-photo_left_url',
-                                'INPUT_DEFAULT_IMAGE' => '/images/photo_left.jpg',
-                                'IMG_ALT' => __('messages.models.Avaliation.fields.photo_left_url'),
-                                'CAN_EDIT' => $canEdit
-                            ])
+                                @include('app.avaliation.partials.photoInput', [
+                                    'MODEL' => $AVALIATION,
+                                    'FIELD_NAME' => 'photo_left_url',
+                                    'INPUT_NAME' => 'f-photo_left_url',
+                                    'INPUT_DEFAULT_IMAGE' => '/images/photo_left.jpg',
+                                    'IMG_ALT' => __('messages.models.Avaliation.fields.photo_left_url'),
+                                    'CAN_EDIT' => $canEdit
+                                ])
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        @include('app.placeholder-premium', [
+                            'DIV_CLASSES' => 'w-100',
+                            'TITLE' => __('messages.components.Features.premiumFeature'),
+                            'DESCRIPTION' => __('messages.components.Features.AvaliationPictures.logoPlaceholderText'),
+                        ])
+                    @endif
                 </div>
             </x-card>
         </div>
