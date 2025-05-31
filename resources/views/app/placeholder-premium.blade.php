@@ -1,3 +1,14 @@
+@php
+/*
+View variables:
+===============
+    - $DIV_CLASSES: string
+    - $TITLE: string
+    - $DESCRIPTION: string
+===============
+*/
+@endphp
+
 <style>
     .logo-placeholder-premium {
         width: 200px;
@@ -26,7 +37,7 @@
     }
 </style>
 
-<div class="logo-placeholder-premium">
-    <span>{{__('messages.components.Features.UserReportLogo.logoPlaceholderTitle')}}</span>
-    <small>{{__('messages.components.Features.UserReportLogo.logoPlaceholderText')}}</small>
+<div class="logo-placeholder-premium {{ $DIV_CLASSES ?? '' }}">
+    <span>{{ $TITLE ?? __('messages.components.Features.labelPremiumPlan') }}</span>
+    <small>{{ $DESCRIPTION ?? '' }}</small>
 </div>

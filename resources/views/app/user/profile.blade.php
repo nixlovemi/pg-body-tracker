@@ -151,7 +151,11 @@ $URLogoFeature = new $UserReportLogo();
                                 'CAN_EDIT' => true,
                             ])
                         @else
-                            @include('app.user.partials.companyLogoPlaceholder')
+                            @include('app.placeholder-premium', [
+                                'DIV_CLASSES' => 'w-100',
+                                'TITLE' => __('messages.components.Features.premiumFeature'),
+                                'DESCRIPTION' => __('messages.components.Features.UserReportLogo.logoPlaceholderText'),
+                            ])
                         @endif
                     </div>
                 </div>

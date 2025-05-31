@@ -40,7 +40,7 @@ $ASLink = new $AvaliationSendLink();
             </a>
         @else
             <h6 class="dropdown-item text-center">
-                {{ __('messages.components.Features.AvaliationSendLink.shareMenuPlaceholderTitle') }}
+                {{ __('messages.components.Features.premiumFeature') }}
             </h6>
         @endif
     </div>

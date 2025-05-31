@@ -17,7 +17,11 @@ abstract class FeatureAbstract
         }
     }
     abstract public function getName(): string;
-    abstract public function validate(): bool;
+    /** Overwrite it when needed */
+    public function validate(): bool
+    {
+        return $this->getPlanType() === self::FEATURE_PLAN_TYPE_PREMIUM;
+    }
     abstract public function getValidateMsg(): string;
     final public static function fGetPlanTypes(): array
     {

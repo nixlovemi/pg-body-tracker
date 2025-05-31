@@ -15,6 +15,7 @@ use Intervention\Image\Facades\Image;
 use App\Mail\SendAvaliationLink;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Helpers\Feature\AvaliationPictures;
 
 class Avaliation extends Model
 {
@@ -244,6 +245,36 @@ class Avaliation extends Model
     public function setCreatedAtAttribute($value)
     {
         // to Disable created_at
+    }
+
+    public function getPhotoFrontUrlAttribute(): ?string
+    {
+        return $this->getPhotoUrlFromAttribute('photo_front_url');
+    }
+
+    public function getPhotoRightUrlAttribute(): ?string
+    {
+        return $this->getPhotoUrlFromAttribute('photo_right_url');
+    }
+
+    public function getPhotoRearUrlAttribute(): ?string
+    {
+        return $this->getPhotoUrlFromAttribute('photo_rear_url');
+    }
+
+    public function getPhotoLeftUrlAttribute(): ?string
+    {
+        return $this->getPhotoUrlFromAttribute('photo_left_url');
+    }
+
+    private function getPhotoUrlFromAttribute(string $attribute): ?string
+    {
+        $ApicFeature = new AvaliationPictures();
+        if (!$ApicFeature->validate()) {
+            return null;
+        }
+
+        return $this->{$attribute};
     }
 
     public function getBodyAgeCalcAttribute()
@@ -844,6 +875,11 @@ class Avaliation extends Model
 
     private function setPhotoUrl(string $field, ?UploadedFile $file): void
     {
+        $ApicFeature = new AvaliationPictures();
+        if (!$ApicFeature->validate()) {
+            return; // feature is disabled
+        }
+
         // check if file is null
         if (null === $file) {
             return;

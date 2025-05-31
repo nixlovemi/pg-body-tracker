@@ -539,17 +539,20 @@ return [
             'userDropdownPlanText' => 'Plan: :planType',
             'labelFreePlan' => 'Free',
             'labelPremiumPlan' => 'Premium',
+            'premiumFeature' => 'Premium Feature',
             'ClientLimit' => [
                 'validateMessage' => 'You have reached the limit of allowed clients (:limit clients). To add more clients, upgrade to premium.',
             ],
             'UserReportLogo' => [
                 'validateMessage' => 'To add logo to report, upgrade to premium plan.',
-                'logoPlaceholderTitle' => 'Premium Feature',
                 'logoPlaceholderText' => 'Add your custom logo to the avaliation report.',
             ],
             'AvaliationSendLink' => [
                 'validateMessage' => 'To send the avaliation link to your client, upgrade to the premium plan.',
-                'shareMenuPlaceholderTitle' => 'Premium Feature',
+            ],
+            'AvaliationPictures' => [
+                'validateMessage' => 'To add client photos to the avaliation, upgrade to the premium plan.',
+                'logoPlaceholderText' => 'Upgrade to the premium plan to add client photos to the avaliation.',
             ],
         ],
     ],
