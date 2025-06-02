@@ -867,8 +867,7 @@
             })
 
             calendar.on('selectEvent', function(event, activeEvent) {
-                // if activeEvent.id starts with bday-, opens activeEvent.PG_CLICK_URL in a new tab
-                if (activeEvent.id.startsWith('bday-')) {
+                if (activeEvent.id.startsWith('bday-') || activeEvent.id.startsWith('revaluation-')) {
                     window.open(activeEvent.PG_CLICK_URL, '_blank').focus();
                     return;
                 }

@@ -14,6 +14,7 @@ use App\Models\Avaliation as mAvaliation;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\Constants;
 use Illuminate\Support\Facades\URL;
+use App\Helpers\Feature\RevaluationDate;
 
 class Avaliation extends Controller
 {
@@ -342,6 +343,12 @@ class Avaliation extends Controller
         $form['client_notes'] = $request->input('f-cnotes') ?? null;
         $form['private_notes'] = $request->input('f-pnotes') ?? null;
 
+        $form['revaluation_date'] = $request->input('f-rev-date') ?? null;
+        $RevDateFeature = new RevaluationDate();
+        if (!$RevDateFeature->validate()) {
+            $form['revaluation_date'] = null;
+        }
+
         // get Client
         $Client = Client::getModelByCodedId($form['cid']);
         $form['client_id'] = $Client?->id;
@@ -349,6 +356,9 @@ class Avaliation extends Controller
         // format deadline from d/m/Y to Y-m-d
         if (null !== $form['date']) {
             $form['date'] = SysUtils::reformatDate($form['date'], __('messages.dateFormat'), 'Y-m-d');
+        }
+        if (null !== $form['revaluation_date']) {
+            $form['revaluation_date'] = SysUtils::reformatDate($form['revaluation_date'], __('messages.dateFormat'), 'Y-m-d');
         }
 
         // format number to db

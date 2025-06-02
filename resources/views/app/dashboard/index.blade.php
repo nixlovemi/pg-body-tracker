@@ -1,3 +1,5 @@
+@inject('AppDashboardPresenter', 'App\Presenters\AppDashboardPresenter')
+
 @php
 /*
 View variables:
@@ -12,17 +14,7 @@ View variables:
 
 @section('DASH_BODY_CONTENT')
     <div class="row">
-        @php
-        $cards = [
-            'App\Helpers\DashboardCard\DashCardMonthAvaliations',
-            'App\Helpers\DashboardCard\DashCardMonthClients',
-            'App\Helpers\DashboardCard\DashCardClientsWithoutAvaliation30Days',
-            'App\Helpers\DashboardCard\DashCardClientsWithGoalsDueThisWeek',
-            'App\Helpers\DashboardCard\DashCardBirthdaysMonth',
-        ];
-        @endphp
-
-        @foreach ($cards as $cardClass)
+        @foreach ($AppDashboardPresenter::getDashboardCardData() as $cardClass)
             @php
                 $card = new $cardClass();
             @endphp

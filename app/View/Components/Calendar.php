@@ -6,6 +6,8 @@ use Illuminate\View\Component;
 use App\Helpers\SysUtils;
 use App\Models\User;
 use App\Helpers\Icons;
+use App\Models\Avaliation;
+use App\Helpers\Feature\RevaluationDate;
 
 class Calendar extends Component
 {
@@ -57,6 +59,7 @@ class Calendar extends Component
         */
 
         $this->addBirthdays();
+        $this->addRevaluations();
     }
 
     private function addBirthdays(): void
@@ -75,6 +78,38 @@ class Calendar extends Component
                 'everyYear' => true,
                 'color' => "#D1C4E9",
                 'PG_CLICK_URL' => route('app.client.view', ['codedId' => $Client->codedId]),
+            ];
+        }
+    }
+
+    private function addRevaluations(): void
+    {
+        $RevDateFeature = new RevaluationDate();
+        if (!$RevDateFeature->validate()) {
+            return;
+        }
+
+        if (!$this->User) {
+            return;
+        }
+
+        $clientIds = $this->User->clients->pluck('id')->map(fn($id) => (int) $id)->toArray();
+        $Avaliations = Avaliation::whereNotNull('revaluation_date')
+            ->whereIn('client_id', $clientIds);
+
+        foreach ($Avaliations->get() as $Avaliation) {
+            $this->events[] = [
+                'id' => "revaluation-" . $Avaliation->codedId,
+                'description' => __('messages.pages.calendar.revaluationDescription'),
+                'name' => $Avaliation->client->getName(),
+                'badge' => Icons::FILE_CHART,
+                'date' => SysUtils::timezoneDate($Avaliation->revaluation_date . ' 12:00:00', self::EVENT_DATE_FORMAT),
+                'type' => "event",
+                'color' => "#4FC3F7",
+                'PG_CLICK_URL' => route('app.avaliation.index', [
+                    'openAvaliation' => 1,
+                    'openAvaliationCID' => $Avaliation->client->codedId,
+                ]),
             ];
         }
     }

@@ -16,6 +16,7 @@ use App\Mail\SendAvaliationLink;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Helpers\Feature\AvaliationPictures;
+use App\Helpers\Feature\RevaluationDate;
 
 class Avaliation extends Model
 {
@@ -106,6 +107,7 @@ class Avaliation extends Model
 
         'client_notes',
         'private_notes',
+        'revaluation_date',
 
         'photo_front_url',
         'photo_right_url',
@@ -227,6 +229,20 @@ class Avaliation extends Model
 
         $validation->addField('client_notes', ['nullable', 'string'], __('messages.models.Avaliation.fields.client_notes'));
         $validation->addField('private_notes', ['nullable', 'string'], __('messages.models.Avaliation.fields.private_notes'));
+        $validation->addField('revaluation_date', ['nullable', 'date', 'date_format:Y-m-d', function ($attribute, $value, $fail) {
+            if (empty($value)) {
+                return;
+            }
+
+            // if the revaluation date is set, it must be in the future (after field date)
+            $revDate = SysUtils::applyTimezone($value);
+            $date = SysUtils::applyTimezone($this->date);
+            if ($revDate <= $date) {
+                $fail(
+                    __('messages.models.Avaliation.validateRevaluationBeforeDate')
+                );
+            }
+        }], __('messages.models.Avaliation.fields.revaluation_date'));
 
         // TODO: check if we need to validate the file URL
         $validation->addField('photo_front_url', ['nullable', 'string'], __('messages.models.Avaliation.fields.photo_front_url'));
@@ -271,6 +287,28 @@ class Avaliation extends Model
     {
         $ApicFeature = new AvaliationPictures();
         if (!$ApicFeature->validate()) {
+            return null;
+        }
+
+        return $value;
+    }
+
+    public function setRevaluationDateAttribute($value)
+    {
+        $RevDateFeature = new RevaluationDate();
+        if (!$RevDateFeature->validate()) {
+            $this->attributes['revaluation_date'] = null;
+            return;
+        }
+
+        $this->attributes['revaluation_date'] = $value;
+        return;
+    }
+
+    public function getRevaluationDateAttribute(?string $value): ?string
+    {
+        $RevDateFeature = new RevaluationDate();
+        if (!$RevDateFeature->validate()) {
             return null;
         }
 

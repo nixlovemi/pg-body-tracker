@@ -187,6 +187,7 @@ return [
                 'skin_folds_bicep_cm' => 'Bicep',
                 'client_notes' => 'Client Notes',
                 'private_notes' => 'Private Notes',
+                'revaluation_date' => 'Next Revaluation Date',
                 'photo_front_url' => 'Front View',
                 'photo_right_url' => 'Right View',
                 'photo_rear_url' => 'Rear View',
@@ -202,6 +203,7 @@ return [
             'skinFoldFormula3FoldsJacksonPollock' => 'Jackson & Pollock - 3 Skin Folds',
             'skinFoldFormula7FoldsJacksonPollock' => 'Jackson & Pollock - 7 Skin Folds',
             'skinFoldFormula4FoldsDurninWomersley' => 'Durnin & Womersley - 4 Skin Folds',
+            'validateRevaluationBeforeDate' => 'The revaluation date must be greater than the evaluation date!',
         ],
 
         'UserInfo' => [
@@ -418,6 +420,7 @@ return [
 
         'calendar' => [
             'title' => 'Calendar',
+            'revaluationDescription' => 'Client Revaluation',
         ],
     ],
 
@@ -542,6 +545,9 @@ return [
         'DashCardBirthdaysMonth' => [
             'title' => 'Birthdays this Month',
         ],
+        'DashRevaluationsMonth' => [
+            'title' => 'Monthly Revaluations',
+        ],
         'Features' => [
             'userDropdownPlanText' => 'Plan: :planType',
             'labelFreePlan' => 'Free',
@@ -560,6 +566,10 @@ return [
             'AvaliationPictures' => [
                 'validateMessage' => 'To add client photos to the evaluation, upgrade to the premium plan.',
                 'logoPlaceholderText' => 'Upgrade to the premium plan to add client photos to the evaluation.',
+            ],
+            'RevaluationDate' => [
+                'validateMessage' => 'To add revaluation date, upgrade to premium plan.',
+                'logoPlaceholderText' => 'Upgrade to the premium plan to add the ":fieldLabel" to the calendar.',
             ],
         ],
     ],

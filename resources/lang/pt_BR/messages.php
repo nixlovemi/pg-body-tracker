@@ -187,6 +187,7 @@ return [
                 'skin_folds_bicep_cm' => 'Bíceps',
                 'client_notes' => 'Notas do Cliente',
                 'private_notes' => 'Notas Privadas',
+                'revaluation_date' => 'Data Próxima Avaliação',
                 'photo_front_url' => 'Visão Frontal',
                 'photo_right_url' => 'Visão Lateral Direita',
                 'photo_rear_url' => 'Visão Costas',
@@ -202,6 +203,7 @@ return [
             'skinFoldFormula3FoldsJacksonPollock' => 'Jackson & Pollock - 3 Dobras Cutâneas',
             'skinFoldFormula7FoldsJacksonPollock' => 'Jackson & Pollock - 7 Dobras Cutâneas',
             'skinFoldFormula4FoldsDurninWomersley' => 'Durnin & Womersley - 4 Dobras Cutâneas',
+            'validateRevaluationBeforeDate' => 'A data da reavaliação deve ser maior que a data da avaliação!',
         ],
 
         'UserInfo' => [
@@ -418,6 +420,7 @@ return [
 
         'calendar' => [
             'title' => 'Calendário',
+            'revaluationDescription' => 'Reavaliação do cliente',
         ],
     ],
 
@@ -542,6 +545,9 @@ return [
         'DashCardBirthdaysMonth' => [
             'title' => 'Aniversários no Mês',
         ],
+        'DashRevaluationsMonth' => [
+            'title' => 'Reavaliações no Mês',
+        ],
         'Features' => [
             'userDropdownPlanText' => 'Plano: :planType',
             'labelFreePlan' => 'Grátis',
@@ -560,6 +566,10 @@ return [
             'AvaliationPictures' => [
                 'validateMessage' => 'Para adicionar fotos do cliente na avaliação, atualize para o plano premium.',
                 'logoPlaceholderText' => 'Atualize para o plano premium para adicionar fotos do cliente na avaliação.',
+            ],
+            'RevaluationDate' => [
+                'validateMessage' => 'Para adicionar a data de reavaliação, atualize para o plano premium.',
+                'logoPlaceholderText' => 'Atualize para o plano premium para adicionar a ":fieldLabel" ao calendário.',
             ],
         ],
     ],

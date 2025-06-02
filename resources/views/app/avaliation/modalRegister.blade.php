@@ -2,6 +2,7 @@
 @inject('mAvaliation', 'App\Models\Avaliation')
 @inject('mClient', 'App\Models\Client')
 @inject('AvaliationPictures', 'App\Helpers\Feature\AvaliationPictures')
+@inject('RevaluationDate', 'App\Helpers\Feature\RevaluationDate')
 
 @php
 /*
@@ -20,6 +21,7 @@ $ACTION = $ACTION ?? '';
 $canEdit = (1 == $CEDIT) ? true: false;
 $Client = $mClient::getModelByCodedId($CUID);
 $APicFeature = new $AvaliationPictures();
+$RevDateFeature = new $RevaluationDate();
 @endphp
 
 @extends('layout.modal', [
@@ -1114,6 +1116,31 @@ $APicFeature = new $AvaliationPictures();
         <div class="d-none" id="raf-page-5" data-idx="5">
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageFiveTitle') }}">
                 <div class="form-row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label" title="* {{ __('messages.models.Avaliation.fields.revaluation_date') }}">
+                                {{ __('messages.models.Avaliation.fields.revaluation_date') }}
+                            </label>
+
+                            @if (!$RevDateFeature->validate())
+                                @include('app.placeholder-premium', [
+                                    'DIV_CLASSES' => 'w-100 h-auto',
+                                    'TITLE' => __('messages.components.Features.premiumFeature'),
+                                    'DESCRIPTION' => __('messages.components.Features.RevaluationDate.logoPlaceholderText', [
+                                        'fieldLabel' => __('messages.models.Avaliation.fields.revaluation_date')
+                                    ]),
+                                ])
+                            @else
+                                @php
+                                $value = old('f-rev-date') ?: ($AVALIATION?->revaluation_date ? $SysUtils::reformatDate($AVALIATION?->revaluation_date, 'Y-m-d', __('messages.dateFormat')) : null);
+                                @endphp
+                                <input type="text" class="form-control form-control-user jq-datepicker"
+                                    id="f-rev-date" name="f-rev-date" maxlength="10" value="{{ $value ?? '' }}"
+                                    {{ $canEdit ? '': 'disabled' }}
+                                />
+                            @endif
+                        </div>
+                    </div>
                     <div class="col-12">
                         <div class="form-group">
                             <label class="form-label m-0" title="{{ __('messages.models.Avaliation.fields.client_notes') }}">

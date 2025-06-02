@@ -171,40 +171,58 @@ div.table-responsive tfoot .page-link {
 /* =================================== */
 
 /* ============ EVO CALENDAR ========= */
+:root {
+    --calendar-primary-color: #2D8EDB;
+    --calendar-secondary-color: #1e79c4;
+    --calendar-border-color: #0d72c5;
+    --calendar-bg-opacity: rgba(45, 142, 219, 0.15);
+}
+
+/* === Sombreamento principal === */
 .evo-calendar {
-    -webkit-box-shadow: 0 10px 50px -20px #cacaca;
     box-shadow: 0 10px 50px -20px #cacaca;
 }
-.evo-calendar .calendar-sidebar {
-    background-color: #2D8EDB;
+
+/* === Sidebar === */
+.evo-calendar .calendar-sidebar,
+.evo-calendar .calendar-sidebar > span#sidebarToggler,
+.evo-calendar #eventListToggler {
+    background-color: var(--calendar-primary-color);
     box-shadow: none;
-}
-.evo-calendar .calendar-sidebar > .month-list > .calendar-months > li.active-month,
-.evo-calendar .calendar-sidebar>.month-list>.calendar-months>li:hover {
-    background-color: #1e79c4;
-}
-.evo-calendar .calendar-sidebar > span#sidebarToggler {
-    background-color: #2D8EDB;
     -webkit-box-shadow: none;
-    box-shadow: none;
 }
+
+/* === Meses ativos e hover no sidebar === */
+.evo-calendar .calendar-sidebar > .month-list > .calendar-months > li.active-month,
+.evo-calendar .calendar-sidebar > .month-list > .calendar-months > li:hover {
+    background-color: var(--calendar-secondary-color);
+}
+
+/* === Cabeçalho dos dias da semana === */
 .evo-calendar th[colspan="7"] {
-  color: #2D8EDB;
+    color: var(--calendar-primary-color);
 }
+
+/* === Dia atual do calendário === */
 .evo-calendar tr.calendar-body .calendar-day .day.calendar-today {
     color: #fff;
-    background-color: #2D8EDB;
+    background-color: var(--calendar-primary-color);
 }
-.evo-calendar #eventListToggler {
-    background-color: #2D8EDB;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-}
+
+/* === Lista de eventos vazia === */
 .evo-calendar .event-list > .event-empty {
-    background-color: rgba(45,142,219,.15);
-    border: 1px solid #0d72c5;
+    background-color: var(--calendar-bg-opacity);
+    border: 1px solid var(--calendar-border-color);
 }
 .evo-calendar .event-list > .event-empty > p {
-    color: #0d72c5;
+    color: var(--calendar-border-color);
 }
+
+/* === Título do evento === */
+.event-container > .event-info > p.event-title > span {
+    color: var(--calendar-primary-color);
+    border: 1px solid var(--calendar-primary-color);
+    background-color: var(--calendar-bg-opacity);
+}
+
 /* =================================== */

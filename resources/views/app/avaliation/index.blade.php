@@ -1,6 +1,7 @@
 @inject('Permissions', 'App\Helpers\Permissions')
 @inject('SysUtils', 'App\Helpers\SysUtils')
 @inject('Icons', 'App\Helpers\Icons')
+@inject('RevaluationDate', 'App\Helpers\Feature\RevaluationDate')
 
 @php
 /*
@@ -9,6 +10,7 @@ View variables:
     - $PAGE_TITLE: string
 */
 $userId = $SysUtils::getLoggedInUser()?->id ?? 0;
+$RevDateFeature = new $RevaluationDate();
 @endphp
 
 @extends('layout.dashboard', [
@@ -40,3 +42,30 @@ $userId = $SysUtils::getLoggedInUser()?->id ?? 0;
         </div>
     </div>
 @endsection
+
+@if ($RevDateFeature->validate())
+    @php
+    $paramOpenAvaliation = $_REQUEST['openAvaliation'] ?? null;
+    $paramOpenAvaliationCodedId = $_REQUEST['openAvaliationCID'] ?? null;
+    @endphp
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if ($paramOpenAvaliation)
+                // click the button to open the modal
+                document.getElementById('btn-add-avaliations').click();
+
+                // wait 2 seconds then select the client (client_cid = ZD)
+                setTimeout(function () {
+                    // select option, client with client_cid = $paramOpenAvaliationCodedId
+                    let value = '{{ $paramOpenAvaliationCodedId }}';
+                    let radio = document.querySelector(`input[name="client_cid"][value="${value}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        radio.dispatchEvent(new Event('change'));
+                    }
+                }, 1250);
+            @endif
+        });
+    </script>
+@endif
