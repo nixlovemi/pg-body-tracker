@@ -415,6 +415,10 @@ return [
             'passwordChangedSuccess' => 'Password changed successfully!',
             'passwordChangedError' => 'Error changing password! Please try again.',
         ],
+
+        'calendar' => [
+            'title' => 'Calendar',
+        ],
     ],
 
     'menu' => [
@@ -534,6 +538,9 @@ return [
         'DashCardClientsWithGoalsDueThisWeek' => [
             'title' => 'Clients with Goals Due This Week',
             'tableColGoalDeadline' => 'Goal Deadline',
+        ],
+        'DashCardBirthdaysMonth' => [
+            'title' => 'Birthdays this Month',
         ],
         'Features' => [
             'userDropdownPlanText' => 'Plan: :planType',

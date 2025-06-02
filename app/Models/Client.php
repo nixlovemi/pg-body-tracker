@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Models\Avaliation;
 
 class Client extends Model
 {

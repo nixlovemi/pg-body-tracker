@@ -415,6 +415,10 @@ return [
             'passwordChangedSuccess' => 'Senha alterada com sucesso!',
             'passwordChangedError' => 'Erro ao alterar a senha! Tente novamente.',
         ],
+
+        'calendar' => [
+            'title' => 'Calendário',
+        ],
     ],
 
     'menu' => [
@@ -534,6 +538,9 @@ return [
         'DashCardClientsWithGoalsDueThisWeek' => [
             'title' => 'Clientes com Objetivos Vencendo Esta Semana',
             'tableColGoalDeadline' => 'Prazo do Objetivo',
+        ],
+        'DashCardBirthdaysMonth' => [
+            'title' => 'Aniversários no Mês',
         ],
         'Features' => [
             'userDropdownPlanText' => 'Plano: :planType',

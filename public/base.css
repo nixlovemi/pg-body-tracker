@@ -169,3 +169,42 @@ div.table-responsive tfoot .page-link {
     padding: .45rem .75rem;
 }
 /* =================================== */
+
+/* ============ EVO CALENDAR ========= */
+.evo-calendar {
+    -webkit-box-shadow: 0 10px 50px -20px #cacaca;
+    box-shadow: 0 10px 50px -20px #cacaca;
+}
+.evo-calendar .calendar-sidebar {
+    background-color: #2D8EDB;
+    box-shadow: none;
+}
+.evo-calendar .calendar-sidebar > .month-list > .calendar-months > li.active-month,
+.evo-calendar .calendar-sidebar>.month-list>.calendar-months>li:hover {
+    background-color: #1e79c4;
+}
+.evo-calendar .calendar-sidebar > span#sidebarToggler {
+    background-color: #2D8EDB;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.evo-calendar th[colspan="7"] {
+  color: #2D8EDB;
+}
+.evo-calendar tr.calendar-body .calendar-day .day.calendar-today {
+    color: #fff;
+    background-color: #2D8EDB;
+}
+.evo-calendar #eventListToggler {
+    background-color: #2D8EDB;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.evo-calendar .event-list > .event-empty {
+    background-color: rgba(45,142,219,.15);
+    border: 1px solid #0d72c5;
+}
+.evo-calendar .event-list > .event-empty > p {
+    color: #0d72c5;
+}
+/* =================================== */

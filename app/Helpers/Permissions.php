@@ -17,6 +17,9 @@ final class Permissions {
     public const ACL_AVALIATION_VIEW = 'avaliation/view';
     public const ACL_AVALIATION_EDIT = 'avaliation/edit';
 
+    public const ACL_CALENDAR_VIEW = 'calendar/view';
+    public const ACL_CALENDAR_EDIT = 'calendar/edit';
+
     private const ACL = [
         self::ACL_DASHBOARD_INDEX => [User::ROLE_MANAGER],
 
@@ -28,6 +31,9 @@ final class Permissions {
 
         self::ACL_AVALIATION_VIEW => [User::ROLE_MANAGER, User::ROLE_CLIENT],
         self::ACL_AVALIATION_EDIT => [User::ROLE_MANAGER],
+
+        self::ACL_CALENDAR_VIEW => [User::ROLE_MANAGER, User::ROLE_CLIENT],
+        self::ACL_CALENDAR_EDIT => [User::ROLE_MANAGER],
     ];
 
     private const ROUTE_ACL = [
@@ -63,6 +69,8 @@ final class Permissions {
         'app.avaliation.doModalSendWhats' => self::ACL_AVALIATION_EDIT,
         'app.avaliation.htmlModalSendMail' => self::ACL_AVALIATION_EDIT,
         'app.avaliation.doModalSendMail' => self::ACL_AVALIATION_EDIT,
+
+        'app.calendar.index' => self::ACL_CALENDAR_VIEW,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

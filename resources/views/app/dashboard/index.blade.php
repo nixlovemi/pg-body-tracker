@@ -18,6 +18,7 @@ View variables:
             'App\Helpers\DashboardCard\DashCardMonthClients',
             'App\Helpers\DashboardCard\DashCardClientsWithoutAvaliation30Days',
             'App\Helpers\DashboardCard\DashCardClientsWithGoalsDueThisWeek',
+            'App\Helpers\DashboardCard\DashCardBirthdaysMonth',
         ];
         @endphp
 
