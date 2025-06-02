@@ -82,6 +82,10 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/htmlModalSendMail', 'App\Http\Controllers\Avaliation@htmlModalSendMail')->name('app.avaliation.htmlModalSendMail')->middleware('avaliation.send.link.feature');
             Route::post('/doModalSendMail', 'App\Http\Controllers\Avaliation@doModalSendMail')->name('app.avaliation.doModalSendMail')->middleware('avaliation.send.link.feature');
         });
+
+        Route::prefix('calendar')->group(function () {
+            Route::get('/', 'App\Http\Controllers\Calendar@index')->name('app.calendar.index');
+        });
     });
 
     Route::group([], function(){

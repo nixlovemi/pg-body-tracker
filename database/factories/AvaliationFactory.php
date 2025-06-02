@@ -413,6 +413,20 @@ class AvaliationFactory extends Factory
                 }
                 return $this->faker->text(200);
             },
+            'revaluation_date' => function(array $attr) {
+                if (true === $this->faker->boolean()) {
+                    return null;
+                }
+
+                // get $sttr['date'] and add 30 days
+                $date = \DateTime::createFromFormat('Y-m-d', $attr['date']);
+                if ($date === false) {
+                    return null;
+                }
+
+                $date->modify('+30 days');
+                return $date->format('Y-m-d');
+            },
             'photo_front_url' => function() {
                 // TODO: Implement a way to generate a random image URL
                 return null;

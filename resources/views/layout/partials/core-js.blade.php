@@ -10,6 +10,7 @@
 <script src="{{ url('/') }}/template/components/sweetalert2-11.14.0/sweetalert2.all.min.js"></script>
 <script src="{{ url('/') }}/template/start-bootstrap/vendor/chart.js/Chart.min.js"></script>
 <script src="{{ url('/') }}/template/components/chartjs-plugin-datalabels-2.2.0/chartjs-plugin-datalabels.js"></script>
+<script src="{{ url('/') }}/template/components/event-calendar-evo/evo-calendar/js/evo-calendar.min.js"></script>
 
 <!--
 <script src="{{ url('/') }}/template/start-bootstrap/js/demo/chart-area-demo.js"></script>

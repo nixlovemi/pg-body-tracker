@@ -2,6 +2,8 @@
 <link rel='stylesheet' href='{{ url('/') }}/template/components/bootstrap/css/bootstrap.min.css' type='text/css' media='all' />
 <link rel='stylesheet' href='{{ url('/') }}/template/components/font-awesome-5/css/all.min.css' type='text/css' media='all' />
 <link rel='stylesheet' href='{{ url('/') }}/template/components/sweetalert2-11.14.0/sweetalert2.min.css' type='text/css' media='all' />
+<link rel="stylesheet" href="{{ url('/') }}/template/components/event-calendar-evo/evo-calendar/css/evo-calendar.min.css" type='text/css' media='all' />
+<link rel="stylesheet" href="{{ url('/') }}/template/components/event-calendar-evo/evo-calendar/css/evo-calendar.midnight-blue.css" type='text/css' media='all' />
 <link rel="stylesheet" href="{{ url('/') }}/template/components/jquery-ui-1.13.2/jquery-ui.min.css" type='text/css' media='all' />
 <link rel="stylesheet" href="{{ url('/') }}/template/components/jquery-ui-1.13.2/jquery-ui.theme.css" type='text/css' media='all' />
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

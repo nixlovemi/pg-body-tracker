@@ -94,6 +94,7 @@
             loadMaskMoney();
             // loadBootstrapSelect();
             loadDatePicker();
+            initCalendar();
         }, 250);
     }
 
@@ -845,4 +846,33 @@
     }
     // ==================
 
+    // calendar
+    function initCalendar()
+    {
+        $('div.pg-calendar').each(function() {
+            const events = JSON.parse($(this).find('input#pg-calendar-events').val());
+            const calendar = $(this).find('.pgbody-evoCalendar').evoCalendar({
+                calendarEvents: events,
+                format: 'mm/dd/yyyy',
+                titleFormat: 'MM yyyy',
+                eventHeaderFormat: 'MM d, yyyy',
+                language: 'pt', // en
+                todayHighlight: true,
+                sidebarDisplayDefault: false,
+                // theme: 'Midnight Blue'
+            });
+
+            calendar.on('selectDate', function(newDate, oldDate) {
+                calendar.evoCalendar('toggleEventList', true);
+            })
+
+            calendar.on('selectEvent', function(event, activeEvent) {
+                if (activeEvent.id.startsWith('bday-') || activeEvent.id.startsWith('revaluation-')) {
+                    window.open(activeEvent.PG_CLICK_URL, '_blank').focus();
+                    return;
+                }
+            })
+        });
+    }
+    // ========
 }(jQuery));
