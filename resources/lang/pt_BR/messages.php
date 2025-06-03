@@ -449,7 +449,10 @@ return [
             'GoalsNearDeadline' => [
                 'title' => 'Objetivos Próximos do Prazo',
                 'description' => 'Exibe os clientes cujos objetivos estão próximos do prazo final, permitindo agir proativamente para ajustar estratégias ou motivar o cliente.',
-                'columns' => [],
+            ],
+            'ClientProfileOverview' => [
+                'title' => 'Perfis dos Clientes',
+                'description' => 'Fornece uma visão geral demográfica e biométrica da sua base de clientes, ajudando você a entender a distribuição por idade, sexo e características de composição corporal.',
             ],
         ],
     ],

@@ -449,7 +449,10 @@ return [
             'GoalsNearDeadline' => [
                 'title' => 'Goals Near Deadline',
                 'description' => 'Displays clients whose goals are close to their deadline, allowing you to act proactively to adjust strategies or motivate the customer.',
-                'columns' => [],
+            ],
+            'ClientProfileOverview' => [
+                'title' => 'Client Profile Overview',
+                'description' => 'Provides a demographic and biometric overview of your client base, helping you understand the distribution by age, gender, and body composition characteristics.',
             ],
         ],
     ],

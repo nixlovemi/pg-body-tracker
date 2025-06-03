@@ -184,6 +184,11 @@ class Client extends Model
             ->orderBy('date', 'DESC')
             ->first();
     }
+
+    public function getFormattedHeight(): string
+    {
+        return SysUtils::formatDbToNumber($this->height_cm, 0) . 'cm';
+    }
     // ===============
 
     // static functions

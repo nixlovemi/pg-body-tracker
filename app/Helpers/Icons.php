@@ -32,4 +32,5 @@ final class Icons {
     public const DOWNLOAD = '<i class="fas fa-download"></i>';
     public const FILE_PDF = '<i class="fas fa-file-pdf"></i>';
     public const HOURGLASS_HALF = '<i class="fas fa-hourglass-half"></i>';
+    public const USER_FRIENDS = '<i class="fas fa-user-friends"></i>';
 }
