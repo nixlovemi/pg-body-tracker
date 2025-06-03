@@ -454,6 +454,14 @@ return [
                 'title' => 'Client Profile Overview',
                 'description' => 'Provides a demographic and biometric overview of your client base, helping you understand the distribution by age, gender, and body composition characteristics.',
             ],
+            'ResultsComparison' => [
+                'title' => 'Results Comparison',
+                'description' => 'Compare the progress between two specific evaluations for each client, highlighting key changes in body composition and performance indicators.',
+                'columns' => [
+                    'deltaWeight' => 'Delta Weight',
+                    'deltaBodyFat' => 'Body Fat',
+                ],
+            ],
         ],
     ],
 

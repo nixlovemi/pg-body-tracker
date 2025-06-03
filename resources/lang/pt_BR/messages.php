@@ -454,6 +454,14 @@ return [
                 'title' => 'Perfis dos Clientes',
                 'description' => 'Fornece uma visão geral demográfica e biométrica da sua base de clientes, ajudando você a entender a distribuição por idade, sexo e características de composição corporal.',
             ],
+            'ResultsComparison' => [
+                'title' => 'Comparativo de Resultados',
+                'description' => 'Compare a evolução entre duas avaliações específicas de cada cliente, destacando mudanças importantes na composição corporal e indicadores de desempenho.',
+                'columns' => [
+                    'deltaWeight' => 'Variação de Peso',
+                    'deltaBodyFat' => 'Gordura Corporal',
+                ],
+            ],
         ],
     ],
 

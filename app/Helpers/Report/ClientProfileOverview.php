@@ -88,6 +88,13 @@ class ClientProfileOverview extends ReportAbstract
                     return $avaliation?->getFormattedBmi() ?? '';
                 }),
 
+            Column::make('bodyFat')
+                ->title(__('messages.components.avaliationReport.bodyFat'))
+                ->format(function(Model $Model) {
+                    $avaliation = $Model->getLastAvaliation();
+                    return $avaliation?->getFormattedBodyFat() ?? '';
+                }),
+
             Column::make('lastAvaliation')
                 ->title(__('messages.pages.avaliation.modalSelectClient.lastAvaliationColumn'))
                 ->format(function(Model $Model) {

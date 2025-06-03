@@ -10,7 +10,8 @@ final class ReportIndex
             'App\Helpers\Report\OverdueEvaluations',
             'App\Helpers\Report\GoalsNearDeadline',
             'App\Helpers\Report\ClientProfileOverview',
-            'App\Helpers\Report\ClientProgress'
+            'App\Helpers\Report\ClientProgress',
+            'App\Helpers\Report\ResultsComparison',
         ];
 
         return $data;

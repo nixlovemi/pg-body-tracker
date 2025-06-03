@@ -185,6 +185,23 @@ class Client extends Model
             ->first();
     }
 
+    /**
+     * Get the two most recent evaluations for the client.
+     * @return array[?Avaliation]
+     */
+    public function getTwoLastAvaliations(): array
+    {
+        $avaliations = $this->avaliations()
+            ->orderBy('date', 'DESC')
+            ->take(2)
+            ->get();
+
+        return [
+            $avaliations->get(0) ?: null,
+            $avaliations->get(1) ?: null,
+        ];
+    }
+
     public function getFormattedHeight(): string
     {
         return SysUtils::formatDbToNumber($this->height_cm, 0) . 'cm';
