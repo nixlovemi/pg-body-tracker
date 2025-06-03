@@ -97,6 +97,16 @@ class Goal extends Model
         return $objectivies[$this->objective] ?? '';
     }
 
+    public function getFormattedInitialWeight(): string
+    {
+        return SysUtils::formatDbToNumber($this->initial_weight_kg, 1) . 'kg';
+    }
+
+    public function getFormattedTargetWeight(): string
+    {
+        return SysUtils::formatDbToNumber($this->target_weight_kg, 1) . 'kg';
+    }
+
     public function remainingDays(): int
     {
         $today = new \DateTime(SysUtils::timezoneNow('Y-m-d'));

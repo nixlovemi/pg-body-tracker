@@ -8,6 +8,7 @@ final class ReportIndex
     {
         $data = [
             'App\Helpers\Report\OverdueEvaluations',
+            'App\Helpers\Report\GoalsNearDeadline',
             'App\Helpers\Report\ClientProgress'
         ];
 

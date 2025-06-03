@@ -137,6 +137,11 @@ class Client extends Model
         return $this->weight_kg;
     }
 
+    public function getFormattedCurrentWeight(): string
+    {
+        return SysUtils::formatDbToNumber($this->getCurrentWeight(), 1) . 'kg';
+    }
+
     public function getAge(): int
     {
         if (!$this->birthdate) return 0;

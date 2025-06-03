@@ -446,6 +446,11 @@ return [
                     'avaliationNbr' => 'Evaluation Qty',
                 ],
             ],
+            'GoalsNearDeadline' => [
+                'title' => 'Goals Near Deadline',
+                'description' => 'Displays clients whose goals are close to their deadline, allowing you to act proactively to adjust strategies or motivate the customer.',
+                'columns' => [],
+            ],
         ],
     ],
 

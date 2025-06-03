@@ -31,4 +31,5 @@ final class Icons {
     public const CALENDAR_TIME = '<i class="fas fa-calendar-times"></i>';
     public const DOWNLOAD = '<i class="fas fa-download"></i>';
     public const FILE_PDF = '<i class="fas fa-file-pdf"></i>';
+    public const HOURGLASS_HALF = '<i class="fas fa-hourglass-half"></i>';
 }

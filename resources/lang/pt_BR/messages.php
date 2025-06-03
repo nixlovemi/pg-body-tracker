@@ -446,6 +446,11 @@ return [
                     'avaliationNbr' => 'Nr de Avaliações',
                 ],
             ],
+            'GoalsNearDeadline' => [
+                'title' => 'Objetivos Próximos do Prazo',
+                'description' => 'Exibe os clientes cujos objetivos estão próximos do prazo final, permitindo agir proativamente para ajustar estratégias ou motivar o cliente.',
+                'columns' => [],
+            ],
         ],
     ],
 
