@@ -27,4 +27,8 @@ final class Icons {
     public const USER_PLUS = '<i class="fas fa-user-plus"></i>';
     public const CALENDAR_ALT = '<i class="far fa-calendar-alt"></i>';
     public const BIRTHDAY_CAKE = '<i class="fas fa-birthday-cake"></i>';
+    public const CHART_BAR = '<i class="fas fa-chart-bar"></i>';
+    public const CALENDAR_TIME = '<i class="fas fa-calendar-times"></i>';
+    public const DOWNLOAD = '<i class="fas fa-download"></i>';
+    public const FILE_PDF = '<i class="fas fa-file-pdf"></i>';
 }

@@ -422,6 +422,18 @@ return [
             'title' => 'Calendário',
             'revaluationDescription' => 'Reavaliação do cliente',
         ],
+
+        'report' => [
+            'title' => 'Relatórios',
+            'reportNotFound' => 'Relatório não encontrado!',
+            'OverdueEvaluations' => [
+                'title' => 'Avaliações em Atraso',
+                'description' => 'Exibe clientes que já fizeram avaliações anteriores, mas estão sem nova avaliação dentro do intervalo esperado de :days dias.',
+                'columns' => [
+                    'daysOverdue' => 'Dias da Última Avaliação',
+                ],
+            ],
+        ],
     ],
 
     'menu' => [
@@ -569,7 +581,10 @@ return [
             ],
             'RevaluationDate' => [
                 'validateMessage' => 'Para adicionar a data de reavaliação, atualize para o plano premium.',
-                'logoPlaceholderText' => 'Atualize para o plano premium para adicionar a ":fieldLabel" ao calendário.',
+                'logoPlaceholderText' => 'Atualize para o plano premium para adicionar a ":fieldLabel" ao calendário e receba lembretes no dashboard.',
+            ],
+            'ReportExport' => [
+                'validateMessage' => 'Para exportar os relatórios, atualize para o plano premium.',
             ],
         ],
     ],

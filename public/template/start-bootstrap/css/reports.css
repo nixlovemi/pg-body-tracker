@@ -1,0 +1,8 @@
+.report-view table.table thead th,
+.report-pdf table.table thead th {
+    font-weight: bold;
+}
+
+.report-pdf table.table tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}

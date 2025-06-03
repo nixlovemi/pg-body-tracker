@@ -422,6 +422,18 @@ return [
             'title' => 'Calendar',
             'revaluationDescription' => 'Client Revaluation',
         ],
+
+        'report' => [
+            'title' => 'Reports',
+            'reportNotFound' => 'Report not found!',
+            'OverdueEvaluations' => [
+                'title' => 'Overdue Evaluations',
+                'description' => 'Displays clients who had previous evaluation but have not returned within the expected range of :days days.',
+                'columns' => [
+                    'daysOverdue' => 'Days of Last Evaluation',
+                ],
+            ],
+        ],
     ],
 
     'menu' => [
@@ -569,7 +581,10 @@ return [
             ],
             'RevaluationDate' => [
                 'validateMessage' => 'To add revaluation date, upgrade to premium plan.',
-                'logoPlaceholderText' => 'Upgrade to the premium plan to add the ":fieldLabel" to the calendar.',
+                'logoPlaceholderText' => 'Upgrade to the premium plan to add the ":fieldLabel" to the calendar and get reminders on your dashboard.',
+            ],
+            'ReportExport' => [
+                'validateMessage' => 'To export reports, upgrade to the premium plan.',
             ],
         ],
     ],
