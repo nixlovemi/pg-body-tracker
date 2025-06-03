@@ -433,6 +433,19 @@ return [
                     'daysOverdue' => 'Days of Last Evaluation',
                 ],
             ],
+            'ClientProgress' => [
+                'title' => 'Client Progress',
+                'description' => 'Displays the evolution of the client\'s main physical indicators, comparing the first and last recorded evaluation.',
+                'columns' => [
+                    'firstAvaliationDate' => '1st Evaluation',
+                    'lastAvaliationDate' => 'Last',
+                    'weightFirstLast' => 'Weight:',
+                    'bodyFatPercFirstLast' => 'Body Fat:',
+                    'muscleMassPercFirstLast' => 'Muscle Mass:',
+                    'basalMetabolismFirstLast' => 'Basal Metabolism:',
+                    'avaliationNbr' => 'Evaluation Qty',
+                ],
+            ],
         ],
     ],
 
@@ -585,6 +598,9 @@ return [
             ],
             'ReportExport' => [
                 'validateMessage' => 'To export reports, upgrade to the premium plan.',
+            ],
+            'ReportPremium' => [
+                'validateMessage' => 'To access this report, upgrade to the premium plan.',
             ],
         ],
     ],

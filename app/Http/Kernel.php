@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'avaliation.send.link.feature' => \App\Http\Middleware\AvaliationSendLink::class,
         'report.export.feature' => \App\Http\Middleware\ReportExport::class,
+        'report.premium.feature' => \App\Http\Middleware\ReportPremium::class,
     ];
 }

@@ -47,4 +47,9 @@ abstract class ReportAbstract
 
         return $html;
     }
+
+    public function premiumOnly(): bool
+    {
+        return false;
+    }
 }

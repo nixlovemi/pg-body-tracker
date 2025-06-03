@@ -166,6 +166,13 @@ class Client extends Model
         return self::fGetGenders()[$this->gender] ?? '';
     }
 
+    public function getFirstAvaliation(): ?Avaliation
+    {
+        return $this->avaliations()
+            ->orderBy('date', 'ASC')
+            ->first();
+    }
+
     public function getLastAvaliation(): ?Avaliation
     {
         return $this->avaliations()

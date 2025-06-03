@@ -89,8 +89,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
 
         Route::prefix('report')->group(function () {
             Route::get('/', 'App\Http\Controllers\Report@index')->name('app.report.index');
-            Route::match(array('GET','POST'), '/view/{reportClass}', 'App\Http\Controllers\Report@view')->name('app.report.view');
-            Route::get('/pdf/{reportClass}', 'App\Http\Controllers\Report@pdf')->name('app.report.pdf')->middleware('report.export.feature');
+            Route::match(array('GET','POST'), '/view/{reportClass}', 'App\Http\Controllers\Report@view')->name('app.report.view')->middleware('report.premium.feature');
+            Route::get('/pdf/{reportClass}', 'App\Http\Controllers\Report@pdf')->name('app.report.pdf')->middleware('report.export.feature', 'report.premium.feature');
         });
     });
 

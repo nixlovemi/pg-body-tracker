@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Helpers\Report\ReportAbstract;
 
 class Report extends Controller
 {
@@ -39,9 +40,19 @@ class Report extends Controller
 
     private function getReportFromClassOrRedirect(string $reportClass)
     {
+        $report = self::getReportFromClass($reportClass);
+        if (null === $report) {
+            return $this->redirectWithError('app.report.index', __('messages.pages.report.reportNotFound'));
+        }
+
+        return $report;
+    }
+
+    public static function getReportFromClass(string $reportClass): null|ReportAbstract
+    {
         $reportClass = 'App\\Helpers\\Report\\' . ucfirst($reportClass);
         if (!class_exists($reportClass)) {
-            return $this->redirectWithError('app.report.index', __('messages.pages.report.reportNotFound'));
+            return null;
         }
 
         return new $reportClass();
