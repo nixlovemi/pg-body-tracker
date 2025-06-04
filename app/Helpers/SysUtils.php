@@ -206,4 +206,17 @@ final class SysUtils {
         $basePath = str_replace('/', DIRECTORY_SEPARATOR, $basePath);
         return $prefix.$basePath;
     }
+
+    public static function getFormattedDeltaText(float $delta, string $sufix): string
+    {
+        $signal = $delta >= 0 ? '+' : '-';
+        $arrow = $delta >= 0 ? Icons::ARROW_UP : Icons::ARROW_DOWN;
+
+        return sprintf(
+            '<span>%s %s %s</span>',
+            $signal,
+            SysUtils::formatDbToNumber(abs($delta), 1) . $sufix,
+            $arrow,
+        );
+    }
 }

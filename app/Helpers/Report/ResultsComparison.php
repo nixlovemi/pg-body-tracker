@@ -82,7 +82,7 @@ class ResultsComparison extends ReportAbstract
                 ->format(function(Model $Model) {
                     [$avaliation2, $avaliation1] = $this->getMostRecentAvaliations($Model);
                     $deltaWeight = $avaliation2->weight_kg - $avaliation1->weight_kg;
-                    return $this->getFormattedDeltaText($deltaWeight, 'kg');
+                    return SysUtils::getFormattedDeltaText($deltaWeight, 'kg');
                 }),
 
             Column::make('deltaBodyFat')
@@ -90,7 +90,15 @@ class ResultsComparison extends ReportAbstract
                 ->format(function(Model $Model) {
                     [$avaliation2, $avaliation1] = $this->getMostRecentAvaliations($Model);
                     $deltaBodyFat = $avaliation2->getBodyFatPerc() - $avaliation1->getBodyFatPerc();
-                    return $this->getFormattedDeltaText($deltaBodyFat, '%');
+                    return SysUtils::getFormattedDeltaText($deltaBodyFat, '%');
+                }),
+
+            Column::make('deltaMuscleMass')
+                ->title(__('messages.models.Avaliation.fields.muscle_mass_perc'))
+                ->format(function(Model $Model) {
+                    [$avaliation2, $avaliation1] = $this->getMostRecentAvaliations($Model);
+                    $deltaMMass = $avaliation2->getMuscleMassPerc() - $avaliation1->getMuscleMassPerc();
+                    return SysUtils::getFormattedDeltaText($deltaMMass, '%');
                 }),
 
             Column::make('deltaSkeletalMuscle')
@@ -98,7 +106,7 @@ class ResultsComparison extends ReportAbstract
                 ->format(function(Model $Model) {
                     [$avaliation2, $avaliation1] = $this->getMostRecentAvaliations($Model);
                     $deltaSkeletal = $avaliation2->getSkeletalMuscleMassPerc() - $avaliation1->getSkeletalMuscleMassPerc();
-                    return $this->getFormattedDeltaText($deltaSkeletal, '%');
+                    return SysUtils::getFormattedDeltaText($deltaSkeletal, '%');
                 }),
 
             Column::make('deltaBMI')
@@ -106,7 +114,7 @@ class ResultsComparison extends ReportAbstract
                 ->format(function(Model $Model) {
                     [$avaliation2, $avaliation1] = $this->getMostRecentAvaliations($Model);
                     $deltaBmi = $avaliation2->getBmi() - $avaliation1->getBmi();
-                    return $this->getFormattedDeltaText($deltaBmi, '');
+                    return SysUtils::getFormattedDeltaText($deltaBmi, '');
                 }),
         ];
     }
@@ -114,18 +122,5 @@ class ResultsComparison extends ReportAbstract
     private function getMostRecentAvaliations(Model $Model): array
     {
         return $Model->getTwoLastAvaliations();
-    }
-
-    private function getFormattedDeltaText(float $delta, string $sufix): string
-    {
-        $signal = $delta >= 0 ? '+' : '-';
-        $arrow = $delta >= 0 ? Icons::ARROW_UP : Icons::ARROW_DOWN;
-
-        return sprintf(
-            '<span>%s %s %s</span>',
-            $signal,
-            abs(round($delta, 1)) . $sufix,
-            $arrow,
-        );
     }
 }

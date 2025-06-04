@@ -462,6 +462,15 @@ return [
                     'deltaBodyFat' => 'Gordura Corporal',
                 ],
             ],
+            'EvolutionRanking' => [
+                'title' => 'Ranking de Evolução',
+                'description' => 'Mostra os clientes com maior evolução corporal entre a primeira e a última avaliação, considerando múltiplos indicadores.',
+                'columns' => [
+                    'muscleGain' => 'Evolução Muscular',
+                    'fatLoss' => 'Redução de Gordura',
+                    'score' => 'Evolução total',
+                ],
+            ],
         ],
     ],
 

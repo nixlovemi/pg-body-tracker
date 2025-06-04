@@ -206,6 +206,60 @@ class Client extends Model
     {
         return SysUtils::formatDbToNumber($this->height_cm, 0) . 'cm';
     }
+
+    public function getEvolutionRankingMuscleGainAttribute(): ?float
+    {
+        if ($this->avaliations->count() < 2) {
+            return null;
+        }
+
+        $first = $this->getFirstAvaliation();
+        $last = $this->getLastAvaliation();
+        if (!$first || !$last) {
+            return null;
+        }
+
+        if ($first->getMuscleMassPerc() === null || $last->getMuscleMassPerc() === null) {
+            return null;
+        }
+
+        return round($last->getMuscleMassPerc() - $first->getMuscleMassPerc(), 1);
+    }
+
+    public function getEvolutionRankingFatLossAttribute(): ?float
+    {
+        if ($this->avaliations->count() < 2) {
+            return null;
+        }
+
+        $first = $this->getFirstAvaliation();
+        $last = $this->getLastAvaliation();
+        if (!$first || !$last) {
+            return null;
+        }
+
+        if ($first->getBodyFatPerc() === null || $last->getBodyFatPerc() === null) {
+            return null;
+        }
+
+        return round($last->getBodyFatPerc() - $first->getBodyFatPerc(), 1);
+    }
+
+    public function getEvolutionRankingScoreAttribute(): ?float
+    {
+        if ($this->avaliations->count() < 2) {
+            return null;
+        }
+
+        $muscleGain = $this->getEvolutionRankingMuscleGainAttribute();
+        $fatLoss = $this->getEvolutionRankingFatLossAttribute();
+
+        if ($muscleGain === null || $fatLoss === null) {
+            return null;
+        }
+
+        return round($muscleGain + $fatLoss, 1);
+    }
     // ===============
 
     // static functions

@@ -12,6 +12,7 @@ final class ReportIndex
             'App\Helpers\Report\ClientProfileOverview',
             'App\Helpers\Report\ClientProgress',
             'App\Helpers\Report\ResultsComparison',
+            'App\Helpers\Report\EvolutionRanking',
         ];
 
         return $data;

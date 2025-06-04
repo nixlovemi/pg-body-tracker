@@ -779,9 +779,14 @@ class Avaliation extends Model
         }
     }
 
+    public function getMuscleMassPerc(): float
+    {
+        return round(($this->getMuscleMassKg() / $this->weight_kg) * 100, 1);
+    }
+
     public function getFormattedMuscleMassPerc(): string
     {
-        return SysUtils::formatDbToNumber(($this->getMuscleMassKg() / $this->weight_kg) * 100, 1) . '%';
+        return SysUtils::formatDbToNumber($this->getMuscleMassPerc(), 1) . '%';
     }
 
     private function estimateMuscleMassKg(float $leanMassKg, int $age, bool $isMale): float

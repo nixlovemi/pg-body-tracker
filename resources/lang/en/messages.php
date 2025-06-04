@@ -462,6 +462,15 @@ return [
                     'deltaBodyFat' => 'Body Fat',
                 ],
             ],
+            'EvolutionRanking' => [
+                'title' => 'Evolution Ranking',
+                'description' => 'Displays clients with the greatest body progress between their first and most recent assessments, considering multiple metrics.',
+                'columns' => [
+                    'muscleGain' => 'Muscle Gain',
+                    'fatLoss' => 'Fat Loss',
+                    'score' => 'Overall Progress Score',
+                ],
+            ],
         ],
     ],
 
