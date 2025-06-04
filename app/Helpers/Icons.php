@@ -36,4 +36,5 @@ final class Icons {
     public const USER_FRIENDS = '<i class="fas fa-user-friends"></i>';
     public const EXCHANGE_ALT = '<i class="fas fa-exchange-alt"></i>';
     public const TROPHY = '<i class="fas fa-trophy"></i>';
+    public const QUESTION_CIRCLE = '<i class="fas fa-question-circle"></i>';
 }

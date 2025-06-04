@@ -4,6 +4,7 @@ return [
     'thousandSeparator' => '.',
     'decimalSeparator' => ',',
     'dateFormat' => 'd/m/Y',
+    'fullDateFormat' => 'd/m/Y H:i:s',
     'selectEmptyOption' => 'Selecione...',
     'dontHavePermission' => 'Você não tem acesso a esse conteúdo! Faça o login novamente.',
     'userNameDash' => 'Usuário',
@@ -470,6 +471,11 @@ return [
                     'fatLoss' => 'Redução de Gordura',
                     'score' => 'Evolução total',
                 ],
+            ],
+            'ClientsWithoutGoals' => [
+                'title' => 'Clientes Sem Objetivos',
+                'description' => 'Lista de clientes que ainda não possuem objetivos definidos para acompanhamento dos resultados.',
+                'createdAt' => 'Data Cadastro'
             ],
         ],
     ],

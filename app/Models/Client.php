@@ -142,6 +142,11 @@ class Client extends Model
         return SysUtils::formatDbToNumber($this->getCurrentWeight(), 1) . 'kg';
     }
 
+    public function getFormattedCreatedAt(): string
+    {
+        return SysUtils::applyTimezone($this->created_at)->format(__('messages.fullDateFormat'));
+    }
+
     public function getAge(): int
     {
         if (!$this->birthdate) return 0;
