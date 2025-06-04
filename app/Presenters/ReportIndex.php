@@ -14,6 +14,7 @@ final class ReportIndex
             'App\Helpers\Report\ResultsComparison',
             'App\Helpers\Report\EvolutionRanking',
             'App\Helpers\Report\ClientsWithoutGoals',
+            'App\Helpers\Report\EvaluationFrequency',
         ];
 
         // order by premiumOnly() false first, then by getTitle()

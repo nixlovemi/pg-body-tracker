@@ -9,21 +9,26 @@ use Illuminate\Database\Eloquent\Builder;
 use Okipa\LaravelTable\Column;
 use App\Helpers\SysUtils;
 
-class ClientsWithoutGoals extends ReportAbstract
+class EvaluationFrequency extends ReportAbstract
 {
+    public function premiumOnly(): bool
+    {
+        return true;
+    }
+
     public function getIcon(): string
     {
-        return Icons::QUESTION_CIRCLE;
+        return Icons::CALENDAR_ALT;
     }
 
     public function getTitle(): string
     {
-        return __('messages.pages.report.ClientsWithoutGoals.title');
+        return __('messages.pages.report.EvaluationFrequency.title');
     }
 
     public function getDescription(): string
     {
-        return __('messages.pages.report.ClientsWithoutGoals.description');
+        return __('messages.pages.report.EvaluationFrequency.description');
     }
 
     public function getModel(): Model
@@ -37,10 +42,10 @@ class ClientsWithoutGoals extends ReportAbstract
         $userId = $User->id;
 
         $query->where('user_id', $userId)
-            ->doesntHave('goals')
-            ->with(['avaliations' => fn($q) => $q->latest('date')])
-            ->get()
-            ->sortByDesc('first_name, last_name');
+            ->whereHas('avaliations', fn ($q) => $q, '>=', 2)
+            ->with(['avaliations' => fn($q) => $q->orderBy('date', 'asc')])
+            ->orderByRaw("CONCAT(first_name, ' ', last_name)")
+            ->get();
     }
 
     /**
@@ -51,39 +56,28 @@ class ClientsWithoutGoals extends ReportAbstract
     public function getColumns(): array
     {
         return [
-            Column::make('full_name')
+            Column::make('fullName')
                 ->title(__('messages.models.Client.name'))
                 ->format(function(Model $Model) {
                     return $Model->getName();
                 }),
 
-            Column::make('gender')
-                ->title(__('messages.models.Client.fields.gender'))
+            Column::make('avaliations_count')
+                ->title(__('messages.menu.avaliation'))
                 ->format(function(Model $Model) {
-                    return $Model->getGenderStr();
+                    return $Model->avaliations->count();
                 }),
 
-            Column::make('age')
-                ->title(__('messages.models.Client.fields.age'))
+            Column::make('avg_days_btw_evaluations')
+                ->title(__('messages.pages.report.EvaluationFrequency.columns.avgDaysBtwEvaluations'))
                 ->format(function(Model $Model) {
-                    return $Model->getAge();
-                }),
-
-            Column::make('created_at')
-                ->title(__('messages.pages.report.ClientsWithoutGoals.columns.createdAt'))
-                ->format(function(Model $Model) {
-                    return $Model->getFormattedCreatedAt();
+                    return $Model->getAvgDaysBtwAvaliations();
                 }),
 
             Column::make('last_avaliation')
                 ->title(__('messages.pages.avaliation.modalSelectClient.lastAvaliationColumn'))
                 ->format(function(Model $Model) {
-                    $last = $Model->getLastAvaliation();
-                    if ($last) {
-                        return $last->getFormattedDate();
-                    }
-
-                    return '';
+                    return $Model->getLastAvaliation()->getFormattedDate();
                 }),
         ];
     }

@@ -475,7 +475,16 @@ return [
             'ClientsWithoutGoals' => [
                 'title' => 'Clients Without Goals',
                 'description' => 'Lists clients who have not yet defined their goals for tracking progress.',
-                'createdAt' => 'Created At',
+                'columns' => [
+                    'createdAt' => 'Created At',
+                ],
+            ],
+            'EvaluationFrequency' => [
+                'title' => 'Evaluation Frequency',
+                'description' => 'Displays how frequently each client is evaluated, helping identify patterns and potential follow-up adjustments.',
+                'columns' => [
+                    'avgDaysBtwEvaluations' => 'Avg Days Between Evaluations',
+                ],
             ],
         ],
     ],

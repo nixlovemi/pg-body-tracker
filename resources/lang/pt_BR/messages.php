@@ -475,7 +475,16 @@ return [
             'ClientsWithoutGoals' => [
                 'title' => 'Clientes Sem Objetivos',
                 'description' => 'Lista de clientes que ainda não possuem objetivos definidos para acompanhamento dos resultados.',
-                'createdAt' => 'Data Cadastro'
+                'columns' => [
+                    'createdAt' => 'Data Cadastro',
+                ],
+            ],
+            'EvaluationFrequency' => [
+                'title' => 'Frequência de Avaliações',
+                'description' => 'Mostra com que frequência cada cliente é avaliado, ajudando a identificar padrões e possíveis ajustes no acompanhamento.',
+                'columns' => [
+                    'avgDaysBtwEvaluations' => 'Média de Dias Entre Avaliações',
+                ],
             ],
         ],
     ],

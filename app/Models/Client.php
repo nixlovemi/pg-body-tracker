@@ -212,6 +212,26 @@ class Client extends Model
         return SysUtils::formatDbToNumber($this->height_cm, 0) . 'cm';
     }
 
+    public function getAvgDaysBtwAvaliations(): ?float
+    {
+        $avaliations = $this->avaliations()
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        if ($avaliations->count() < 2) {
+            return null;
+        }
+
+        $dates = $avaliations->pluck('date')->map(fn($d) => \Carbon\Carbon::parse($d));
+        $diffs = [];
+
+        for ($i = 1; $i < $dates->count(); $i++) {
+            $diffs[] = $dates[$i]->diffInDays($dates[$i - 1]);
+        }
+
+        return count($diffs) ? round(array_sum($diffs) / count($diffs), 1) : null;
+    }
+
     public function getEvolutionRankingMuscleGainAttribute(): ?float
     {
         if ($this->avaliations->count() < 2) {
