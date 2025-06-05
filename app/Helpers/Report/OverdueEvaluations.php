@@ -6,7 +6,6 @@ use App\Helpers\Icons;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Okipa\LaravelTable\Column;
 use App\Helpers\SysUtils;
 use Illuminate\Support\Facades\DB;
 
@@ -64,59 +63,13 @@ class OverdueEvaluations extends ReportAbstract
     public function getColumns(): array
     {
         return [
-            Column::make('fullName')
-                ->title(__('messages.models.Client.name'))
-                ->format(function(Model $Model) {
-                    return $Model->getName();
-                }),
-
-            Column::make('lastAvaliation')
-                ->title(__('messages.pages.avaliation.modalSelectClient.lastAvaliationColumn'))
-                ->format(function(Model $Model) {
-                    return SysUtils::reformatDate($Model->getLastAvaliation()->date, 'Y-m-d', __('messages.dateFormat'));
-                }),
-
-            Column::make('dueDays')
-                ->title(__('messages.pages.report.OverdueEvaluations.columns.daysOverdue'))
-                ->format(function(Model $Model) {
-                    $lastAvaliation = $Model->getLastAvaliation();
-                    $daysOverdue = SysUtils::applyTimezone($lastAvaliation->date)->diffInDays(now());
-                    return '<div class="text-center">' . $daysOverdue . '</div>';
-                }),
-
-            Column::make('email')
-                ->title(__('messages.pages.client.table.colEmail'))
-                ->format(function(Model $Model) {
-                    return $Model->email;
-                }),
-
-            Column::make('phone')
-                ->title(__('messages.pages.client.table.colPhone'))
-                ->format(function(Model $Model) {
-                    return $Model->phone;
-                }),
-
-            Column::make('goal')
-                ->title(__('messages.models.Goal.name'))
-                ->format(function(Model $Model) {
-                    $Goal = $Model->getCurrentGoal();
-                    if (!$Goal) {
-                        return '';
-                    }
-
-                    return $Goal->getObjectivieString();
-                }),
-
-            Column::make('goal_due')
-                ->title(__('messages.models.Goal.fields.deadline'))
-                ->format(function(Model $Model) {
-                    $Goal = $Model->getCurrentGoal();
-                    if (!$Goal) {
-                        return '';
-                    }
-
-                    return SysUtils::reformatDate($Goal->deadline, 'Y-m-d', __('messages.dateFormat'));
-                }),
+            ReportColumns::clientFullName(),
+            ReportColumns::clientLastAvaliationDate(),
+            ReportColumns::clientLastAvaliationDaysToNow(),
+            ReportColumns::clientEmail(),
+            ReportColumns::clientPhone(),
+            ReportColumns::clientCurrentGoalName(),
+            ReportColumns::clientCurrentGoalDeadline(),
         ];
     }
 }

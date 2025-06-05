@@ -6,7 +6,6 @@ use App\Helpers\Icons;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Okipa\LaravelTable\Column;
 use App\Helpers\SysUtils;
 
 class GoalsNearDeadline extends ReportAbstract
@@ -59,63 +58,14 @@ class GoalsNearDeadline extends ReportAbstract
     public function getColumns(): array
     {
         return [
-            Column::make('fullName')
-                ->title(__('messages.models.Client.name'))
-                ->format(function(Model $Model) {
-                    return $Model->getName();
-                }),
-
-            Column::make('goal')
-                ->title(__('messages.models.Goal.name'))
-                ->format(function(Model $Model) {
-                    $Goal = $Model->getCurrentGoal();
-                    if (!$Goal) {
-                        return '';
-                    }
-
-                    return $Goal->getObjectivieString();
-                }),
-
-            Column::make('initial_weight')
-                ->title(__('messages.models.Goal.fields.initial_weight'))
-                ->format(function(Model $Model) {
-                    $goal = $Model->getCurrentGoal();
-                    return $goal->getFormattedInitialWeight();
-                }),
-
-            Column::make('target_weight')
-                ->title(__('messages.models.Goal.fields.target_weight'))
-                ->format(function(Model $Model) {
-                    $goal = $Model->getCurrentGoal();
-                    return $goal->getFormattedTargetWeight();
-                }),
-
-            Column::make('current_weight')
-                ->title(__('messages.pages.client.register.labelActualWeight'))
-                ->format(function(Model $Model) {
-                    return $Model->getFormattedCurrentWeight();
-                }),
-
-            Column::make('deadline')
-                ->title(__('messages.models.Goal.fields.deadline'))
-                ->format(function(Model $Model) {
-                    $goal = $Model->getCurrentGoal();
-                    return SysUtils::applyTimezone($goal->deadline)->format(__('messages.dateFormat'));
-                }),
-
-            Column::make('progress')
-                ->title(__('messages.pages.goal.modalAddGoal.labelProgress'))
-                ->format(function(Model $Model) {
-                    $goal = $Model->getCurrentGoal();
-                    return round($goal->percentageTowardsGoal(), 2) . '%';
-                }),
-
-            Column::make('remaining_days')
-                ->title(__('messages.pages.goal.modalAddGoal.labelDaysToDeadline'))
-                ->format(function(Model $Model) {
-                    $goal = $Model->getCurrentGoal();
-                    return '<div class="text-center">' . $goal->remainingDays() . '</div>';
-                }),
+            ReportColumns::clientFullName(),
+            ReportColumns::clientCurrentGoalName(),
+            ReportColumns::clientCurrentGoalInitialWeight(),
+            ReportColumns::clientCurrentGoalTargetWeight(),
+            ReportColumns::clientWeight(),
+            ReportColumns::clientCurrentGoalDeadline(),
+            ReportColumns::clientCurrentProgress(),
+            ReportColumns::clientCurrentRemainingDays(),
         ];
     }
 }

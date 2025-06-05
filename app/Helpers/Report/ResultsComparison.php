@@ -57,11 +57,7 @@ class ResultsComparison extends ReportAbstract
     public function getColumns(): array
     {
         return [
-            Column::make('fullName')
-                ->title(__('messages.models.Client.name'))
-                ->format(function(Model $Model) {
-                    return $Model->getName();
-                }),
+            ReportColumns::clientFullName(),
 
             Column::make('avaliationDate1')
                 ->title(__('messages.models.Avaliation.fields.date') . ' 1')

@@ -6,7 +6,6 @@ use App\Helpers\Icons;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Okipa\LaravelTable\Column;
 use App\Helpers\SysUtils;
 
 class EvaluationFrequency extends ReportAbstract
@@ -56,29 +55,10 @@ class EvaluationFrequency extends ReportAbstract
     public function getColumns(): array
     {
         return [
-            Column::make('fullName')
-                ->title(__('messages.models.Client.name'))
-                ->format(function(Model $Model) {
-                    return $Model->getName();
-                }),
-
-            Column::make('avaliations_count')
-                ->title(__('messages.menu.avaliation'))
-                ->format(function(Model $Model) {
-                    return $Model->avaliations->count();
-                }),
-
-            Column::make('avg_days_btw_evaluations')
-                ->title(__('messages.pages.report.EvaluationFrequency.columns.avgDaysBtwEvaluations'))
-                ->format(function(Model $Model) {
-                    return $Model->getAvgDaysBtwAvaliations();
-                }),
-
-            Column::make('last_avaliation')
-                ->title(__('messages.pages.avaliation.modalSelectClient.lastAvaliationColumn'))
-                ->format(function(Model $Model) {
-                    return $Model->getLastAvaliation()->getFormattedDate();
-                }),
+            ReportColumns::clientFullName(),
+            ReportColumns::clientAvaliationsCount(),
+            ReportColumns::clientAvgDaysBtwAvaliations(),
+            ReportColumns::clientLastAvaliationDate(),
         ];
     }
 }

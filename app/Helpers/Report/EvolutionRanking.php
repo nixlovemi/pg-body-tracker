@@ -6,7 +6,6 @@ use App\Helpers\Icons;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Okipa\LaravelTable\Column;
 use App\Helpers\SysUtils;
 
 class EvolutionRanking extends ReportAbstract
@@ -57,41 +56,12 @@ class EvolutionRanking extends ReportAbstract
     public function getColumns(): array
     {
         return [
-            Column::make('fullName')
-                ->title(__('messages.models.Client.name'))
-                ->format(function(Model $Model) {
-                    return $Model->getName();
-                }),
-
-            Column::make('avaliations_count')
-                ->title(__('messages.menu.avaliation'))
-                ->format(function(Model $Model) {
-                    return $Model->avaliations->count();
-                }),
-
-            Column::make('muscle_gain')
-                ->title(__('messages.pages.report.EvolutionRanking.columns.muscleGain'))
-                ->format(function(Model $Model) {
-                    return SysUtils::getFormattedDeltaText($Model->getEvolutionRankingMuscleGainAttribute(), '%');
-                }),
-
-            Column::make('fat_loss')
-                ->title(__('messages.pages.report.EvolutionRanking.columns.fatLoss'))
-                ->format(function(Model $Model) {
-                    return SysUtils::getFormattedDeltaText($Model->getEvolutionRankingFatLossAttribute(), '%');
-                }),
-
-            Column::make('score')
-                ->title(__('messages.pages.report.EvolutionRanking.columns.score'))
-                ->format(function(Model $Model) {
-                    return SysUtils::getFormattedDeltaText($Model->getEvolutionRankingScoreAttribute(), '%');
-                }),
-
-            Column::make('last_avaliation')
-                ->title(__('messages.pages.avaliation.modalSelectClient.lastAvaliationColumn'))
-                ->format(function(Model $Model) {
-                    return $Model->getLastAvaliation()->getFormattedDate();
-                }),
+            ReportColumns::clientFullName(),
+            ReportColumns::clientAvaliationsCount(),
+            ReportColumns::clientMuscleGainSinceStart(),
+            ReportColumns::clientFatLossSinceStart(),
+            ReportColumns::clientEvolutionScoreSinceStart(),
+            ReportColumns::clientLastAvaliationDate(),
         ];
     }
 }
