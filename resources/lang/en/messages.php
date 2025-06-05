@@ -427,6 +427,7 @@ return [
         'report' => [
             'title' => 'Reports',
             'reportNotFound' => 'Report not found!',
+            'generatedAt' => 'Generated at',
             'OverdueEvaluations' => [
                 'title' => 'Overdue Evaluations',
                 'description' => 'Displays clients who had previous evaluation but have not returned within the expected range of :days days.',

@@ -1,3 +1,5 @@
+@inject('SysUtils', 'app\Helpers\SysUtils')
+
 @php
 /*
 View variables:
@@ -14,12 +16,30 @@ View variables:
 <link rel="stylesheet" href="{{ public_path('/base.css') }}" type='text/css' media='all' />
 <link rel="stylesheet" href="{{ public_path('template/start-bootstrap/css/reports.css') }}" type='text/css' media='all' />
 
-@include('layout.partials.copyright')
-<br /><br />
-@include('app.report.view', [
-    'PAGE_TITLE' => $REPORT->getTitle(),
-    'REPORT' => $REPORT,
-    'ROW_CLASS' => 'report-pdf',
-    'DISPLAY_DOWNLOADS' => false,
-    'DISPLAY_LIVEWIRE' => false,
-])
+<div class="header card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div class="row" style="width: 100%;">
+        <div class="col-xs-6">
+            <h3 style="margin: 0; color: #2D8EDB; font-size: 18px;">
+                {{ $PAGE_TITLE ?? $REPORT->getTitle() }}
+            </h3>
+        </div>
+        <div class="col-xs-6 text-right">
+            <small style="font-size: 11px; color: #999; position:relative; left:-40px; top: 3px;">
+                {{ __('messages.pages.report.generatedAt') }} {{ $SysUtils::timezoneNow(__('messages.fullDateFormat')) }}
+            </small>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="card-footer text-center" style="font-size:11px; color:#999; margin-top: 30px;">
+        © {{ env('APP_NAME') }} {{ date('Y') }}
+    </div>
+</div>
+
+<p style="font-size:13px; color:#666;">
+    {{ $REPORT->getDescription() }}
+</p>
+<div class="table-responsive">
+    {!! $REPORT->generateHtml() !!}
+</div>
