@@ -50,7 +50,7 @@ View variables:
 
             <div class="col-12 mb-3 col-sm-6 col-xl-3">
                 <div class="report-card card border-left-primary shadow h-100 py-2 {{ !$RepPremiumFeature->validate() ? 'premium-locked' : '' }}"
-                    data-url="{{ route('app.report.view', ['reportClass' => basename($reportClass)]) }}"
+                    data-url="{{ route('app.report.view', ['reportClass' => class_basename($reportClass)]) }}"
                 >
                     @unless ($RepPremiumFeature->validate())
                         <div class="badge badge-warning premium-badge">Premium</div>

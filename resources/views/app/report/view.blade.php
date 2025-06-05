@@ -36,7 +36,7 @@ $RepExportFeature = new $ReportExport();
                             <div class="dropdown-header">{{ __('messages.components.avaliationReport.downloadHeader') }}</div>
 
                             @if ($RepExportFeature->validate())
-                                <a class="dropdown-item" target="_blank" href="{{ route('app.report.pdf', ['reportClass' => basename($reportClassName)]) }}">
+                                <a class="dropdown-item" target="_blank" href="{{ route('app.report.pdf', ['reportClass' => class_basename($reportClassName)]) }}">
                                     {!! $Icons::FILE_PDF !!}&nbsp;
                                     {{ __('messages.components.avaliationReport.downloadPdfButton') }}
                                 </a>

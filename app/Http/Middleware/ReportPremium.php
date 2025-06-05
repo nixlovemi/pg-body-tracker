@@ -19,7 +19,7 @@ class ReportPremium
     public function handle(Request $request, Closure $next)
     {
         $report = ReportController::getReportFromClass(
-            basename($request->getRequestUri())
+            class_basename($request->getRequestUri())
         );
 
         if (null === $report) {
