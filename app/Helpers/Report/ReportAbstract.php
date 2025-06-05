@@ -48,6 +48,40 @@ abstract class ReportAbstract
         return $html;
     }
 
+    final public function generateCsv(): string
+    {
+        $columns = $this->getColumns();
+        $separator = ',';
+        $csv = "\xEF\xBB\xBF"; // BOM for UTF-8
+
+        // Add header row
+        $header = [];
+        foreach ($columns as $column) {
+            $header[] = $column->getTitle();
+        }
+        $csv .= implode($separator, $header) . "\n";
+
+        // Add data rows
+        $model = $this->getModel();
+        $query = $model::query();
+        $this->applyFilter($query);
+        $results = $query->get();
+        foreach ($results as $result) {
+            $row = [];
+            foreach ($columns as $column) {
+                // remove any html tags so <div class=""text-center"">103</div> can display as "103"
+                $columnValue = strip_tags($column->getValue($result, []));
+                // escape double quotes for CSV
+                $columnValue = str_replace('"', '""', $columnValue);
+                // add quotes around the value to handle commas and new lines
+                $row[] = '"' . trim($columnValue) . '"';
+            }
+            $csv .= implode($separator, $row) . "\r\n";
+        }
+
+        return $csv;
+    }
+
     public function premiumOnly(): bool
     {
         return false;

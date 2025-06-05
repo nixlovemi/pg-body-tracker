@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -36,6 +35,19 @@ class Report extends Controller
             'REPORT' => $report,
         ]);
         return $pdf->stream();
+    }
+
+    public function csv(string $reportClass)
+    {
+        $report = $this->getReportFromClassOrRedirect($reportClass);
+        if (!(new \App\Helpers\Feature\ReportExport())->validate()) {
+            abort(403, __('messages.dontHavePermission'));
+        }
+
+        $csv = $report->generateCsv();
+        return response($csv)
+            ->header('Content-Type', 'text/csv; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="report-'.$reportClass.'.csv"');
     }
 
     private function getReportFromClassOrRedirect(string $reportClass)

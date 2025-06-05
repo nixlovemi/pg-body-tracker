@@ -40,6 +40,11 @@ $RepExportFeature = new $ReportExport();
                                     {!! $Icons::FILE_PDF !!}&nbsp;
                                     {{ __('messages.components.avaliationReport.downloadPdfButton') }}
                                 </a>
+
+                                <a class="dropdown-item" target="_blank" href="{{ route('app.report.csv', ['reportClass' => class_basename($reportClassName)]) }}">
+                                    {!! $Icons::FILE_CSV !!}&nbsp;
+                                    {{ __('messages.components.avaliationReport.downloadCsvButton') }}
+                                </a>
                             @else
                                 <h6 class="dropdown-item text-center">
                                     {{ __('messages.components.Features.premiumFeature') }}

@@ -499,6 +499,7 @@ return [
         'avaliationReport' => [
             'downloadHeader' => 'Download:',
             'downloadPdfButton' => 'Baixar PDF',
+            'downloadCsvButton' => 'Baixar CSV',
             'sendLinkHeader' => 'Enviar link:',
             'sendWhatsLink' => 'Whatsapp',
             'dataErrorPrintReport' => 'Dados insuficientes para gerar gráfico!',

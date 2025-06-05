@@ -499,6 +499,7 @@ return [
         'avaliationReport' => [
             'downloadHeader' => 'Download:',
             'downloadPdfButton' => 'Download PDF',
+            'downloadCsvButton' => 'Download CSV',
             'sendLinkHeader' => 'Send link:',
             'sendWhatsLink' => 'Whatsapp',
             'dataErrorPrintReport' => 'Insufficient data to generate graph!',
