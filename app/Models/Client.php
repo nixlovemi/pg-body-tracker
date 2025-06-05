@@ -137,6 +137,16 @@ class Client extends Model
         return $this->weight_kg;
     }
 
+    public function getFormattedCurrentWeight(): string
+    {
+        return SysUtils::formatDbToNumber($this->getCurrentWeight(), 1) . 'kg';
+    }
+
+    public function getFormattedCreatedAt(): string
+    {
+        return SysUtils::applyTimezone($this->created_at)->format(__('messages.fullDateFormat'));
+    }
+
     public function getAge(): int
     {
         if (!$this->birthdate) return 0;
@@ -166,11 +176,114 @@ class Client extends Model
         return self::fGetGenders()[$this->gender] ?? '';
     }
 
+    public function getFirstAvaliation(): ?Avaliation
+    {
+        return $this->avaliations()
+            ->orderBy('date', 'ASC')
+            ->first();
+    }
+
     public function getLastAvaliation(): ?Avaliation
     {
         return $this->avaliations()
             ->orderBy('date', 'DESC')
             ->first();
+    }
+
+    /**
+     * Get the two most recent evaluations for the client.
+     * @return array[?Avaliation]
+     */
+    public function getTwoLastAvaliations(): array
+    {
+        $avaliations = $this->avaliations()
+            ->orderBy('date', 'DESC')
+            ->take(2)
+            ->get();
+
+        return [
+            $avaliations->get(0) ?: null,
+            $avaliations->get(1) ?: null,
+        ];
+    }
+
+    public function getFormattedHeight(): string
+    {
+        return SysUtils::formatDbToNumber($this->height_cm, 0) . 'cm';
+    }
+
+    public function getAvgDaysBtwAvaliations(): ?float
+    {
+        $avaliations = $this->avaliations()
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        if ($avaliations->count() < 2) {
+            return null;
+        }
+
+        $dates = $avaliations->pluck('date')->map(fn($d) => \Carbon\Carbon::parse($d));
+        $diffs = [];
+
+        for ($i = 1; $i < $dates->count(); $i++) {
+            $diffs[] = $dates[$i]->diffInDays($dates[$i - 1]);
+        }
+
+        return count($diffs) ? round(array_sum($diffs) / count($diffs), 1) : null;
+    }
+
+    public function getEvolutionRankingMuscleGainAttribute(): ?float
+    {
+        if ($this->avaliations->count() < 2) {
+            return null;
+        }
+
+        $first = $this->getFirstAvaliation();
+        $last = $this->getLastAvaliation();
+        if (!$first || !$last) {
+            return null;
+        }
+
+        if ($first->getMuscleMassPerc() === null || $last->getMuscleMassPerc() === null) {
+            return null;
+        }
+
+        return round($last->getMuscleMassPerc() - $first->getMuscleMassPerc(), 1);
+    }
+
+    public function getEvolutionRankingFatLossAttribute(): ?float
+    {
+        if ($this->avaliations->count() < 2) {
+            return null;
+        }
+
+        $first = $this->getFirstAvaliation();
+        $last = $this->getLastAvaliation();
+        if (!$first || !$last) {
+            return null;
+        }
+
+        if ($first->getBodyFatPerc() === null || $last->getBodyFatPerc() === null) {
+            return null;
+        }
+
+        return round($last->getBodyFatPerc() - $first->getBodyFatPerc(), 1);
+    }
+
+    public function getEvolutionRankingScoreAttribute(): ?float
+    {
+        if ($this->avaliations->count() < 2) {
+            return null;
+        }
+
+        $muscleGain = $this->getEvolutionRankingMuscleGainAttribute();
+        $fatLoss = $this->getEvolutionRankingFatLossAttribute();
+
+        if ($muscleGain === null || $fatLoss === null) {
+            return null;
+        }
+
+        return round($muscleGain + $fatLoss, 1);
     }
     // ===============
 

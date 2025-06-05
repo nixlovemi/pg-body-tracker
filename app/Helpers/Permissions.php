@@ -71,6 +71,10 @@ final class Permissions {
         'app.avaliation.doModalSendMail' => self::ACL_AVALIATION_EDIT,
 
         'app.calendar.index' => self::ACL_CALENDAR_VIEW,
+
+        'app.report.index' => self::ACL_DASHBOARD_INDEX,
+        'app.report.view' => self::ACL_DASHBOARD_INDEX,
+        'app.report.pdf' => self::ACL_DASHBOARD_INDEX,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

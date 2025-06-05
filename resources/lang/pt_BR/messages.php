@@ -4,6 +4,7 @@ return [
     'thousandSeparator' => '.',
     'decimalSeparator' => ',',
     'dateFormat' => 'd/m/Y',
+    'fullDateFormat' => 'd/m/Y H:i:s',
     'selectEmptyOption' => 'Selecione...',
     'dontHavePermission' => 'Você não tem acesso a esse conteúdo! Faça o login novamente.',
     'userNameDash' => 'Usuário',
@@ -422,6 +423,70 @@ return [
             'title' => 'Calendário',
             'revaluationDescription' => 'Reavaliação do cliente',
         ],
+
+        'report' => [
+            'title' => 'Relatórios',
+            'reportNotFound' => 'Relatório não encontrado!',
+            'OverdueEvaluations' => [
+                'title' => 'Avaliações em Atraso',
+                'description' => 'Exibe clientes que já fizeram avaliações anteriores, mas estão sem nova avaliação dentro do intervalo esperado de :days dias.',
+                'columns' => [
+                    'daysOverdue' => 'Dias da Última Avaliação',
+                ],
+            ],
+            'ClientProgress' => [
+                'title' => 'Progresso do Cliente',
+                'description' => 'Exibe a evolução dos principais indicadores físicos do cliente, comparando a primeira e a última avaliação registrada.',
+                'columns' => [
+                    'firstAvaliationDate' => '1ª Avaliação',
+                    'lastAvaliationDate' => 'Última',
+                    'weightFirstLast' => 'Peso:',
+                    'bodyFatPercFirstLast' => 'Gordura Corporal:',
+                    'muscleMassPercFirstLast' => 'Massa Muscular:',
+                    'basalMetabolismFirstLast' => 'Metabolismo Basal:',
+                    'avaliationNbr' => 'Nr de Avaliações',
+                ],
+            ],
+            'GoalsNearDeadline' => [
+                'title' => 'Objetivos Próximos do Prazo',
+                'description' => 'Exibe os clientes cujos objetivos estão próximos do prazo final, permitindo agir proativamente para ajustar estratégias ou motivar o cliente.',
+            ],
+            'ClientProfileOverview' => [
+                'title' => 'Perfis dos Clientes',
+                'description' => 'Fornece uma visão geral demográfica e biométrica da sua base de clientes, ajudando você a entender a distribuição por idade, sexo e características de composição corporal.',
+            ],
+            'ResultsComparison' => [
+                'title' => 'Comparativo de Resultados',
+                'description' => 'Compare a evolução entre duas avaliações específicas de cada cliente, destacando mudanças importantes na composição corporal e indicadores de desempenho.',
+                'columns' => [
+                    'deltaWeight' => 'Variação de Peso',
+                    'deltaBodyFat' => 'Gordura Corporal',
+                ],
+            ],
+            'EvolutionRanking' => [
+                'title' => 'Ranking de Evolução',
+                'description' => 'Mostra os clientes com maior evolução corporal entre a primeira e a última avaliação, considerando múltiplos indicadores.',
+                'columns' => [
+                    'muscleGain' => 'Evolução Muscular',
+                    'fatLoss' => 'Redução de Gordura',
+                    'score' => 'Evolução total',
+                ],
+            ],
+            'ClientsWithoutGoals' => [
+                'title' => 'Clientes Sem Objetivos',
+                'description' => 'Lista de clientes que ainda não possuem objetivos definidos para acompanhamento dos resultados.',
+                'columns' => [
+                    'createdAt' => 'Data Cadastro',
+                ],
+            ],
+            'EvaluationFrequency' => [
+                'title' => 'Frequência de Avaliações',
+                'description' => 'Mostra com que frequência cada cliente é avaliado, ajudando a identificar padrões e possíveis ajustes no acompanhamento.',
+                'columns' => [
+                    'avgDaysBtwEvaluations' => 'Média de Dias Entre Avaliações',
+                ],
+            ],
+        ],
     ],
 
     'menu' => [
@@ -569,7 +634,13 @@ return [
             ],
             'RevaluationDate' => [
                 'validateMessage' => 'Para adicionar a data de reavaliação, atualize para o plano premium.',
-                'logoPlaceholderText' => 'Atualize para o plano premium para adicionar a ":fieldLabel" ao calendário.',
+                'logoPlaceholderText' => 'Atualize para o plano premium para adicionar a ":fieldLabel" ao calendário e receba lembretes no dashboard.',
+            ],
+            'ReportExport' => [
+                'validateMessage' => 'Para exportar os relatórios, atualize para o plano premium.',
+            ],
+            'ReportPremium' => [
+                'validateMessage' => 'Para acessar este relatório, atualize para o plano premium.',
             ],
         ],
     ],

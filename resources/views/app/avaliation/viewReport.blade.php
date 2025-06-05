@@ -16,11 +16,7 @@ View variables:
 ])
 
 @section('DASH_BODY_CONTENT')
-    <div class="text-left mb-3">
-        <a href="{{ url()->previous() }}" class="btn btn-light">
-            {{ __('messages.buttonBack') }}
-        </a>
-    </div>
+    @include('layout.partials.button-back')
 
     <div class="row">
         <div class="col-12">

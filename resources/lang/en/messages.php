@@ -4,6 +4,7 @@ return [
     'thousandSeparator' => ',',
     'decimalSeparator' => '.',
     'dateFormat' => 'm/d/Y',
+    'fullDateFormat' => 'm/d/Y H:i:s',
     'selectEmptyOption' => 'Select...',
     'dontHavePermission' => 'You do not have permission to access this page! Please login again!',
     'userNameDash' => 'User',
@@ -422,6 +423,70 @@ return [
             'title' => 'Calendar',
             'revaluationDescription' => 'Client Revaluation',
         ],
+
+        'report' => [
+            'title' => 'Reports',
+            'reportNotFound' => 'Report not found!',
+            'OverdueEvaluations' => [
+                'title' => 'Overdue Evaluations',
+                'description' => 'Displays clients who had previous evaluation but have not returned within the expected range of :days days.',
+                'columns' => [
+                    'daysOverdue' => 'Days of Last Evaluation',
+                ],
+            ],
+            'ClientProgress' => [
+                'title' => 'Client Progress',
+                'description' => 'Displays the evolution of the client\'s main physical indicators, comparing the first and last recorded evaluation.',
+                'columns' => [
+                    'firstAvaliationDate' => '1st Evaluation',
+                    'lastAvaliationDate' => 'Last',
+                    'weightFirstLast' => 'Weight:',
+                    'bodyFatPercFirstLast' => 'Body Fat:',
+                    'muscleMassPercFirstLast' => 'Muscle Mass:',
+                    'basalMetabolismFirstLast' => 'Basal Metabolism:',
+                    'avaliationNbr' => 'Evaluation Qty',
+                ],
+            ],
+            'GoalsNearDeadline' => [
+                'title' => 'Goals Near Deadline',
+                'description' => 'Displays clients whose goals are close to their deadline, allowing you to act proactively to adjust strategies or motivate the customer.',
+            ],
+            'ClientProfileOverview' => [
+                'title' => 'Client Profile Overview',
+                'description' => 'Provides a demographic and biometric overview of your client base, helping you understand the distribution by age, gender, and body composition characteristics.',
+            ],
+            'ResultsComparison' => [
+                'title' => 'Results Comparison',
+                'description' => 'Compare the progress between two specific evaluations for each client, highlighting key changes in body composition and performance indicators.',
+                'columns' => [
+                    'deltaWeight' => 'Delta Weight',
+                    'deltaBodyFat' => 'Body Fat',
+                ],
+            ],
+            'EvolutionRanking' => [
+                'title' => 'Evolution Ranking',
+                'description' => 'Displays clients with the greatest body progress between their first and most recent assessments, considering multiple metrics.',
+                'columns' => [
+                    'muscleGain' => 'Muscle Gain',
+                    'fatLoss' => 'Fat Loss',
+                    'score' => 'Overall Progress Score',
+                ],
+            ],
+            'ClientsWithoutGoals' => [
+                'title' => 'Clients Without Goals',
+                'description' => 'Lists clients who have not yet defined their goals for tracking progress.',
+                'columns' => [
+                    'createdAt' => 'Created At',
+                ],
+            ],
+            'EvaluationFrequency' => [
+                'title' => 'Evaluation Frequency',
+                'description' => 'Displays how frequently each client is evaluated, helping identify patterns and potential follow-up adjustments.',
+                'columns' => [
+                    'avgDaysBtwEvaluations' => 'Avg Days Between Evaluations',
+                ],
+            ],
+        ],
     ],
 
     'menu' => [
@@ -569,7 +634,13 @@ return [
             ],
             'RevaluationDate' => [
                 'validateMessage' => 'To add revaluation date, upgrade to premium plan.',
-                'logoPlaceholderText' => 'Upgrade to the premium plan to add the ":fieldLabel" to the calendar.',
+                'logoPlaceholderText' => 'Upgrade to the premium plan to add the ":fieldLabel" to the calendar and get reminders on your dashboard.',
+            ],
+            'ReportExport' => [
+                'validateMessage' => 'To export reports, upgrade to the premium plan.',
+            ],
+            'ReportPremium' => [
+                'validateMessage' => 'To access this report, upgrade to the premium plan.',
             ],
         ],
     ],
