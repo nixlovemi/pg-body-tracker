@@ -1,8 +1,7 @@
-.report-view table.table thead th,
-.report-pdf table.table thead th {
-    font-weight: bold;
-}
-
-.report-pdf table.table tbody tr:nth-of-type(odd) {
-    background-color: #f9f9f9;
-}
+body { margin: 52px 0; padding: 0 15px; }
+.header { position: fixed; left: 0px; top: 0px; right: 0px;  background-color:#f3f9ff !important; }
+.footer { position: fixed; left: 0px; bottom: 15px; right: 0px; height: 50px; text-align: center;}
+.footer .pagenum:before { content: counter(page); }
+.table-responsive table,
+p { font-size: 11.8px;}
+.table-responsive table th { font-weight: bold; }

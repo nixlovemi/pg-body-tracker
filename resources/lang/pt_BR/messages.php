@@ -427,6 +427,7 @@ return [
         'report' => [
             'title' => 'Relatórios',
             'reportNotFound' => 'Relatório não encontrado!',
+            'generatedAt' => 'Gerado em',
             'OverdueEvaluations' => [
                 'title' => 'Avaliações em Atraso',
                 'description' => 'Exibe clientes que já fizeram avaliações anteriores, mas estão sem nova avaliação dentro do intervalo esperado de :days dias.',
