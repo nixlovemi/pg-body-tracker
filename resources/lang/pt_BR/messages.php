@@ -529,6 +529,11 @@ return [
             'subscriptionSaveError' => 'Erro ao processar a assinatura! Tente novamente.',
             'paymentClassNotFound' => 'Erro ao conectar com o pagamento! Tente novamente ou entre em contato com o suporte.',
             'paymentStatusChecked' => 'Status do pagamento verificado com sucesso!',
+            'defaultCheckoutMessage' => 'Seu pedido de assinatura foi registrado. Em breve você receberá um e-mail com a confirmação.',
+            'processingMessage' => 'Sua assinatura foi iniciada e está em processamento.',
+            'activeMessage' => 'Sua assinatura está ativa. Aproveite todos os recursos premium!',
+            'cancelledMessage' => 'Sua assinatura foi cancelada ou pausada.',
+            'titleThankYou' => 'Obrigado por se inscrever no PG Body Tracker Premium!',
             'plans' => [
                 'monthly' => 'Mensal',
                 'quarterly' => 'Trimestral',

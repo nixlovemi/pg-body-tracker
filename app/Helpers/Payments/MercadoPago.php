@@ -172,7 +172,7 @@ class MercadoPago extends PaymentGatewayAbstract
 
     public function getCheckoutMessageUrl(): string
     {
-        return $this->forceHttps(route('app.subscription.checkoutMessage'));
+        return $this->forceHttps(route('app.subscription.mercadoPagoCheckoutMessage'));
     }
 
     public function isPaymentApproved(UserPlans $UserPlan): bool

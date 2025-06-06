@@ -31,10 +31,35 @@ class Subscription extends Controller
         return redirect($url);
     }
 
-    public function checkoutMessage(Request $request)
+    public function mercadoPagoCheckoutMessage(Request $request)
     {
-        // http://127.0.0.1:8000/admin/subscription/checkoutMessage?preapproval_id=7214f32ae3cd4b7493683539711f4daf
-        dd($request);
+        $preapprovalId = $request->input('preapproval_id');
+        $message = __('messages.pages.premium.defaultCheckoutMessage');
+        $userPlanLog = \App\Models\UserPlanLogs::where('data', 'like', '%"'.$preapprovalId.'"%')->latest()->first();
+
+        if ($userPlanLog) {
+            $logData = json_decode($userPlanLog->data, true);
+            $status = $logData['status'] ?? null;
+
+            switch ($status) {
+                case 'authorized':
+                case 'pending':
+                    $message = __('messages.pages.premium.processingMessage');
+                    break;
+                case 'active':
+                    $message = __('messages.pages.premium.activeMessage');
+                    break;
+                case 'paused':
+                case 'cancelled':
+                    $message = __('messages.pages.premium.cancelledMessage');
+                    break;
+            }
+        }
+
+        return view('app.subscription.mercadoPagoCheckoutMessage', [
+            'PAGE_TITLE' => __('messages.pages.premium.subscription'),
+            'MESSAGE' => $message,
+        ]);
     }
 
     public function mercadoPagoWebhook(Request $request)

@@ -99,7 +99,7 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/upgrade', 'App\Http\Controllers\Subscription@upgrade')->name('app.subscription.upgrade')->middleware('is.already.premium');
             Route::get('/checkout', 'App\Http\Controllers\Subscription@checkout')->name('app.subscription.checkout')->middleware('is.already.premium');
             Route::get('/subscribe/{plan}', 'App\Http\Controllers\Subscription@subscribe')->name('app.subscription.subscribe')->middleware('is.already.premium');
-            Route::get('/checkoutMessage', 'App\Http\Controllers\Subscription@checkoutMessage')->name('app.subscription.checkoutMessage');
+            Route::get('/mercadoPagoCheckoutMessage', 'App\Http\Controllers\Subscription@mercadoPagoCheckoutMessage')->name('app.subscription.mercadoPagoCheckoutMessage');
         });
     });
 
