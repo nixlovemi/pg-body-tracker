@@ -76,6 +76,11 @@ final class Permissions {
         'app.report.view' => self::ACL_DASHBOARD_INDEX,
         'app.report.pdf' => self::ACL_DASHBOARD_INDEX,
         'app.report.csv' => self::ACL_DASHBOARD_INDEX,
+
+        'app.subscription.upgrade' => self::ACL_DASHBOARD_INDEX,
+        'app.subscription.checkout' => self::ACL_DASHBOARD_INDEX,
+        'app.subscription.subscribe' => self::ACL_DASHBOARD_INDEX,
+        'app.subscription.checkoutMessage' => self::ACL_DASHBOARD_INDEX,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

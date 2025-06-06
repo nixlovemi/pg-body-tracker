@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'avaliation.send.link.feature' => \App\Http\Middleware\AvaliationSendLink::class,
         'report.export.feature' => \App\Http\Middleware\ReportExport::class,
         'report.premium.feature' => \App\Http\Middleware\ReportPremium::class,
+        'is.already.premium' => \App\Http\Middleware\IsAlreadyPremium::class,
     ];
 }

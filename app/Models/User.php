@@ -280,6 +280,16 @@ class User extends Authenticatable
         fclose($tempFile);
     }
 
+    public function getCurrentPlan(): ?UserPlans
+    {
+        return $this->plans()
+            ->where('status', UserPlans::STATUS_ACTIVE)
+            ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
+            ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
+            ->orderBy('end_date', 'desc')
+            ->first();
+    }
+
     public function getPlanType(): string
     {
         if ($this->isRoot()) {
@@ -295,13 +305,8 @@ class User extends Authenticatable
         }
 
         // get current plan
-        $plan = $this->plans()
-            ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
-            ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
-            ->orderBy('end_date', 'desc')
-            ->first();
-
-        $planType = $plan->plan_type ?? FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
+        $plan = $this->getCurrentPlan();
+        $planType = $plan?->plan_type ?? FeatureAbstract::FEATURE_PLAN_TYPE_FREE;
 
         // if we dont have a plan, or the plan type is not valid, set to free
         if (!in_array($planType, FeatureAbstract::fGetPlanTypes())) {
@@ -313,6 +318,11 @@ class User extends Authenticatable
         return $planType;
     }
 
+    public function hasPremiumPlan(): bool
+    {
+        return $this->getPlanType() === FeatureAbstract::FEATURE_PLAN_TYPE_PREMIUM;
+    }
+
     public function getPlanTypeLabel(): string
     {
         return FeatureAbstract::fGetLabelPlanType($this->getPlanType());
@@ -321,6 +331,45 @@ class User extends Authenticatable
     private function getPlanTypeCacheKey(): string
     {
         return 'user-plan-type-' . $this->id;
+    }
+
+    public function checkPlanPaymentStatus(): void
+    {
+        $userPlan = $this->plans()
+            ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
+            ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
+            ->orderBy('end_date', 'desc')
+            ->first();
+        if ($userPlan?->status !== UserPlans::STATUS_PENDING) {
+            return;
+        }
+
+        // check payment status
+        $paymentLog = $userPlan->logs->first();
+        $paymentClass = $paymentLog->payment_class;
+        if (!class_exists($paymentClass)) {
+            return;
+        }
+
+        $Class = new $paymentClass();
+        if ($Class->isPaymentApproved($userPlan)) {
+            // set user plan status to STATUS_ACTIVE
+            $userPlan->status = UserPlans::STATUS_ACTIVE;
+            $userPlan->save();
+
+            // add custom log
+            $userPlan->addLog([
+                'payment_class' => $paymentClass,
+                'payment_id' => $paymentLog->payment_id,
+                'data' => json_encode([
+                    'type' => 'checkPlanPaymentStatus',
+                    'message' => __('messages.pages.premium.paymentStatusChecked'),
+                ]),
+            ]);
+
+            // remove cache
+            Cache::forget($this->getPlanTypeCacheKey());
+        }
     }
     // ===============
 

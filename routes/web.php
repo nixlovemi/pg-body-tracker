@@ -39,6 +39,7 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     Route::get('/confirmUser/{key}', 'App\Http\Controllers\Login@confirmUser')->name('app.confirmUser')->middleware('signed');
     Route::get('/avaliation/showMyAvaliation/{codedId}', 'App\Http\Controllers\Avaliation@showMyAvaliation')->name('app.avaliation.showMyAvaliation')->middleware('signed');
     Route::get('/s/{key}', 'App\Http\Controllers\UrlShortController@redirect')->name('app.urlShortController.redirect');
+    Route::post('/subscription/mercadoPago/webhook', 'App\Http\Controllers\Subscription@mercadoPagoWebhook')->name('app.subscription.mercadoPagoWebhook');
 
     // ================================================
     // ADD ROUTE PERMISSIONS ON App\Helpers\Permissions
@@ -92,6 +93,13 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::match(array('GET','POST'), '/view/{reportClass}', 'App\Http\Controllers\Report@view')->name('app.report.view')->middleware('report.premium.feature');
             Route::get('/pdf/{reportClass}', 'App\Http\Controllers\Report@pdf')->name('app.report.pdf')->middleware('report.export.feature', 'report.premium.feature');
             Route::get('/csv/{reportClass}', 'App\Http\Controllers\Report@csv')->name('app.report.csv')->middleware('report.export.feature', 'report.premium.feature');
+        });
+
+        Route::prefix('subscription')->group(function () {
+            Route::get('/upgrade', 'App\Http\Controllers\Subscription@upgrade')->name('app.subscription.upgrade')->middleware('is.already.premium');
+            Route::get('/checkout', 'App\Http\Controllers\Subscription@checkout')->name('app.subscription.checkout')->middleware('is.already.premium');
+            Route::get('/subscribe/{plan}', 'App\Http\Controllers\Subscription@subscribe')->name('app.subscription.subscribe')->middleware('is.already.premium');
+            Route::get('/checkoutMessage', 'App\Http\Controllers\Subscription@checkoutMessage')->name('app.subscription.checkoutMessage');
         });
     });
 

@@ -73,6 +73,16 @@ $USER = $mSysUtils::getLoggedInUser();
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        @if (false === $USER->hasPremiumPlan())
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a href="{{ route('app.subscription.upgrade') }}" class="btn btn-warning btn-sm text-white font-weight-bold ml-3" style="position:relative; top:19px;">
+                                    <i class="fas fa-crown"></i> {{ __('messages.pages.premium.subscribe') }}
+                                </a>
+                            </li>
+                        @endif
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"

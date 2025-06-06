@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'currency' => 'R$',
     'thousandSeparator' => '.',
     'decimalSeparator' => ',',
     'dateFormat' => 'd/m/Y',
@@ -46,6 +47,7 @@ return [
     'no' => 'Não',
     'allRightsReserved' => 'Todos os direitos reservados.',
     'noReplyEmail' => 'Este é um e-mail automático, por favor não responda.',
+    'month' => 'mês',
 
     'helpers' => [
         'modelValidation' => [
@@ -219,6 +221,33 @@ return [
                 'link_twitter' => 'X (Twitter)',
                 'link_youtube' => 'YouTube',
                 'link_website' => 'Website',
+            ],
+        ],
+
+        'UserPlans' => [
+            'name' => 'Planos do Usuário',
+            'fields' => [
+                'user_id' => 'Usuário',
+                'plan_type' => 'Tipo de Plano',
+                'start_date' => 'Data de Início',
+                'end_date' => 'Data de Término',
+                'payment_data' => 'Dados do Pagamento',
+                'status' => 'Status',
+            ],
+            'status' => [
+                'active' => 'Ativo',
+                'pending' => 'Pendente',
+                'canceled' => 'Cancelado',
+            ],
+        ],
+
+        'UserPlanLogs' => [
+            'name' => 'Logs do Plano do Usuário',
+            'fields' => [
+                'user_plan_id' => 'Plano do Usuário',
+                'payment_class' => 'Classe de Pagamento',
+                'payment_id' => 'ID do Pagamento',
+                'data' => 'Dados',
             ],
         ],
     ],
@@ -485,6 +514,52 @@ return [
                 'description' => 'Mostra com que frequência cada cliente é avaliado, ajudando a identificar padrões e possíveis ajustes no acompanhamento.',
                 'columns' => [
                     'avgDaysBtwEvaluations' => 'Média de Dias Entre Avaliações',
+                ],
+            ],
+        ],
+
+        'premium' => [
+            'subscription' => 'Assinatura',
+            'subscribe' => 'Assinar Premium',
+            'upgradeTitle' => 'Torne-se Premium e Eleve sua Experiência com o PG Body Tracker',
+            'upgradeDescription' => 'O PG Body Tracker foi desenvolvido para atender às necessidades reais de profissionais como você — comprometidos com resultados, eficiência e profissionalismo.
+                Com o plano gratuito, você já conta com uma base sólida para realizar avaliações corporais, acompanhar metas, gerar relatórios e manter o histórico dos seus clientes.
+                Mas se você quer ir além, o <strong>Plano Premium</strong> foi feito sob medida para você.',
+            'labelTotalPricePerFrequency' => '* A assinatura será no valor de :total a cada :frequency mês(es)',
+            'subscriptionSaveError' => 'Erro ao processar a assinatura! Tente novamente.',
+            'paymentClassNotFound' => 'Erro ao conectar com o pagamento! Tente novamente ou entre em contato com o suporte.',
+            'paymentStatusChecked' => 'Status do pagamento verificado com sucesso!',
+            'plans' => [
+                'monthly' => 'Mensal',
+                'quarterly' => 'Trimestral',
+                'semiannual' => 'Semestral',
+                'annual' => 'Anual',
+            ],
+            'freeVsPremium' => [
+                'freePlan' => 'Gratuito',
+                'premiumPlan' => 'Assinatura Premium',
+                'currentPlan' => 'Plano Atual',
+                'subscribeNow' => 'Assinar Agora',
+                'startingFrom' => 'A partir de',
+                'features' => [
+                    'line1Free' => 'Limite de Clientes (máximo 5)',
+                    'line1Premium' => 'Clientes Ilimitados',
+                    'line2' => 'Suporte por Email',
+                    'line3' => 'Cadastro de Metas',
+                    'line4' => 'Avaliações Corporais',
+                    'line5' => 'Bioimpedância, Medidas, Adipômetro',
+                    'line6' => 'Relatório de Avaliação + versão PDF',
+                    'line7' => 'Impressão de Avaliação',
+                    'line8' => 'Calendário de Aniversário',
+                    'line9' => 'Relatórios Básicos',
+                    'line10' => 'Fotos nas avaliações',
+                    'line11' => 'Envio de Avaliação por Link (Whats/Email)',
+                    'line12' => 'Relatórios Premium',
+                    'line13' => 'Exportação dos Relatórios em PDF e CSV',
+                    'line14' => 'Reavaliação com lembrete',
+                    'line15' => 'Calendário Completo',
+                    'line16' => 'Logo da Empresa nas Avaliações',
+                    'line17' => 'Acesso a Futuras Funcionalidades',
                 ],
             ],
         ],

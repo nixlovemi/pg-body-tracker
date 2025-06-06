@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\UserPlans;
 use App\Helpers\Feature\FeatureAbstract;
 
 class UserPlansFactory extends Factory
@@ -24,7 +25,7 @@ class UserPlansFactory extends Factory
                     ->first();
             },
             'plan_type' => function() {
-                return $this->faker->randomElement([FeatureAbstract::FEATURE_PLAN_TYPE_FREE, FeatureAbstract::FEATURE_PLAN_TYPE_PREMIUM]);
+                return $this->faker->randomElement(FeatureAbstract::fGetPlanTypes());
             },
             'start_date' => $this->faker->dateTimeBetween('-1 month', '-6 months')->format('Y-m-d'),
             'end_date' => function(array $attributes) {
@@ -33,6 +34,7 @@ class UserPlansFactory extends Factory
                 return $startDate->addMonths($monthsToAdd)->format('Y-m-d');
             },
             'payment_data' => null,
+            'status' => $this->faker->randomElement(array_keys(UserPlans::fGetStatuses())),
         ];
     }
 }

@@ -38,4 +38,6 @@ final class Icons {
     public const EXCHANGE_ALT = '<i class="fas fa-exchange-alt"></i>';
     public const TROPHY = '<i class="fas fa-trophy"></i>';
     public const QUESTION_CIRCLE = '<i class="fas fa-question-circle"></i>';
+    public const CHECK = '<i class="fas fa-check"></i>';
+    public const TIMES = '<i class="fas fa-times"></i>';
 }

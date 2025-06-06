@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'currency' => '$',
     'thousandSeparator' => ',',
     'decimalSeparator' => '.',
     'dateFormat' => 'm/d/Y',
@@ -46,6 +47,7 @@ return [
     'no' => 'No',
     'allRightsReserved' => 'All rights reserved.',
     'noReplyEmail' => 'This is an automated email, please do not reply.',
+    'month' => 'month',
 
     'helpers' => [
         'modelValidation' => [
@@ -219,6 +221,33 @@ return [
                 'link_twitter' => 'X (Twitter)',
                 'link_youtube' => 'YouTube',
                 'link_website' => 'Website',
+            ],
+        ],
+
+        'UserPlans' => [
+            'name' => 'User Plan',
+            'fields' => [
+                'user_id' => 'User ID',
+                'plan_type' => 'Type',
+                'start_date' => 'Start Date',
+                'end_date' => 'End Date',
+                'payment_data' => 'Payment Data',
+                'status' => 'Status',
+            ],
+            'status' => [
+                'active' => 'Ativo',
+                'pending' => 'Pendente',
+                'canceled' => 'Cancelado',
+            ],
+        ],
+
+        'UserPlanLogs' => [
+            'name' => 'User Plan Log',
+            'fields' => [
+                'user_plan_id' => 'User Plan ID',
+                'payment_class' => 'Payment Class',
+                'payment_id' => 'Payment ID',
+                'data' => 'Data',
             ],
         ],
     ],
@@ -466,7 +495,7 @@ return [
             ],
             'EvolutionRanking' => [
                 'title' => 'Evolution Ranking',
-                'description' => 'Displays clients with the greatest body progress between their first and most recent assessments, considering multiple metrics.',
+                'description' => 'Displays clients with the greatest body progress between their first and most recent evaluations, considering multiple metrics.',
                 'columns' => [
                     'muscleGain' => 'Muscle Gain',
                     'fatLoss' => 'Fat Loss',
@@ -485,6 +514,52 @@ return [
                 'description' => 'Displays how frequently each client is evaluated, helping identify patterns and potential follow-up adjustments.',
                 'columns' => [
                     'avgDaysBtwEvaluations' => 'Avg Days Between Evaluations',
+                ],
+            ],
+        ],
+
+        'premium' => [
+            'subscription' => 'Subscription',
+            'subscribe' => 'Subscribe Premium',
+            'upgradeTitle' => 'Go Premium and Elevate Your Experience with PG Body Tracker',
+            'upgradeDescription' => 'PG Body Tracker was developed to meet the real needs of professionals like you — committed to results, efficiency and professionalism.
+                With the free plan, you already have a solid foundation to perform body evaluations, track goals, generate reports and maintain your clients\' history.
+                But if you want to go further, the <strong>Premium Plan</strong> was tailor-made for you.',
+            'labelTotalPricePerFrequency' => '* The subscription will be for the amount of :total every :frequency month(s)',
+            'subscriptionSaveError' => 'Error processing subscription! Please try again.',
+            'paymentClassNotFound' => 'Error connecting to payment! Please try again or contact support.',
+            'paymentStatusChecked' => 'Payment status verified successfully!',
+            'plans' => [
+                'monthly' => 'Monthly',
+                'quarterly' => 'Quarterly',
+                'semiannual' => 'Semiannual',
+                'annual' => 'Yearly',
+            ],
+            'freeVsPremium' => [
+                'freePlan' => 'Free',
+                'premiumPlan' => 'Premium Subscription',
+                'currentPlan' => 'Current',
+                'subscribeNow' => 'Subscribe Now',
+                'startingFrom' => 'Starting from',
+                'features' => [
+                    'line1Free' => 'Client Limit (maximum 5)',
+                    'line1Premium' => 'Unlimited Clients',
+                    'line2' => 'Email Support',
+                    'line3' => 'Goal Registration',
+                    'line4' => 'Body Evaluation',
+                    'line5' => 'Bioimpedance, Measurements, Skinfold Caliper',
+                    'line6' => 'Evaluation Report + PDF version',
+                    'line7' => 'Evaluation Printing',
+                    'line8' => 'Birthday Calendar',
+                    'line9' => 'Basic Reports',
+                    'line10' => 'Photos in Evaluations',
+                    'line11' => 'Send Evaluation by Link (WhatsApp/Email)',
+                    'line12' => 'Premium Reports',
+                    'line13' => 'Export Reports in PDF and CSV',
+                    'line14' => 'Revaluation with Reminder',
+                    'line15' => 'Full Calendar',
+                    'line16' => 'Company Logo on Evaluations',
+                    'line17' => 'Access to Future Features',
                 ],
             ],
         ],
