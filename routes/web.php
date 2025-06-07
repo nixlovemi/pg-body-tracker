@@ -50,6 +50,7 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
         Route::get('/dashboard/clientsWithGoalsDueThisWeek', 'App\Http\Controllers\Dashboard@clientsWithGoalsDueThisWeek')->name('app.dashboard.clientsWithGoalsDueThisWeek');
         Route::get('/profile', 'App\Http\Controllers\User@profile')->name('app.user.profile');
         Route::post('/doProfile', 'App\Http\Controllers\User@doProfile')->name('app.user.doProfile');
+        Route::get('/payments', 'App\Http\Controllers\User@payments')->name('app.user.payments');
         Route::get('/changePsw', 'App\Http\Controllers\User@changePsw')->name('app.user.changePsw');
         Route::post('/doChangePsw', 'App\Http\Controllers\User@doChangePsw')->name('app.user.doChangePsw');
 

@@ -40,4 +40,5 @@ final class Icons {
     public const QUESTION_CIRCLE = '<i class="fas fa-question-circle"></i>';
     public const CHECK = '<i class="fas fa-check"></i>';
     public const TIMES = '<i class="fas fa-times"></i>';
+    public const FILE_INVOICE_DOLAR = '<i class="fas fa-file-invoice-dollar"></i>';
 }

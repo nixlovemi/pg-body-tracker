@@ -103,6 +103,12 @@ $USER = $mSysUtils::getLoggedInUser();
                                     {!! $Icons::USER_GREY !!}
                                     {{ __('messages.profile') }}
                                 </a>
+                                @if ($USER?->plans->count() > 0)
+                                    <a class="dropdown-item" href="{{ route('app.user.payments') }}">
+                                        <span class="ml-1 mr-2 text-gray-400">{!! $Icons::FILE_INVOICE_DOLAR !!}</span>
+                                        &nbsp;{{ __('messages.pages.premium.paymentHistory.menuTitle') }}
+                                    </a>
+                                @endif
                                 <a class="dropdown-item" href="{{ route('app.user.changePsw') }}">
                                     {!! $Icons::KEY_GREY !!}
                                     {{ __('messages.pages.changePsw.title') }}

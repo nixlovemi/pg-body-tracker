@@ -117,6 +117,18 @@ class User extends Controller
             ->withSuccess($changeRet->getMessage());
     }
 
+    public function payments()
+    {
+        $User = SysUtils::getLoggedInUser();
+        if ($User?->plans?->count() <= 0) {
+            return $this->redirectWithError('app.dashboard.index', __('messages.pages.premium.paymentHistory.redirectDoestHavePayments'));
+        }
+
+        return view('app.user.payments', [
+            'PAGE_TITLE' => __('messages.pages.premium.paymentHistory.menuTitle'),
+        ]);
+    }
+
     private function formatSaveRequest(Request $request): array
     {
         $form = ['User' => [], 'UserInfo' => []];

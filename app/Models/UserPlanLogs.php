@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\Helpers\ApiResponse;
 use App\Helpers\ModelValidation;
+use App\Helpers\SysUtils;
 
 class UserPlanLogs extends Model
 {
@@ -71,6 +72,12 @@ class UserPlanLogs extends Model
         $validation->addField('data', ['required', 'string', 'min:1'], __('messages.models.UserPlanLogs.fields.data'));
 
         return $validation->validate();
+    }
+
+    public function getFormattedCreatedAt(bool $full=false): string
+    {
+        $format = $full ? __('messages.fullDateFormat') : __('messages.dateFormat');
+        return SysUtils::timezoneDate($this->created_at, $format);
     }
     // ===============
 

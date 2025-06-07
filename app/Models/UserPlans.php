@@ -10,6 +10,7 @@ use App\Helpers\ModelValidation;
 use App\Models\User;
 use App\Models\UserPlanLogs;
 use App\Helpers\Feature\FeatureAbstract;
+use App\Helpers\SysUtils;
 
 class UserPlans extends Model
 {
@@ -110,6 +111,32 @@ class UserPlans extends Model
     {
         $form['user_plan_id'] = $this->id;
         return UserPlanLogs::fSave($form);
+    }
+
+    public function getFormattedStartDate(): string
+    {
+        return SysUtils::timezoneDate($this->start_date, __('messages.dateFormat'));
+    }
+
+    public function getFormattedEndDate(): string
+    {
+        return SysUtils::timezoneDate($this->end_date, __('messages.dateFormat'));
+    }
+
+    public function getPlanTypeLabel(): string
+    {
+        return FeatureAbstract::fGetLabelPlanType($this->plan_type);
+    }
+
+    public function getStatuslabel(): string
+    {
+        // TODO: maybe update database?
+        // if status is active and end_date is in the past, return 'expired'
+        if ($this->status === self::STATUS_ACTIVE && strtotime($this->end_date) < strtotime(SysUtils::timezoneNow('Y-m-d'))) {
+            return __('messages.models.UserPlans.status.expired');
+        }
+
+        return self::fGetStatuses()[$this->status] ?? '-';
     }
     // ===============
 
