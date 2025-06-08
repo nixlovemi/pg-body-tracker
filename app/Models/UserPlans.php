@@ -140,6 +140,46 @@ class UserPlans extends Model
 
         return self::fGetStatuses()[$this->status] ?? '-';
     }
+
+    public function getLastPaymentLogRow(): ?UserPlanLogs
+    {
+        // Get the last log for this user plan
+        return $this->logs()
+            ->where('data', 'like', '%"type":"payment"%')
+            ->orderBy('created_at', 'desc')
+            ->first();
+    }
+
+    public function getPaymentClass(): ?string
+    {
+        return $this->logs()
+            ->orderBy('id', 'desc')
+            ->limit(1)
+            ->get()
+            ->first()->payment_class ?? null;
+    }
+
+    /**
+     * Payment ID from logs !== payment_id from UserPlans
+     *
+     * @return string|null
+     */
+    public function getPaymentId(): ?string
+    {
+        $paymentLog = $this->getLastPaymentLogRow();
+        $logData = json_decode($paymentLog?->data ?? [], true);
+        $paymentId = $logData['data_id'] ?? null;
+        return $paymentId;
+    }
+
+    public function getColPaymentId(): string
+    {
+        return $this->logs()
+            ->orderBy('id', 'desc')
+            ->limit(1)
+            ->get()
+            ->first()->payment_id ?? null;
+    }
     // ===============
 
     // static functions

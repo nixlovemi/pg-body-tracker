@@ -82,6 +82,12 @@ class UserPlanLogs extends Model
         $format = $full ? __('messages.fullDateFormat') : __('messages.dateFormat');
         return SysUtils::timezoneDate($this->created_at, $format);
     }
+
+    public function getColIdString(): string
+    {
+        // Return a short version of the payment ID
+        return $this->payment_id ? substr($this->payment_id, 0, 6) . '...' : '-';
+    }
     // ===============
 
     // static functions

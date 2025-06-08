@@ -8,6 +8,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Helpers\Payments\MercadoPago;
 use Illuminate\Support\Facades\Log;
+use App\Models\UserPlans;
+use Symfony\Component\HttpFoundation\Response;
 
 class Subscription extends Controller
 {
@@ -112,5 +114,48 @@ class Subscription extends Controller
             return response()->json(['status' => 'error'], 500);
         }
         */
+    }
+
+    public function details(Request $request)
+    {
+        $codedId = $request->input('codedId');
+        $json = $request->input('json', '1');
+
+        $UserPlan = UserPlans::getModelByCodedId($codedId);
+        if (!$UserPlan || !UserPlans::fHasAccess($UserPlan)) {
+            return $this->returnResponse(
+                false,
+                __('messages.modelErrorNoAccess'),
+                [],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $paymentClass = $UserPlan->getPaymentClass() ?? '';
+        $PaymentGateway = new ($paymentClass)();
+        $payment = $PaymentGateway->getPaymentById($UserPlan->getPaymentId());
+        $preapproval = $PaymentGateway->getPreapprovalById($UserPlan->getColPaymentId());
+
+        $view = view('app.subscription.modalDetails', [
+            'TITLE' => __('messages.pages.premium.modalDetails.title', [
+                'paymentId' => $UserPlan?->logs()->first()->getColIdString(),
+            ]),
+            'PAYMENT' => $payment,
+            'PREAPPROVAL' => $preapproval,
+            'USER_PLAN' => $UserPlan,
+        ]);
+
+        if (1 == $json) {
+            return $this->returnResponse(
+                false,
+                __('messages.htmlReturned'),
+                [
+                    'html' => $view->render()
+                ],
+                Response::HTTP_OK
+            );
+        }
+
+        return $view;
     }
 }

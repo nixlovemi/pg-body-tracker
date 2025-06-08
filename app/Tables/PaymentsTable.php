@@ -5,12 +5,11 @@ namespace App\Tables;
 use App\Models\UserPlans;
 use Okipa\LaravelTable\Abstracts\AbstractTableConfiguration;
 use Okipa\LaravelTable\Column;
-use Okipa\LaravelTable\Formatters\DateFormatter;
-use Okipa\LaravelTable\RowActions\DestroyRowAction;
-use Okipa\LaravelTable\RowActions\EditRowAction;
+use App\Tables\RowActions\OpenModalRowAction;
 use Okipa\LaravelTable\Table;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use App\Helpers\Icons;
 
 class PaymentsTable extends AbstractTableConfiguration
 {
@@ -30,8 +29,16 @@ class PaymentsTable extends AbstractTableConfiguration
             ->model(UserPlans::class)
             ->query(function(Builder $query) {
                 return $query->where('user_id', '=', $this->User->id ?? 0)
-                    ->orderBy('start_date', 'desc');
-            });
+                    ->orderBy('start_date', 'desc')
+                    ->orderBy('id', 'desc');
+            })
+            ->rowActions(fn(UserPlans $UserPlans) => [
+                (new OpenModalRowAction(
+                    __('messages.tableActionEdit'),
+                    route('app.subscription.details', ['codedId' => $UserPlans->codedId, 'json' => '1']),
+                    Icons::EYE
+                )),
+            ]);
     }
 
     protected function columns(): array
@@ -40,8 +47,8 @@ class PaymentsTable extends AbstractTableConfiguration
             Column::make('ID')
                 ->title(__('messages.pages.premium.paymentHistory.colID'))
                 ->format(function(UserPlans $UserPlans) {
-                    $id = $UserPlans->logs?->last()?->payment_id ?
-                        substr($UserPlans->logs?->last()?->payment_id, 0, 6) . '...' :
+                    $id = $UserPlans->logs?->last() ?
+                        $UserPlans->logs?->last()?->getColIdString() :
                         '-';
 
                     return $id;

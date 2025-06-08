@@ -615,6 +615,19 @@ return [
                     'line5' => 'Equipe PG Body Tracker',
                 ],
             ],
+            'modalDetails' => [
+                'title' => 'Detalhes da Assinatura - :paymentId',
+                'noActivePlan' => 'Nenhum plano encontrado.',
+                'labelPlanStatus' => 'Status do Plano',
+                'labelPlanValidity' => 'Período de Vigência',
+                'labelPlanType' => 'Tipo de Plano',
+                'labelPaymentStatus' => 'Status',
+                'labelPaymentDetails' => 'Detalhe',
+                'labelPaymentPrice' => 'Valor',
+                'labelPaymentDate' => 'Dt Pagamento',
+                'labelPaymentType' => 'Forma Pagamento',
+
+            ],
         ],
     ],
 

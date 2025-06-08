@@ -174,23 +174,12 @@ class MercadoPago extends PaymentGatewayAbstract
             return null;
         }
 
-        // get log for the user plan where data json has type='payment'
-        $userPlanLog = $UserPlan->logs()
-            ->where('data', 'like', '%"type":"payment"%')
-            ->orderBy('created_at', 'desc')
-            ->first();
-        if (!$userPlanLog) {
-            return null;
-        }
-
-        $paymentClass = $userPlanLog->payment_class;
+        $paymentClass = $UserPlan->getPaymentClass();
         if (!class_exists($paymentClass)) {
             return null;
         }
 
-        $logData = json_decode($userPlanLog->data, true);
-        $paymentId = $logData['data_id'] ?? null;
-
+        $paymentId = $UserPlan->getPaymentId() ?? null;
         return (new $paymentClass())->getPaymentById($paymentId);
     }
 
@@ -213,5 +202,75 @@ class MercadoPago extends PaymentGatewayAbstract
     private function forceHttps(string $url): string
     {
         return preg_replace('/^http:/i', 'https:', $url);
+    }
+
+    /**
+     * Traduz status de Payment
+     */
+    public function getPaymentStatusLabel(?string $status): string
+    {
+        $map = [
+            'approved' => 'Aprovado',
+            'pending' => 'Pendente',
+            'authorized' => 'Autorizado',
+            'in_process' => 'Em processamento',
+            'in_mediation' => 'Em mediação',
+            'rejected' => 'Recusado',
+            'cancelled' => 'Cancelado',
+            'refunded' => 'Reembolsado',
+            'charged_back' => 'Contestação (chargeback)',
+        ];
+
+        return $map[$status] ?? ucfirst(str_replace('_', ' ', $status));
+    }
+
+    /**
+     * Traduz status_detail de Payment
+     */
+    public function getPaymentStatusDetailLabel(?string $statusDetail): string
+    {
+        $map = [
+            'accredited' => 'Pagamento aprovado',
+            'pending_contingency' => 'Pagamento pendente por contingência',
+            'pending_review_manual' => 'Pagamento pendente de revisão manual',
+            'cc_rejected_bad_filled_card_number' => 'Cartão com número inválido',
+            'cc_rejected_insufficient_amount' => 'Saldo insuficiente',
+            'cc_rejected_call_for_authorize' => 'Necessário autorização com o banco',
+            'cc_rejected_card_disabled' => 'Cartão desativado',
+            'cc_rejected_card_error' => 'Erro com o cartão',
+            'cc_rejected_other_reason' => 'Pagamento recusado',
+        ];
+
+        return $map[$statusDetail] ?? ucfirst(str_replace('_', ' ', $statusDetail));
+    }
+
+    /**
+     * Traduz status da assinatura (Preapproval)
+     */
+    public function getPreapprovalStatusLabel(?string $status): string
+    {
+        $map = [
+            'authorized' => 'Ativa',
+            'paused' => 'Pausada',
+            'cancelled' => 'Cancelada',
+            'pending' => 'Pendente',
+        ];
+
+        return $map[$status] ?? ucfirst(str_replace('_', ' ', $status));
+    }
+
+    public function getPaymentMethodLabel(?string $paymentMethodId): string
+    {
+        $map = [
+            'account_money' => 'Saldo Mercado Pago',
+            'credit_card' => 'Cartão de Crédito',
+            'debit_card' => 'Cartão de Débito',
+            'ticket' => 'Boleto Bancário',
+            'bank_transfer' => 'Transferência Bancária',
+            'pix' => 'Pix',
+            'prepaid_card' => 'Cartão Pré-pago',
+        ];
+
+        return $map[$paymentMethodId] ?? ucfirst(str_replace('_', ' ', $paymentMethodId));
     }
 }
