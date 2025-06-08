@@ -15,6 +15,7 @@ use App\Helpers\Feature\FeatureAbstract;
 class MercadoPago extends PaymentGatewayAbstract
 {
     private bool $_isTest;
+    private ?Payment $_payment = null;
 
     public function __construct()
     {
@@ -26,24 +27,53 @@ class MercadoPago extends PaymentGatewayAbstract
         );
     }
 
-    private function createPaymentPreference(string $title, float $price): Preference
+    public function extractSubscriptionDataFromWebhook(array $webhookData): ?PaymentGatewayDataAbstract
     {
-        $item = new Item();
-        $item->title = $title;
-        $item->quantity = 1;
-        $item->unit_price = $price;
+        $PGData = new PaymentGatewayDataAbstract();
+        $dataId = $webhookData['data']['id'] ?? null;
 
-        $preference = new Preference();
-        $preference->items = [$item];
-        $preference->back_urls = [
-            'success' => $this->getCheckoutMessageUrl(),
-            'failure' => $this->getCheckoutMessageUrl(),
-            'pending' => $this->getCheckoutMessageUrl(),
-        ];
-        $preference->auto_return = 'approved';
-        $preference->save();
+        // defaults
+        if (isset($webhookData['type'])) {
+            $PGData->setType($webhookData['type']);
+        }
 
-        return $preference;
+        if (isset($webhookData['date'])) {
+            $PGData->setDate($webhookData['date']);
+        } else if (isset($webhookData['date_created'])) {
+            $PGData->setDate($webhookData['date_created']);
+        }
+
+        if (isset($webhookData['action'])) {
+            $PGData->setAction($webhookData['action']);
+        }
+
+        if (isset($webhookData['status'])) {
+            $PGData->setStatus($webhookData['status']);
+        }
+
+        // payment id
+        if ($PGData->getType() === 'subscription_preapproval') {
+            $PGData->setPaymentId($dataId);
+        }
+
+        if ($PGData->getType() === 'payment') {
+            $payment = $this->getPaymentById($dataId);
+            $subsId = $payment->subscription_id
+                ?? ($payment->point_of_interaction->transaction_data->subscription_id ?? null);
+            if ($subsId) {
+                $PGData->setPaymentId($subsId);
+            }
+        }
+
+        // TODO: there is no way to get the preapproval id from the webhook data when the type is 'subscription_authorized_payment'
+        if ($PGData->getType() === 'subscription_authorized_payment') {
+            $preapproval = $this->getPreapprovalById($dataId);
+            if ($preapproval) {
+                $PGData->setPaymentId($preapproval->id);
+            }
+        }
+
+        return $PGData;
     }
 
     public function subscribe(string $plan): ?string
@@ -106,63 +136,6 @@ class MercadoPago extends PaymentGatewayAbstract
         return $preapproval->init_point;
     }
 
-    public function getPaymentById($paymentId): ?Payment
-    {
-        return Payment::find_by_id($paymentId);
-    }
-
-    public function getPreapprovalById($preapprovalId): ?Preapproval
-    {
-        return Preapproval::find_by_id($preapprovalId);
-    }
-
-    public function extractSubscriptionDataFromWebhook(array $webhookData): ?PaymentGatewayDataAbstract
-    {
-        $PGData = new PaymentGatewayDataAbstract();
-        $dataId = $webhookData['data']['id'] ?? null;
-
-        // defaults
-        if (isset($webhookData['type'])) {
-            $PGData->setType($webhookData['type']);
-        }
-
-        if (isset($webhookData['date'])) {
-            $PGData->setDate($webhookData['date']);
-        } else if (isset($webhookData['date_created'])) {
-            $PGData->setDate($webhookData['date_created']);
-        }
-
-        if (isset($webhookData['action'])) {
-            $PGData->setAction($webhookData['action']);
-        }
-
-        if (isset($webhookData['status'])) {
-            $PGData->setStatus($webhookData['status']);
-        }
-
-        // payment id
-        if ($PGData->getType() === 'subscription_preapproval') {
-            $PGData->setPaymentId($dataId);
-        }
-
-        if ($PGData->getType() === 'payment') {
-            $payment = $this->getPaymentById($dataId);
-            $subsId = $payment->subscription_id
-                ?? ($payment->point_of_interaction->transaction_data->subscription_id ?? null);
-            $PGData->setPaymentId($subsId);
-        }
-
-        // TODO: there is no way to get the preapproval id from the webhook data when the type is 'subscription_authorized_payment'
-        if ($PGData->getType() === 'subscription_authorized_payment') {
-            $preapproval = $this->getPreapprovalById($dataId);
-            if ($preapproval) {
-                $PGData->setPaymentId($preapproval->id);
-            }
-        }
-
-        return $PGData;
-    }
-
     public function getPayerEmail(): string
     {
         return $this->_isTest
@@ -181,24 +154,60 @@ class MercadoPago extends PaymentGatewayAbstract
             return false;
         }
 
+        $Payment = $this->getPaymentData($UserPlan);
+        return $Payment?->status === 'approved' && $Payment?->status_detail === 'accredited';
+    }
+
+    public function isPaymentRejected(UserPlans $UserPlan): bool
+    {
+        if ($UserPlan->status !== UserPlans::STATUS_PENDING) {
+            return false;
+        }
+
+        $Payment = $this->getPaymentData($UserPlan);
+        return in_array($Payment?->status, ['rejected', 'cancelled', 'refunded', 'charged_back']);
+    }
+
+    public function getPaymentData(UserPlans $UserPlan): ?object
+    {
+        if ($UserPlan->status !== UserPlans::STATUS_PENDING) {
+            return null;
+        }
+
         // get log for the user plan where data json has type='payment'
         $userPlanLog = $UserPlan->logs()
             ->where('data', 'like', '%"type":"payment"%')
             ->orderBy('created_at', 'desc')
             ->first();
         if (!$userPlanLog) {
-            return false;
+            return null;
         }
 
         $paymentClass = $userPlanLog->payment_class;
         if (!class_exists($paymentClass)) {
-            return false;
+            return null;
         }
 
         $logData = json_decode($userPlanLog->data, true);
         $paymentId = $logData['data_id'] ?? null;
-        $Payment = (new $paymentClass())->getPaymentById($paymentId);
-        return $Payment->status === 'approved' && $Payment->status_detail === 'accredited';
+
+        return (new $paymentClass())->getPaymentById($paymentId);
+    }
+
+    // CUSTOM FUNCTIONS
+    public function getPaymentById($paymentId): ?Payment
+    {
+        if (null !== $this->_payment) {
+            return $this->_payment;
+        }
+
+        $this->_payment = Payment::find_by_id($paymentId);
+        return $this->_payment;
+    }
+
+    public function getPreapprovalById($preapprovalId): ?Preapproval
+    {
+        return Preapproval::find_by_id($preapprovalId);
     }
 
     private function forceHttps(string $url): string

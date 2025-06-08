@@ -8,6 +8,9 @@ use Illuminate\Notifications\Notifiable;
 use App\Helpers\ApiResponse;
 use App\Helpers\ModelValidation;
 use App\Helpers\SysUtils;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SubscriptionUpdate;
 
 class UserPlanLogs extends Model
 {
@@ -82,6 +85,16 @@ class UserPlanLogs extends Model
     // ===============
 
     // static functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($UserPlan) {
+            // Send email notification to the user
+            self::fCheckLog($UserPlan);
+        });
+    }
+
     public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
         if ($model->id > 0 && $model->userPlan->user_id !== $user->id) {
@@ -94,5 +107,45 @@ class UserPlanLogs extends Model
     public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
     {
         return null;
+    }
+
+    public static function fCheckLog(Model $model): void
+    {
+        // get payment class
+        $paymentClass = $model->payment_class;
+        if (!class_exists($paymentClass)) {
+            Log::error('Payment class does not exist: ' . $paymentClass);
+            return;
+        }
+
+        // check approval status
+        $Class = new $paymentClass();
+        if ($Class->isPaymentApproved($model->userPlan)) {
+            $model->userPlan->status = UserPlans::STATUS_ACTIVE;
+            $model->userPlan->save();
+
+            Mail::to($model->userPlan->user->email)
+                ->send(
+                    new SubscriptionUpdate(
+                        $model->userPlan,
+                        'subscriptionApproved',
+                    )
+                );
+            return;
+        }
+
+        if ($Class->isPaymentRejected($model->userPlan)) {
+            $model->userPlan->status = UserPlans::STATUS_CANCELED;
+            $model->userPlan->save();
+
+            Mail::to($model->userPlan->user->email)
+                ->send(
+                    new SubscriptionUpdate(
+                        $model->userPlan,
+                        'subscriptionRejected',
+                    )
+                );
+            return;
+        }
     }
 }

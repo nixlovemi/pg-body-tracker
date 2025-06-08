@@ -345,31 +345,46 @@ class User extends Authenticatable
         }
 
         // check payment status
-        $paymentLog = $userPlan->logs->first();
-        $paymentClass = $paymentLog->payment_class;
+        $paymentLog = $userPlan->logs()->orderBy('created_at', 'desc')->first();
+        $paymentClass = $paymentLog?->payment_class ?? '';
         if (!class_exists($paymentClass)) {
             return;
         }
 
         $Class = new $paymentClass();
-        if ($Class->isPaymentApproved($userPlan)) {
-            // set user plan status to STATUS_ACTIVE
-            $userPlan->status = UserPlans::STATUS_ACTIVE;
-            $userPlan->save();
-
-            // add custom log
-            $userPlan->addLog([
-                'payment_class' => $paymentClass,
-                'payment_id' => $paymentLog->payment_id,
-                'data' => json_encode([
-                    'type' => 'checkPlanPaymentStatus',
-                    'message' => __('messages.pages.premium.paymentStatusChecked'),
-                ]),
-            ]);
-
-            // remove cache
-            Cache::forget($this->getPlanTypeCacheKey());
+        $isApproved = $Class->isPaymentApproved($userPlan);
+        if ($isApproved && $userPlan->status === UserPlans::STATUS_ACTIVE) {
+            // already approved, no need to check again
+            return;
         }
+
+        $isRejected = $Class->isPaymentRejected($userPlan);
+        if ($isRejected && $userPlan->status === UserPlans::STATUS_CANCELED) {
+            // already rejected, no need to check again
+            return;
+        }
+
+        if ($isApproved) {
+            $userPlan->status = UserPlans::STATUS_ACTIVE;
+        } elseif ($isRejected) {
+            $userPlan->status = UserPlans::STATUS_CANCELED;
+        }
+        $userPlan->save();
+
+        // add custom log
+        $userPlan->addLog([
+            'payment_class' => $paymentClass,
+            'payment_id' => $paymentLog->payment_id,
+            'data' => json_encode([
+                'type' => 'checkPlanPaymentStatus',
+                'message' => __('messages.pages.premium.paymentStatusChecked') . '(' . $userPlan->status . ')',
+                'isApproved' => $isApproved,
+                'isRejected' => $isRejected,
+            ]),
+        ]);
+
+        // remove cache
+        Cache::forget($this->getPlanTypeCacheKey());
     }
     // ===============
 

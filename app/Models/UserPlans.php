@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\UserPlanLogs;
 use App\Helpers\Feature\FeatureAbstract;
 use App\Helpers\SysUtils;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SubscriptionUpdate;
 
 class UserPlans extends Model
 {
@@ -141,6 +143,22 @@ class UserPlans extends Model
     // ===============
 
     // static functions
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($UserPlan) {
+            // Send email notification to the user
+            Mail::to($UserPlan->user->email)
+                ->send(
+                    new SubscriptionUpdate(
+                        $UserPlan,
+                        'subscriptionStarted',
+                    )
+                );
+        });
+    }
+
     public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
         if ($model->id > 0 && $model->user_id !== $user->id) {

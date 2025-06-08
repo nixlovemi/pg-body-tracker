@@ -17,4 +17,8 @@ interface PaymentGatewayInterface
     public static function fProcessWebhookCall(array $form): void;
 
     public function isPaymentApproved(UserPlans $UserPlan): bool;
+
+    public function isPaymentRejected(UserPlans $UserPlan): bool;
+
+    public function getPaymentData(UserPlans $UserPlan): ?object;
 }

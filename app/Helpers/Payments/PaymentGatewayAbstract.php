@@ -9,7 +9,7 @@ use App\Helpers\SysUtils;
 
 abstract class PaymentGatewayAbstract implements PaymentGatewayInterface
 {
-    public final static function fProcessWebhookCall(array $form): void
+    final public static function fProcessWebhookCall(array $form): void
     {
         $paymentClass = get_called_class();
         $Payment = new $paymentClass();
@@ -17,7 +17,7 @@ abstract class PaymentGatewayAbstract implements PaymentGatewayInterface
         // vars
         $PGData = $Payment->extractSubscriptionDataFromWebhook($form);
 
-        // currently, we can't get payment_id when the payment is a subscription_authorized_payment
+        // currently, we can't get payment_id when the payment is a subscription_authorized_payment (MercadoPago)
         // so, we will try to check the payment status using the body data_id
         if ($PGData->getType() === 'subscription_authorized_payment') {
             // get all user plans with status = 'pending'
