@@ -20,7 +20,7 @@ class CreateUserPlansTable extends Migration
                 ->constrained('users')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
-            $table->enum('plan_type', [FeatureAbstract::FEATURE_PLAN_TYPE_FREE, FeatureAbstract::FEATURE_PLAN_TYPE_PREMIUM])
+            $table->enum('plan_type', FeatureAbstract::fGetPlanTypes())
                 ->default(FeatureAbstract::FEATURE_PLAN_TYPE_FREE);
             $table->date('start_date');
             $table->date('end_date');

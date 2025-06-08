@@ -44,6 +44,7 @@ final class Permissions {
         'app.user.doProfile' => self::ACL_DASHBOARD_INDEX,
         'app.user.changePsw' => self::ACL_DASHBOARD_INDEX,
         'app.user.doChangePsw' => self::ACL_DASHBOARD_INDEX,
+        'app.user.payments' => self::ACL_DASHBOARD_INDEX,
 
         'app.client.index' => self::ACL_CLIENT_VIEW,
         'app.client.add' => self::ACL_CLIENT_EDIT,
@@ -76,6 +77,11 @@ final class Permissions {
         'app.report.view' => self::ACL_DASHBOARD_INDEX,
         'app.report.pdf' => self::ACL_DASHBOARD_INDEX,
         'app.report.csv' => self::ACL_DASHBOARD_INDEX,
+
+        'app.subscription.upgrade' => self::ACL_DASHBOARD_INDEX,
+        'app.subscription.checkout' => self::ACL_DASHBOARD_INDEX,
+        'app.subscription.subscribe' => self::ACL_DASHBOARD_INDEX,
+        'app.subscription.mercadoPagoCheckoutMessage' => self::ACL_DASHBOARD_INDEX,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool

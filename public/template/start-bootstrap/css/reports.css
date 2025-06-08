@@ -1,7 +1,7 @@
 body { margin: 52px 0; padding: 0 15px; }
 .header { position: fixed; left: 0px; top: 0px; right: 0px;  background-color:#f3f9ff !important; }
 .footer { position: fixed; left: 0px; bottom: 15px; right: 0px; height: 50px; text-align: center;}
-.footer .pagenum:before { content: counter(page); }
+.footer .pagenum:before { position: fixed; right: 15px; content: "Pg. " counter(page); }
 .table-responsive table,
 p { font-size: 11.8px;}
 .table-responsive table th { font-weight: bold; }

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'currency' => '$',
     'thousandSeparator' => ',',
     'decimalSeparator' => '.',
     'dateFormat' => 'm/d/Y',
@@ -46,6 +47,7 @@ return [
     'no' => 'No',
     'allRightsReserved' => 'All rights reserved.',
     'noReplyEmail' => 'This is an automated email, please do not reply.',
+    'month' => 'month',
 
     'helpers' => [
         'modelValidation' => [
@@ -219,6 +221,34 @@ return [
                 'link_twitter' => 'X (Twitter)',
                 'link_youtube' => 'YouTube',
                 'link_website' => 'Website',
+            ],
+        ],
+
+        'UserPlans' => [
+            'name' => 'User Plan',
+            'fields' => [
+                'user_id' => 'User ID',
+                'plan_type' => 'Type',
+                'start_date' => 'Start Date',
+                'end_date' => 'End Date',
+                'payment_data' => 'Payment Data',
+                'status' => 'Status',
+            ],
+            'status' => [
+                'active' => 'Ativo',
+                'pending' => 'Pendente',
+                'canceled' => 'Cancelado',
+                'expired' => 'Expired',
+            ],
+        ],
+
+        'UserPlanLogs' => [
+            'name' => 'User Plan Log',
+            'fields' => [
+                'user_plan_id' => 'User Plan ID',
+                'payment_class' => 'Payment Class',
+                'payment_id' => 'Payment ID',
+                'data' => 'Data',
             ],
         ],
     ],
@@ -466,7 +496,7 @@ return [
             ],
             'EvolutionRanking' => [
                 'title' => 'Evolution Ranking',
-                'description' => 'Displays clients with the greatest body progress between their first and most recent assessments, considering multiple metrics.',
+                'description' => 'Displays clients with the greatest body progress between their first and most recent evaluations, considering multiple metrics.',
                 'columns' => [
                     'muscleGain' => 'Muscle Gain',
                     'fatLoss' => 'Fat Loss',
@@ -485,6 +515,104 @@ return [
                 'description' => 'Displays how frequently each client is evaluated, helping identify patterns and potential follow-up adjustments.',
                 'columns' => [
                     'avgDaysBtwEvaluations' => 'Avg Days Between Evaluations',
+                ],
+            ],
+        ],
+
+        'premium' => [
+            'subscription' => 'Subscription',
+            'subscribe' => 'Subscribe Premium',
+            'upgradeTitle' => 'Go Premium and Elevate Your Experience with PG Body Tracker',
+            'upgradeDescription' => 'PG Body Tracker was developed to meet the real needs of professionals like you — committed to results, efficiency and professionalism.
+                With the free plan, you already have a solid foundation to perform body evaluations, track goals, generate reports and maintain your clients\' history.
+                But if you want to go further, the <strong>Premium Plan</strong> was tailor-made for you.',
+            'labelTotalPricePerFrequency' => '* The subscription will be for the amount of :total every :frequency month(s)',
+            'subscriptionSaveError' => 'Error processing subscription! Please try again.',
+            'paymentClassNotFound' => 'Error connecting to payment! Please try again or contact support.',
+            'paymentStatusChecked' => 'Payment status verified successfully!',
+            'defaultCheckoutMessage' => 'Your subscription request has been registered. You will receive a confirmation email shortly.',
+            'processingMessage' => 'Your subscription has been initiated and is being processed.',
+            'activeMessage' => 'Your subscription is active. Enjoy all premium features!',
+            'cancelledMessage' => 'Your subscription has been cancelled or paused.',
+            'titleThankYou' => 'Thank you for subscribing for PG Body Tracker Premium!',
+            'plans' => [
+                'monthly' => 'Monthly',
+                'quarterly' => 'Quarterly',
+                'semiannual' => 'Semiannual',
+                'annual' => 'Yearly',
+            ],
+            'freeVsPremium' => [
+                'freePlan' => 'Free',
+                'premiumPlan' => 'Premium Subscription',
+                'currentPlan' => 'Current',
+                'subscribeNow' => 'Subscribe Now',
+                'startingFrom' => 'Starting from',
+                'features' => [
+                    'line1Free' => 'Client Limit (maximum 5)',
+                    'line1Premium' => 'Unlimited Clients',
+                    'line2' => 'Email Support',
+                    'line3' => 'Goal Registration',
+                    'line4' => 'Body Evaluation',
+                    'line5' => 'Bioimpedance, Measurements, Skinfold Caliper',
+                    'line6' => 'Evaluation Report + PDF version',
+                    'line7' => 'Evaluation Printing',
+                    'line8' => 'Birthday Calendar',
+                    'line9' => 'Basic Reports',
+                    'line10' => 'Photos in Evaluations',
+                    'line11' => 'Send Evaluation by Link (WhatsApp/Email)',
+                    'line12' => 'Premium Reports',
+                    'line13' => 'Export Reports in PDF and CSV',
+                    'line14' => 'Revaluation with Reminder',
+                    'line15' => 'Full Calendar',
+                    'line16' => 'Company Logo on Evaluations',
+                    'line17' => 'Access to Future Features',
+                ],
+            ],
+            'paymentHistory' => [
+                'menuTitle' => 'Payments',
+                'redirectDoestHavePayments' => 'You do not have any payments registered yet.',
+                'cardTitle' => 'Payment History',
+                'labelCurrentPlan' => 'Current Plan',
+                'labelPlanStartDate' => 'Start Date',
+                'labelPlanEndDate' => 'End Date',
+                'labelPaymentTable' => 'Payment History',
+                'colLastUpdate' => 'Last Update',
+                'colID' => 'ID',
+            ],
+            'email' => [
+                'title' => 'Assinatura PG Body Tracker',
+                'actionButtonText' => 'Visit PG Body Tracker',
+                'subscriptionStarted' => [
+                    'subject' => 'Subscription Started',
+                    'line1' => 'Hi :name,',
+                    'line2' => 'We have received your request to become a Premium subscriber to PG Body Tracker. You have been redirected to the payment partner to complete the subscription.',
+                    'line3' => 'Once payment is confirmed, you will receive a new email confirming your subscription.',
+                    'line4' => 'In the meantime, if you have any questions, we are at your disposal.',
+                    'line5' => 'Thank you for trusting PG Body Tracker!',
+                    'line6' => 'PG Body Tracker Team',
+                ],
+                'subscriptionApproved' => [
+                    'subject' => 'Premium Subscription Activated',
+                    'line1' => 'Hi :name,',
+                    'line2' => 'We have great news!',
+                    'line3' => 'Your payment has been approved and your Premium subscription to PG Body Tracker is now active.',
+                    'line4' => 'Now you have access to all exclusive features:',
+                    'line5' => '* Unlimited clients',
+                    'line6' => '* Premium Reports',
+                    'line7' => '* Upload photos in evaluations',
+                    'line8' => '* and more!',
+                    'line9' => 'Make the most of your subscription.',
+                    'line10' => 'We appreciate your trust and preference.',
+                    'line11' => 'If you have any questions, we are here to help.',
+                    'line12' => 'PG Body Tracker Team',
+                ],
+                'subscriptionRejected' => [
+                    'subject' => 'Notice about your Subscription',
+                    'line1' => 'Hi :name,',
+                    'line2' => 'We have identified that your payment for the PG Body Tracker Premium subscription was not approved or was cancelled.',
+                    'line3' => 'If there was a problem with the transaction, you can try the subscription process again by accessing your dashboard in the system.',
+                    'line4' => 'If you need any help, please do not hesitate to contact us.',
+                    'line5' => 'PG Body Tracker Team',
                 ],
             ],
         ],

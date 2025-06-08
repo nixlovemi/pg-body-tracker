@@ -2,6 +2,8 @@
 
 [IDEAS]
 - https://chatgpt.com/share/67475b3a-585c-8000-952b-41a52dcb3382
+- Anamnese Personalizada
+- Exportação de Dados
 
 [LARAVEL]
 - docker exec "php_audio_video" php artisan migrate:fresh --seed --database=pgsql_test

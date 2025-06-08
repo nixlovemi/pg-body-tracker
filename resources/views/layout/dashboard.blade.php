@@ -73,6 +73,16 @@ $USER = $mSysUtils::getLoggedInUser();
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        @if (false === $USER->hasPremiumPlan())
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a href="{{ route('app.subscription.upgrade') }}" class="btn btn-warning btn-sm text-white font-weight-bold ml-3" style="position:relative; top:19px;">
+                                    <i class="fas fa-crown"></i> {{ __('messages.pages.premium.subscribe') }}
+                                </a>
+                            </li>
+                        @endif
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -93,6 +103,12 @@ $USER = $mSysUtils::getLoggedInUser();
                                     {!! $Icons::USER_GREY !!}
                                     {{ __('messages.profile') }}
                                 </a>
+                                @if ($USER?->plans->count() > 0)
+                                    <a class="dropdown-item" href="{{ route('app.user.payments') }}">
+                                        <span class="ml-1 mr-2 text-gray-400">{!! $Icons::FILE_INVOICE_DOLAR !!}</span>
+                                        &nbsp;{{ __('messages.pages.premium.paymentHistory.menuTitle') }}
+                                    </a>
+                                @endif
                                 <a class="dropdown-item" href="{{ route('app.user.changePsw') }}">
                                     {!! $Icons::KEY_GREY !!}
                                     {{ __('messages.pages.changePsw.title') }}

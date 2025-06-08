@@ -33,7 +33,7 @@ View variables:
 
 <div class="footer">
     <div class="card-footer text-center" style="font-size:11px; color:#999; margin-top: 30px;">
-        © {{ env('APP_NAME') }} {{ date('Y') }}
+        © {{ env('APP_NAME') }} {{ date('Y') }} <span class="pagenum"></span>
     </div>
 </div>
 

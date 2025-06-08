@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Helpers\SysUtils;
 use App\Models\User;
+use App\Models\UserPlans;
 use App\Helpers\ApiResponse;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -34,7 +35,7 @@ class Login extends Controller
             return $this->redirectWithError('app.login', $response->getMessage());
         }
 
-        return redirect()->route('app.dashboard.index');
+        return $this->loginOkRedirectToDashboard();
     }
 
     public function forgot()
@@ -155,6 +156,24 @@ class Login extends Controller
             return $this->redirectWithError('app.login', $response->getMessage());
         }
 
+        return $this->loginOkRedirectToDashboard();
+    }
+
+    private function loginOkRedirectToDashboard()
+    {
+        $this->checkPremiumStatus();
         return redirect()->route('app.dashboard.index');
+    }
+
+    private function checkPremiumStatus()
+    {
+        // TODO: implement this in the model or Helper
+        // check if user has a premium plan
+        $user = SysUtils::getLoggedInUser();
+        if (!$user) {
+            return;
+        }
+
+        $user->checkPlanPaymentStatus();
     }
 }
