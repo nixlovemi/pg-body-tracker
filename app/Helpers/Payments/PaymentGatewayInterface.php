@@ -10,6 +10,10 @@ interface PaymentGatewayInterface
 
     public function subscribe(string $plan): ?string; // returns the redirect_url to continue the subscription process
 
+    public function pauseSubscription(UserPlans $UserPlan): bool;
+
+    public function cancelSubscription(UserPlans $UserPlan): bool;
+
     public function getPayerEmail(): string;
 
     public function getCheckoutMessageUrl(): string;
@@ -21,4 +25,6 @@ interface PaymentGatewayInterface
     public function isPaymentRejected(UserPlans $UserPlan): bool;
 
     public function getPaymentData(UserPlans $UserPlan): ?object;
+
+    public function syncSubscriptionStatus(UserPlans $UserPlan): ?string;
 }
