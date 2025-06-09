@@ -11,6 +11,7 @@ use App\Helpers\SysUtils;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubscriptionUpdate;
+use Illuminate\Support\Facades\Cache;
 
 class UserPlanLogs extends Model
 {
@@ -95,9 +96,18 @@ class UserPlanLogs extends Model
     {
         parent::boot();
 
-        static::created(function ($UserPlan) {
+        static::created(function ($UserPlanLogs) {
             // Send email notification to the user
-            self::fCheckLog($UserPlan);
+            self::fCheckLog($UserPlanLogs);
+
+            // syncSubscriptionStatus
+            $paymentClass = $UserPlanLogs->payment_class;
+            if (class_exists($paymentClass)) {
+                (new $paymentClass())->syncSubscriptionStatus($UserPlanLogs->userPlan);
+            }
+
+            // Clear user cache
+            Cache::forget($UserPlanLogs->userPlan->user->getPlanTypeCacheKey());
         });
     }
 
@@ -115,7 +125,7 @@ class UserPlanLogs extends Model
         return null;
     }
 
-    public static function fCheckLog(Model $model): void
+    public static function fCheckLog(UserPlanLogs $model): void
     {
         // get payment class
         $paymentClass = $model->payment_class;

@@ -121,14 +121,9 @@ class Subscription extends Controller
         $codedId = $request->input('codedId');
         $json = $request->input('json', '1');
 
-        $UserPlan = UserPlans::getModelByCodedId($codedId);
-        if (!$UserPlan || !UserPlans::fHasAccess($UserPlan)) {
-            return $this->returnResponse(
-                false,
-                __('messages.modelErrorNoAccess'),
-                [],
-                Response::HTTP_UNAUTHORIZED
-            );
+        $UserPlan = $this->getUserPlanOrRedirect($codedId);
+        if (($UserPlan instanceof UserPlans) === false) {
+            return $UserPlan;
         }
 
         $paymentClass = $UserPlan->getPaymentClass() ?? '';
@@ -157,5 +152,36 @@ class Subscription extends Controller
         }
 
         return $view;
+    }
+
+    public function pauseSubscription(Request $request)
+    {
+        $codedId = $request->input('codedId');
+        $UserPlan = $this->getUserPlanOrRedirect($codedId);
+        if (($UserPlan instanceof UserPlans) === false) {
+            return $UserPlan;
+        }
+
+        $ret = $UserPlan->pauseSubscription();
+        if ($ret->isError()) {
+            return $this->returnResponse(true, $ret->getMessage(), [], Response::HTTP_OK);
+        }
+
+        return $this->returnResponse(false, $ret->getMessage(), [], Response::HTTP_OK);
+    }
+
+    private function getUserPlanOrRedirect(string $codedId)
+    {
+        $UserPlan = UserPlans::getModelByCodedId($codedId);
+        if (!$UserPlan || !UserPlans::fHasAccess($UserPlan)) {
+            return $this->returnResponse(
+                false,
+                __('messages.modelErrorNoAccess'),
+                [],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        return $UserPlan;
     }
 }

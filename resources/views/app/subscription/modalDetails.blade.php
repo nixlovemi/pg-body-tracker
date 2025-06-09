@@ -26,6 +26,7 @@ View variables:
 
 @section('MODAL_BODY')
     <div class="container mt-4">
+        @csrf
         @if (!$USER_PLAN)
             <x-card title="{{ __('messages.infoModalTitle') }}">
                 <div class="alert alert-info">
@@ -42,12 +43,28 @@ View variables:
             @php $MPHelper = new \App\Helpers\Payments\MercadoPago(); @endphp
             <x-card title="{{ __('messages.pages.premium.subscription') }}">
                 @if ($PREAPPROVAL)
-                    <p><strong>Status da Assinatura:</strong> {{ $MPHelper->getPreapprovalStatusLabel($PREAPPROVAL->status) }}</p>
-                    <p><strong>Plano:</strong> {{ $PREAPPROVAL->reason }}</p>
-                    <p><strong>Valor Recorrente:</strong> R$ {{ $SysUtils::formatDbToNumber($PREAPPROVAL->auto_recurring->transaction_amount, 2) }}</p>
-                    <p><strong>Próxima Cobrança:</strong> {{ $SysUtils::timezoneDate($PREAPPROVAL->next_payment_date, __('messages.dateFormat')) }}</p>
+                    <p><strong>{{ __('messages.pages.premium.modalDetails.labelSubscriptionStatus') }}:</strong> {{ $MPHelper->getPreapprovalStatusLabel($PREAPPROVAL->status) }}</p>
+                    <p><strong>{{ __('messages.pages.premium.modalDetails.labelSubscriptionPlan') }}:</strong> {{ $PREAPPROVAL->reason }}</p>
+                    <p><strong>{{ __('messages.pages.premium.modalDetails.labelSubscriptionRecurrentPrice') }}:</strong> R$ {{ $SysUtils::formatDbToNumber($PREAPPROVAL->auto_recurring->transaction_amount, 2) }}</p>
+                    <p>
+                        <strong>{{ __('messages.pages.premium.modalDetails.labelSubscriptionNextBill') }}:</strong>
+                        @if (!in_array($USER_PLAN->status, [$USER_PLAN::STATUS_ACTIVE, $USER_PLAN::STATUS_PAUSED]))
+                            --
+                        @else
+                            {{ $SysUtils::timezoneDate($PREAPPROVAL->next_payment_date, __('messages.dateFormat')) }}
+                        @endif
+                    </p>
+
+                    @if ($USER_PLAN->canHaveSubscriptionPaused())
+                        <a href="javascript:;" id="btn-pause-subscription"
+                            class="btn btn-light btn-user btn-sm" data-msg="{{ __('messages.pages.premium.confirmationPauseSubscription') }}"
+                            data-cid="{{ $USER_PLAN->codedId }}"
+                        >
+                            {{ __('messages.pages.premium.buttonPauseSubscription') }}
+                        </a>
+                    @endif
                 @else
-                    <p class="text-muted">Nenhuma assinatura registrada.</p>
+                    <p class="text-muted">{{ __('messages.pages.premium.modalDetails.labelNoPayments') }}</p>
                 @endif
             </x-card>
 
@@ -59,7 +76,7 @@ View variables:
                     <p><strong>{{ __('messages.pages.premium.modalDetails.labelPaymentDate') }}:</strong> {{ $PAYMENT->date_approved ? $SysUtils::timezoneDate($PAYMENT->date_approved, __('messages.fullDateFormat')) : '---' }}</p>
                     <p><strong>{{ __('messages.pages.premium.modalDetails.labelPaymentType') }}:</strong> {{ $MPHelper->getPaymentMethodLabel($PAYMENT->payment_method_id) }}</p>
                 @else
-                    <p class="text-muted">Nenhum pagamento registrado.</p>
+                    <p class="text-muted">{{ __('messages.pages.premium.modalDetails.labelNoSubscriptions') }}</p>
                 @endif
             </x-card>
         @endif

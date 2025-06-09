@@ -13,6 +13,7 @@ use App\Helpers\Feature\FeatureAbstract;
 use App\Helpers\SysUtils;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubscriptionUpdate;
+use Illuminate\Support\Facades\Cache;
 
 class UserPlans extends Model
 {
@@ -22,6 +23,8 @@ class UserPlans extends Model
     public const STATUS_ACTIVE = 'active';
     public const STATUS_CANCELED = 'canceled';
     public const STATUS_PENDING = 'pending';
+    public const STATUS_PAUSED = 'paused';
+    public const STATUS_EXPIRED = 'expired';
 
     /**
      * The attributes that are mass assignable.
@@ -132,12 +135,6 @@ class UserPlans extends Model
 
     public function getStatuslabel(): string
     {
-        // TODO: maybe update database?
-        // if status is active and end_date is in the past, return 'expired'
-        if ($this->status === self::STATUS_ACTIVE && strtotime($this->end_date) < strtotime(SysUtils::timezoneNow('Y-m-d'))) {
-            return __('messages.models.UserPlans.status.expired');
-        }
-
         return self::fGetStatuses()[$this->status] ?? '-';
     }
 
@@ -150,13 +147,37 @@ class UserPlans extends Model
             ->first();
     }
 
+    private function getPaymentClassCacheKey(): string
+    {
+        return 'user-plans-payment-class-' . $this->id;
+    }
+
     public function getPaymentClass(): ?string
     {
-        return $this->logs()
+        $cacheKey = $this->getPaymentClassCacheKey();
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
+        $paymentClass = $this->logs()
             ->orderBy('id', 'desc')
             ->limit(1)
             ->get()
             ->first()->payment_class ?? null;
+        $sixHourInSeconds = 21600;
+        Cache::put($cacheKey, $paymentClass, $sixHourInSeconds);
+
+        return $paymentClass;
+    }
+
+    /**
+     * Payment ID from logs !== payment_id from UserPlans
+     *
+     * @return string
+     */
+    private function getPaymentIdCacheKey(): string
+    {
+        return 'user-plans-payment-id-' . $this->id;
     }
 
     /**
@@ -166,9 +187,18 @@ class UserPlans extends Model
      */
     public function getPaymentId(): ?string
     {
+        $cacheKey = $this->getPaymentIdCacheKey();
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
         $paymentLog = $this->getLastPaymentLogRow();
         $logData = json_decode($paymentLog?->data ?? [], true);
         $paymentId = $logData['data_id'] ?? null;
+
+        $sixHourInSeconds = 21600;
+        Cache::put($cacheKey, $paymentId, $sixHourInSeconds);
+
         return $paymentId;
     }
 
@@ -179,6 +209,69 @@ class UserPlans extends Model
             ->limit(1)
             ->get()
             ->first()->payment_id ?? null;
+    }
+
+    public function canHaveSubscriptionPaused(): bool
+    {
+        if ($this->status !== self::STATUS_ACTIVE) {
+            return false;
+        }
+
+        $paymentClass = $this->getPaymentClass();
+        if (null === $paymentClass) {
+            return false;
+        }
+
+        $Payment = (new $paymentClass())->getPreapprovalById($this->getColPaymentId());
+        if (null === $Payment) {
+            return false;
+        }
+
+        return in_array(
+            $Payment?->status,
+            [$paymentClass::PAYMENT_STATUS_AUTHORIZED, $paymentClass::PAYMENT_STATUS_APPROVED]
+        );
+    }
+
+    public function pauseSubscription(): ApiResponse
+    {
+        if (!$this->canHaveSubscriptionPaused()) {
+            return new ApiResponse(true, __('messages.pages.premium.cantPauseSubscription'));
+        }
+
+        $paymentClass = $this->getPaymentClass();
+        if (null === $paymentClass) {
+            return new ApiResponse(true, __('messages.pages.premium.cantPauseSubscription'));
+        }
+
+        $PaymentGateway = new $paymentClass();
+        $response = $PaymentGateway->pauseSubscription($this);
+        if (!$response) {
+            return new ApiResponse(true, __('messages.pages.premium.cantPauseSubscription'));
+        }
+
+        // Update the status of the user plan
+        $this->status = self::STATUS_PAUSED;
+        $this->save();
+        $successMsg = __('messages.pages.premium.pauseSubscriptionSuccess');
+
+        // Add a log entry
+        $this->addLog([
+            'payment_class' => $paymentClass,
+            'payment_id' => $this->getPaymentId(),
+            'data' => json_encode([
+                'type' => 'pauseSubscription',
+                'message' => $successMsg,
+            ]),
+        ]);
+
+        return new ApiResponse(
+            false,
+            $successMsg,
+            [
+                'UserPlan' => $this,
+            ]
+        );
     }
     // ===============
 
@@ -196,6 +289,11 @@ class UserPlans extends Model
                         'subscriptionStarted',
                     )
                 );
+        });
+
+        static::updated(function ($UserPlan) {
+            Cache::forget($UserPlan->getPaymentClassCacheKey());
+            Cache::forget($UserPlan->getPaymentIdCacheKey());
         });
     }
 
@@ -219,6 +317,8 @@ class UserPlans extends Model
             self::STATUS_ACTIVE => __('messages.models.UserPlans.status.active'),
             self::STATUS_CANCELED => __('messages.models.UserPlans.status.canceled'),
             self::STATUS_PENDING => __('messages.models.UserPlans.status.pending'),
+            self::STATUS_EXPIRED => __('messages.models.UserPlans.status.expired'),
+            self::STATUS_PAUSED => __('messages.models.UserPlans.status.paused'),
         ];
     }
 }

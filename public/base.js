@@ -64,9 +64,13 @@
 
     function ajaxSetup(csrf)
     {
+        if (csrf === null || typeof csrf === 'undefined') {
+            csrf = $('meta[name="csrf-token"]').attr('content');
+        }
+
         $.ajaxSetup({
             headers: {
-                'X-CSRF-TOKEN': csrf ?? $('meta[name="csrf-token"]').attr('content'),
+                'X-CSRF-TOKEN': csrf,
                 // 'Authorization': `Bearer ${USER_API_TOKEN_ID}`,
                 // 'domain': DOMAIN_CODED
             }
@@ -760,6 +764,36 @@
             closeModal(FORM.closest('div.modal').parent());
 
         }, `/${JS_APP_PREFIX}/avaliation/doModalSendMail`);
+    });
+
+    $(document).on('click', 'div[id^="subscription-modal-details"] #btn-pause-subscription', function(e) {
+        e.preventDefault();
+
+        var confirm = getConfirm({
+            title: JS_ALERT_CONFIRM_TITLE,
+            text: $(this).data('msg')
+        });
+
+        const CODED_ID = $(this).data('cid');
+        confirm.fire().then((result) => {
+            if (!result.isConfirmed) {
+                return false;
+            }
+
+            let FORM = $('<form></form>');
+            let csrfInput = $('input[name="_token"]').first().clone();
+            FORM.append(csrfInput);
+
+            submitModalForm(FORM, function(retorno) {
+
+                showSuccessAlert({
+                    'title': JS_ALERT_SUCCESS_TITLE,
+                    'text': retorno.message
+                });
+                closeModal($(this).closest('div.modal').parent());
+
+            }, `/${JS_APP_PREFIX}/subscription/pauseSubscription`, {codedId:CODED_ID}, true);
+        });
     });
 
     function initChartJs(elementId, config)

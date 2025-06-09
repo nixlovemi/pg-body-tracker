@@ -283,7 +283,7 @@ class User extends Authenticatable
     public function getCurrentPlan(): ?UserPlans
     {
         return $this->plans()
-            ->where('status', UserPlans::STATUS_ACTIVE)
+            ->whereIn('status', [UserPlans::STATUS_ACTIVE, UserPlans::STATUS_PAUSED])
             ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
             ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
             ->orderBy('end_date', 'desc')
@@ -328,7 +328,7 @@ class User extends Authenticatable
         return FeatureAbstract::fGetLabelPlanType($this->getPlanType());
     }
 
-    private function getPlanTypeCacheKey(): string
+    public function getPlanTypeCacheKey(): string
     {
         return 'user-plan-type-' . $this->id;
     }
@@ -336,54 +336,30 @@ class User extends Authenticatable
     public function checkPlanPaymentStatus(): void
     {
         $userPlan = $this->plans()
-            ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
-            ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
-            ->orderBy('end_date', 'desc')
+            ->where('status', UserPlans::STATUS_ACTIVE)
+            ->where('end_date', '<', SysUtils::timezoneNow('Y-m-d'))
             ->first();
-        if ($userPlan?->status !== UserPlans::STATUS_PENDING) {
+        if (!$userPlan) {
             return;
         }
 
-        // check payment status
-        $paymentLog = $userPlan->logs()->orderBy('created_at', 'desc')->first();
-        $paymentClass = $paymentLog?->payment_class ?? '';
-        if (!class_exists($paymentClass)) {
+        $paymentClass = $userPlan->getPaymentClass();
+        if (empty($paymentClass) || !class_exists($paymentClass)) {
             return;
         }
 
-        $Class = new $paymentClass();
-        $isApproved = $Class->isPaymentApproved($userPlan);
-        if ($isApproved && $userPlan->status === UserPlans::STATUS_ACTIVE) {
-            // already approved, no need to check again
-            return;
+        // if status is active/paused and end_date is in the past, return 'expired'
+        if (
+            in_array($userPlan->status, [$userPlan::STATUS_ACTIVE, $userPlan::STATUS_PAUSED]) &&
+            strtotime($userPlan->end_date) < strtotime(SysUtils::timezoneNow('Y-m-d'))
+        ) {
+            $userPlan->status = $userPlan::STATUS_EXPIRED;
+            $userPlan->save();
+        } else {
+            // payment class check
+            (new $paymentClass())->syncSubscriptionStatus($userPlan);
         }
 
-        $isRejected = $Class->isPaymentRejected($userPlan);
-        if ($isRejected && $userPlan->status === UserPlans::STATUS_CANCELED) {
-            // already rejected, no need to check again
-            return;
-        }
-
-        if ($isApproved) {
-            $userPlan->status = UserPlans::STATUS_ACTIVE;
-        } elseif ($isRejected) {
-            $userPlan->status = UserPlans::STATUS_CANCELED;
-        }
-        $userPlan->save();
-
-        // add custom log
-        $userPlan->addLog([
-            'payment_class' => $paymentClass,
-            'payment_id' => $paymentLog->payment_id,
-            'data' => json_encode([
-                'type' => 'checkPlanPaymentStatus',
-                'message' => __('messages.pages.premium.paymentStatusChecked') . '(' . $userPlan->status . ')',
-                'isApproved' => $isApproved,
-                'isRejected' => $isRejected,
-            ]),
-        ]);
-
-        // remove cache
         Cache::forget($this->getPlanTypeCacheKey());
     }
     // ===============

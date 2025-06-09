@@ -83,6 +83,7 @@ final class Permissions {
         'app.subscription.subscribe' => self::ACL_DASHBOARD_INDEX,
         'app.subscription.mercadoPagoCheckoutMessage' => self::ACL_DASHBOARD_INDEX,
         'app.subscription.details' => self::ACL_DASHBOARD_INDEX,
+        'app.subscription.pauseSubscription' => self::ACL_DASHBOARD_INDEX,
     ];
 
     public static function checkPermission(string $aclOrRoute, ?User $User = null): bool
