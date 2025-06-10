@@ -264,6 +264,7 @@ return [
                 'menuWhyUs' => 'Why',
                 'menuVersions' => 'Versions',
                 'menuClients' => 'Clients',
+                'menuLogin' => 'Log In!',
             ],
             'heroSection' => [
                 'title' => 'Organize and track your clients\' physical progress with ease!',

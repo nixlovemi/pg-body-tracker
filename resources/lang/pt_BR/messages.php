@@ -264,6 +264,7 @@ return [
                 'menuWhyUs' => 'Por que nós?',
                 'menuVersions' => 'Versões',
                 'menuClients' => 'Clientes',
+                'menuLogin' => 'Logar!',
             ],
             'heroSection' => [
                 'title' => 'Gerencie e monitore o progresso físico dos seus clientes',
