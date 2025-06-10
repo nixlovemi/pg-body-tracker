@@ -255,6 +255,10 @@ return [
     ],
 
     'pages' => [
+        'siteHome' => [
+            'title' => 'PG Body Tracker - Avaliações Corporais',
+        ],
+
         'login' => [
             'emailPlaceholder' => 'Digite seu e-mail',
             'passwordPlaceholder' => 'Digite sua senha',

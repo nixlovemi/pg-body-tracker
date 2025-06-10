@@ -255,6 +255,10 @@ return [
     ],
 
     'pages' => [
+        'siteHome' => [
+            'title' => 'PG Body Tracker - Body Evaluation',
+        ],
+
         'login' => [
             'emailPlaceholder' => 'Type your e-mail',
             'passwordPlaceholder' => 'Type your password',
