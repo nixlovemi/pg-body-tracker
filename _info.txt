@@ -2,8 +2,12 @@
 
 [IDEAS]
 - https://chatgpt.com/share/67475b3a-585c-8000-952b-41a52dcb3382
-- Anamnese Personalizada
-- Exportação de Dados
+    1) Ver a parte de quando é renovação (tem file no desktop)
+    2) Aceite da política privacidade no cadastro
+    3) Comparação das fotos das avaliações
+    4) Anamnese Personalizada
+    5) Exportação de Dados
+    6) Traduzir páginas site (privacy, terms, faq)
 
 [LARAVEL]
 - docker exec "php_audio_video" php artisan migrate:fresh --seed --database=pgsql_test

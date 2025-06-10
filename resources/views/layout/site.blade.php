@@ -67,7 +67,7 @@
 
                                 <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                     <ul id="nav" class="navbar-nav ms-auto">
-                                        @foreach (LayoutSitePresenter::getMenuLinks() as $item)
+                                        @foreach (LayoutSitePresenter::getMenuLinks(Route::currentRouteName()) as $item)
                                             <li class="nav-item">
                                                 <a class="page-scroll {{ $loop->index == 0 ? 'active' : '' }}" href="{{ $item['url'] }}">
                                                     {{ $item['title'] }}
@@ -121,11 +121,19 @@
                             </div>
                         </div>
 
+                        <div class="col-xl-3 col-lg-3 col-md-6">
+                            <div class="footer-widget">
+                                @php
+                                /*just to fake the last commented block*/
+                                @endphp
+                            </div>
+                        </div>
+
                         <div class="col-xl-2 col-lg-2 col-md-6">
                             <div class="footer-widget">
                                 <h3>{{ __('messages.pages.siteHome.footer.aboutTitle') }}</h3>
                                 <ul class="links">
-                                    @foreach (LayoutSitePresenter::getMenuLinks() as $item)
+                                    @foreach (LayoutSitePresenter::getMenuLinks(Route::currentRouteName()) as $item)
                                         <li>
                                             <a class="page-scroll {{ $loop->index == 0 ? 'active' : '' }}" href="{{ $item['url'] }}">
                                                 {{ $item['title'] }}
@@ -138,16 +146,32 @@
 
                         <div class="col-xl-3 col-lg-3 col-md-6">
                             <div class="footer-widget">
-                                <h3>Features</h3>
+                                <h3>{{ __('messages.pages.siteHome.footer.featuresTitle') }}</h3>
                                 <ul class="links">
-                                    <li><a href="javascript:void(0)">How it works</a></li>
-                                    <li><a href="javascript:void(0)">Privacy policy</a></li>
-                                    <li><a href="javascript:void(0)">Terms of service</a></li>
-                                    <li><a href="javascript:void(0)">Refund policy</a></li>
+                                    <li>
+                                        <a href="{{ route('site.privacy') }}">
+                                            {{ __('messages.pages.sitePrivacy.title') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('site.terms') }}">
+                                            {{ __('messages.pages.siteTerms.title') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('site.faq') }}">
+                                            {{ __('messages.pages.siteFaq.title') }}
+                                        </a>
+                                    </li>
+                                    @php
+                                    /*<li><a href="javascript:void(0)">Refund policy</a></li>*/
+                                    @endphp
                                 </ul>
                             </div>
                         </div>
 
+                        @php
+                        /*
                         <div class="col-xl-3 col-lg-3 col-md-6">
                             <div class="footer-widget">
                                 <h3>Other Products</h3>
@@ -159,6 +183,8 @@
                                 </ul>
                             </div>
                         </div>
+                        */
+                        @endphp
                     </div>
                 </div>
             </div>

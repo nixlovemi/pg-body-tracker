@@ -331,7 +331,20 @@ return [
             'footer' => [
                 'leftText' => 'Turning fitness evaluations into simple, professional experiences. Follow us on social media for tips, news and updates.',
                 'aboutTitle' => 'Browse',
+                'featuresTitle' => 'Pages',
             ],
+        ],
+
+        'sitePrivacy' => [
+            'title' => 'Política de Privacidade',
+        ],
+
+        'siteTerms' => [
+            'title' => 'Terms of Service',
+        ],
+
+        'siteFaq' => [
+            'title' => 'Frequently Asked Questions',
         ],
 
         'login' => [

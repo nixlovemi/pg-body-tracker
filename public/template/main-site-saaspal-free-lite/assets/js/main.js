@@ -42,13 +42,19 @@
   const pageLink = document.querySelectorAll(".page-scroll");
 
   pageLink.forEach((elem) => {
-    elem.addEventListener("click", (e) => {
-      e.preventDefault();
-      document.querySelector(elem.getAttribute("href")).scrollIntoView({
-        behavior: "smooth",
-        offsetTop: 1 - 60,
-      });
-    });
+        elem.addEventListener("click", (e) => {
+            e.preventDefault();
+            let href = elem.getAttribute("href");
+            // Only proceed if href starts with '#'
+            if (href && href.startsWith('#') && document.querySelector(href)) {
+                document.querySelector(href).scrollIntoView({
+                    behavior: "smooth",
+                    offsetTop: 1 - 60,
+                });
+            } else {
+                document.location.href = href; // Fallback for non-anchor links
+            }
+        });
   });
 
   // section menu active
@@ -96,19 +102,23 @@
   new WOW().init();
 
   //======== tiny slider
-  tns({
-    container: ".testimonial-active",
-    slideBy: "page",
-    mode: "gallery",
-    autoplay: false,
-    mouseDrag: true,
-    gutter: 0,
-    nav: false,
-    controls: true,
-    controlsText: [
-      '<i class="lni lni-chevron-left prev"></i>',
-      '<i class="lni lni-chevron-right next"></i>',
-    ],
-    items: 1,
-  });
+  try {
+    tns({
+        container: ".testimonial-active",
+        slideBy: "page",
+        mode: "gallery",
+        autoplay: false,
+        mouseDrag: true,
+        gutter: 0,
+        nav: false,
+        controls: true,
+        controlsText: [
+        '<i class="lni lni-chevron-left prev"></i>',
+        '<i class="lni lni-chevron-right next"></i>',
+        ],
+        items: 1,
+    });
+  } catch (error) {
+
+  }
 })();

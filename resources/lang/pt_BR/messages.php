@@ -331,7 +331,20 @@ return [
             'footer' => [
                 'leftText' => 'Transformando avaliações físicas em experiências simples e profissionais. Siga a gente nas redes sociais para dicas, novidades e atualizações.',
                 'aboutTitle' => 'Navegue',
+                'featuresTitle' => 'Páginas',
             ],
+        ],
+
+        'sitePrivacy' => [
+            'title' => 'Política de Privacidade',
+        ],
+
+        'siteTerms' => [
+            'title' => 'Termos de Serviço',
+        ],
+
+        'siteFaq' => [
+            'title' => 'Perguntas Frequentes',
         ],
 
         'login' => [
