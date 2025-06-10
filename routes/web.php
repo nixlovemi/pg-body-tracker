@@ -13,11 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('')->group(function () {
-    Route::match(array('GET','POST'), '/', function(){ echo 'SITE HOME!'; })->name('site.home');
+    Route::match(array('GET','POST'), '/', 'App\Http\Controllers\Site@home')->name('site.home');
+    Route::match(array('GET','POST'), '/privacy', 'App\Http\Controllers\Site@privacy')->name('site.privacy');
+    Route::match(array('GET','POST'), '/terms', 'App\Http\Controllers\Site@terms')->name('site.terms');
+    Route::match(array('GET','POST'), '/faq', 'App\Http\Controllers\Site@faq')->name('site.faq');
 
     Route::group([], function(){
         Route::fallback(function () {
-            echo 'SITE 404!';
+            return view('site.404');
         })->name('site.404');
     });
 });
