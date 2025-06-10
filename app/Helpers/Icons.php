@@ -41,4 +41,5 @@ final class Icons {
     public const CHECK = '<i class="fas fa-check"></i>';
     public const TIMES = '<i class="fas fa-times"></i>';
     public const FILE_INVOICE_DOLAR = '<i class="fas fa-file-invoice-dollar"></i>';
+    public const HEADSET = '<i class="fas fa-headset"></i>';
 }

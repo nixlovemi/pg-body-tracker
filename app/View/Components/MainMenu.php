@@ -57,6 +57,12 @@ class MainMenu extends Component
                 'icon' => $this->getClassesFromIcon(Icons::CHART_BAR),
                 'label' => __('messages.pages.report.title'),
             ],
+            'support' => [
+                'route' => route('app.support.index'),
+                'routeName' => 'app.support.index',
+                'icon' => $this->getClassesFromIcon(Icons::HEADSET),
+                'label' => __('messages.pages.support.menuTitle'),
+            ],
         ];
 
         $this->checkPermissions($menuItems);

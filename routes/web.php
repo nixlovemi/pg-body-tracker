@@ -104,6 +104,11 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/details', 'App\Http\Controllers\Subscription@details')->name('app.subscription.details');
             Route::post('/pauseSubscription', 'App\Http\Controllers\Subscription@pauseSubscription')->name('app.subscription.pauseSubscription');
         });
+
+        Route::prefix('support')->group(function () {
+            Route::get('/', 'App\Http\Controllers\Support@index')->name('app.support.index');
+            Route::post('/doSend', 'App\Http\Controllers\Support@doSend')->name('app.support.doSend');
+        });
     });
 
     Route::group([], function(){
