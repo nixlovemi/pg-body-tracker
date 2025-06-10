@@ -30,7 +30,9 @@ View variables:
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center mb-4">
-                                        <img class="img-fluid" src="/images/logo-azul.png" alt="PG Body Tracker" />
+                                        <a href="{{ route('site.home') }}">
+                                            <img class="img-fluid" src="/images/logo-azul.png" alt="PG Body Tracker" />
+                                        </a>
                                     </div>
 
                                     @include('layout.partials.alert-return-messages')
