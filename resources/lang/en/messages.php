@@ -668,6 +668,21 @@ return [
                 ],
             ],
         ],
+
+        'support' => [
+            'menuTitle' => 'Support',
+            'cardTitle' => 'Help Center',
+            'cardDescription' => 'Need help or want to talk to us? Fill out the form below and our support team will contact you via email to answer questions, receive suggestions or help resolve any issues you may encounter with the system. We are committed to providing fast and efficient service so that you can make the most of all the platform\'s features.',
+            'contactMessage' => 'Message',
+            'contactSubject' => 'Subject',
+            'requestSent' => 'Request sent successfully! Our team will contact you shortly.',
+            'subject' => [
+                'general' => 'General Question',
+                'technical' => 'Technical Support',
+                'billing' => 'Billing and Payments',
+                'feedback' => 'Feedback and Suggestions',
+            ],
+        ],
     ],
 
     'menu' => [

@@ -668,6 +668,21 @@ return [
                 'labelNoSubscriptions' => 'Nenhuma assinatura encontrada.',
             ],
         ],
+
+        'support' => [
+            'menuTitle' => 'Suporte',
+            'cardTitle' => 'Central de Ajuda',
+            'cardDescription' => 'Precisa de ajuda ou quer falar com a gente? Preencha o formulário abaixo e nossa equipe de suporte entrará em contato por e-mail para esclarecer dúvidas, receber sugestões ou ajudar a resolver qualquer problema que você encontrar no sistema. Nosso compromisso é oferecer um atendimento rápido e eficiente para que você possa aproveitar ao máximo todos os recursos da plataforma.',
+            'contactMessage' => 'Mensagem',
+            'contactSubject' => 'Assunto',
+            'requestSent' => 'Solicitação enviada com sucesso! Nossa equipe entrará em contato em breve.',
+            'subject' => [
+                'general' => 'Assuntos Gerais',
+                'technical' => 'Suporte Técnico',
+                'billing' => 'Cobrança e Pagamentos',
+                'feedback' => 'Feedback e Sugestões',
+            ],
+        ],
     ],
 
     'menu' => [
