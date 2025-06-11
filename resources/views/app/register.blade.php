@@ -9,6 +9,12 @@ View variables:
 */
 
 $PREMIUM_FLOW = $PREMIUM_FLOW ?? false;
+$pMessage = $PREMIUM_FLOW
+    ? __('messages.pages.login.register.descriptionPremium')
+    : __('messages.pages.login.register.description');
+$formAction = $PREMIUM_FLOW
+    ? route('app.doRegisterPremium')
+    : route('app.doRegister');
 @endphp
 
 @extends('layout.login-base', [
@@ -17,14 +23,10 @@ $PREMIUM_FLOW = $PREMIUM_FLOW ?? false;
 
 @section('LOGIN_BASE_CONTENT')
     <p>
-        @if ($PREMIUM_FLOW)
-            {{ __('messages.pages.login.register.descriptionPremium') }}
-        @else
-            {{ __('messages.pages.login.register.description')}}
-        @endif
+        {{ __($pMessage) }}
     </p>
 
-    <form action="{{ $PREMIUM_FLOW ? route('app.doRegisterPremium') : route('app.doRegister') }}" class="user" method="post">
+    <form action="{{ $formAction }}" class="user" method="post" data-premium="{{ $PREMIUM_FLOW ? '1' : '0' }}">
         @if ($PREMIUM_FLOW)
             <h6 style="font-weight:bold">{{ __('messages.pages.login.register.choosePremiumPlan') }}</h6>
             <style>
@@ -89,4 +91,16 @@ $PREMIUM_FLOW = $PREMIUM_FLOW ?? false;
             {{ __('messages.pages.login.forgot.returnLogin') }}
         </a>
     </div>
+
+    <script>
+        document.querySelector('.btn-google').addEventListener('click', function(event) {
+            const subscriptionType = document.getElementById('f-subscriptionType');
+            if (subscriptionType) {
+                const selectedPlan = subscriptionType.value;
+                const url = new URL(this.href);
+                url.searchParams.set('plan', selectedPlan);
+                this.href = url.toString();
+            }
+        });
+    </script>
 @endsection

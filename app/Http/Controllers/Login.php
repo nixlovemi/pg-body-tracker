@@ -11,11 +11,12 @@ use App\Models\User;
 use App\Helpers\Payments\SubscriptionTypes;
 use App\Helpers\ApiResponse;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Auth;
 
 class Login extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    private const GOOGLE_LOGIN_SESSION_KEY = 'google_redirect_plan';
 
     public function index()
     {
@@ -147,12 +148,6 @@ class Login extends Controller
         // validate if the user selected a plan
         $email = $request->input('f-email');
         $planType = $request->input('f-subscriptionType');
-        $plans = SubscriptionTypes::getPlans();
-        if (!in_array($planType, $plans)) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['msg' => __('messages.pages.premium.subscriptionPlanDoestExist')]);
-        }
 
         // register the user
         $ret = $this->doRegister($request);
@@ -162,12 +157,7 @@ class Login extends Controller
         }
 
         // all good, redirect to the subscription page
-        $expirationMinutes = 3; // 3 minutes for temporary login
-        SysUtils::loginUserTempById(
-            User::where('email', $email)->first()->id,
-            $expirationMinutes
-        );
-        return redirect()->route('app.subscription.subscribe', ['plan' => $planType]);
+        return $this->redirectPremiumPayment($email, $planType);
     }
 
     public function confirmUser(string $key)
@@ -180,8 +170,18 @@ class Login extends Controller
         return $this->redirectSuccess('app.login', $ret->getMessage());
     }
 
-    public function googleLogin()
+    public function googleLogin(Request $request)
     {
+        // remove previous session key if exists
+        $request->session()->forget(self::GOOGLE_LOGIN_SESSION_KEY);
+
+        // check the plan param
+        $plan = $request->input('plan');
+        if ($plan) {
+            $request->session()->put(self::GOOGLE_LOGIN_SESSION_KEY, $plan);
+        }
+
+        // redirect to Google login
         return Socialite::driver('google')->redirect();
     }
 
@@ -193,6 +193,14 @@ class Login extends Controller
             return $this->redirectWithError('app.login', $response->getMessage());
         }
 
+        // if google session key exists, redirect to premium payment
+        $plan = session(self::GOOGLE_LOGIN_SESSION_KEY);
+        if ($plan) {
+            session()->forget(self::GOOGLE_LOGIN_SESSION_KEY);
+            return $this->redirectPremiumPayment($googleUser->getEmail(), $plan);
+        }
+
+        // otherwise, proceed with the normal login flow
         return $this->loginOkRedirectToDashboard();
     }
 
@@ -212,5 +220,26 @@ class Login extends Controller
         }
 
         $user->checkPlanPaymentStatus();
+    }
+
+    private function redirectPremiumPayment(string $email, string $planType)
+    {
+        $plans = SubscriptionTypes::getPlans();
+        if (!in_array($planType, $plans)) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['msg' => __('messages.pages.premium.subscriptionPlanDoestExist')]);
+        }
+
+        // if not logged in, log in the user temporarily
+        if (!SysUtils::isLoggedIn()) {
+            $expirationMinutes = 3; // 3 minutes for temporary login
+            SysUtils::loginUserTempById(
+                User::where('email', $email)->first()->id,
+                $expirationMinutes
+            );
+        }
+
+        return redirect()->route('app.subscription.subscribe', ['plan' => $planType]);
     }
 }

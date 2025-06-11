@@ -134,8 +134,14 @@ class UserPlanLogs extends Model
             return;
         }
 
-        // check approval status
+        // get log data
         $Class = new $paymentClass();
+        $logData = json_decode($model->data ?? '{}', true);
+        if (false === $Class->isPaymentLog($logData)) {
+            return;
+        }
+
+        // check approval status
         if ($Class->isPaymentApproved($model->userPlan)) {
             $model->userPlan->status = UserPlans::STATUS_ACTIVE;
             $model->userPlan->save();

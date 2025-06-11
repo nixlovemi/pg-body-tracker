@@ -230,30 +230,18 @@ class MercadoPago extends PaymentGatewayAbstract
 
     public function isPaymentApproved(UserPlans $UserPlan): bool
     {
-        if ($UserPlan->status !== UserPlans::STATUS_PENDING) {
-            return false;
-        }
-
         $Payment = $this->getPaymentData($UserPlan);
         return $Payment?->status === self::PAYMENT_STATUS_APPROVED && $Payment?->status_detail === self::PAYMENT_STATUS_DETAIL_ACCREDITED;
     }
 
     public function isPaymentRejected(UserPlans $UserPlan): bool
     {
-        if ($UserPlan->status !== UserPlans::STATUS_PENDING) {
-            return false;
-        }
-
         $Payment = $this->getPaymentData($UserPlan);
         return in_array($Payment?->status, [self::PAYMENT_STATUS_REJECTED, self::PAYMENT_STATUS_CANCELLED, self::PAYMENT_STATUS_REFUNDED, self::PAYMENT_STATUS_CHARGED_BACK]);
     }
 
     public function getPaymentData(UserPlans $UserPlan): ?object
     {
-        if ($UserPlan->status !== UserPlans::STATUS_PENDING) {
-            return null;
-        }
-
         $paymentClass = $UserPlan->getPaymentClass();
         if (!class_exists($paymentClass)) {
             return null;
@@ -452,7 +440,7 @@ class MercadoPago extends PaymentGatewayAbstract
         $UserPlan->renewSubscription($newEndDate);
     }
 
-    private static function isPaymentLog(array $logData): bool
+    public static function isPaymentLog(array $logData): bool
     {
         return (isset($logData['type']) && $logData['type'] === 'payment') ||
             (isset($logData['action']) && in_array($logData['action'], [
