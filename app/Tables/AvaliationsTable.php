@@ -97,7 +97,7 @@ class AvaliationsTable extends AbstractTableConfiguration
             Column::make('')
                 ->title(__('messages.models.Client.fields.weight') . ' (kg)')
                 ->format(function(Avaliation $Avaliation) {
-                    return number_format($Avaliation?->weight_kg, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator'));
+                    return $Avaliation->getFormattedWeight();
                 }),
             Column::make('')
                 ->title(__('messages.models.Avaliation.fields.body_fat_perc'))
@@ -106,7 +106,7 @@ class AvaliationsTable extends AbstractTableConfiguration
                         return '';
                     }
 
-                    return number_format($Avaliation?->getBodyFatPerc(), 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')) . ' %';
+                    return $Avaliation->getFormattedBodyFat();
                 }),
             Column::make('')
                 ->title(__('messages.models.Avaliation.labelFatMass'))
@@ -115,7 +115,7 @@ class AvaliationsTable extends AbstractTableConfiguration
                         return '';
                     }
 
-                    return number_format($Avaliation->getFatMassKg(), 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')) . ' kg';
+                    return $Avaliation->getFormattedFatMass();
                 }),
             Column::make('')
                 ->title(__('messages.models.Avaliation.labelLeanMass'))
@@ -124,12 +124,12 @@ class AvaliationsTable extends AbstractTableConfiguration
                         return '';
                     }
 
-                    return number_format($Avaliation->getLeanMassKg(), 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')) . ' kg';
+                    return $Avaliation->getFormattedLeanMass();
                 }),
             Column::make('')
                 ->title(__('messages.models.Avaliation.labelTmb'))
                 ->format(function(Avaliation $Avaliation) {
-                    return number_format($Avaliation->getTmb(), 0, __('messages.decimalSeparator'), __('messages.thousandSeparator')) . ' kcal';
+                    return $Avaliation->getFormattedTmb();
                 })
             ]
         );

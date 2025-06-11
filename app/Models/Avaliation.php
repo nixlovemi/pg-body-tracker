@@ -55,7 +55,7 @@ class Avaliation extends Model
         'body_fat_perc',
         'skeletal_muscle_perc',
         'muscle_mass_perc',
-        'visceral_fat_kg',
+        'visceral_fat_level',
         'basal_metabolism',
         'body_age',
         'body_water_perc',
@@ -171,7 +171,7 @@ class Avaliation extends Model
         $validation->addField('body_fat_perc', ['nullable', 'numeric', 'min:0', 'max:100'], __('messages.models.Avaliation.fields.body_fat_perc'));
         $validation->addField('skeletal_muscle_perc', ['nullable', 'numeric', 'min:0', 'max:100'], __('messages.models.Avaliation.fields.skeletal_muscle_perc'));
         $validation->addField('muscle_mass_perc', ['nullable', 'numeric', 'min:0', 'max:100'], __('messages.models.Avaliation.fields.muscle_mass_perc'));
-        $validation->addField('visceral_fat_kg', ['nullable', 'numeric', 'min:0', 'max:20'], __('messages.models.Avaliation.fields.visceral_fat_kg'));
+        $validation->addField('visceral_fat_level', ['nullable', 'numeric', 'min:0', 'max:30'], __('messages.models.Avaliation.fields.visceral_fat_level'));
         $validation->addField('basal_metabolism', ['nullable', 'integer', 'min:1000', 'max:9999'], __('messages.models.Avaliation.fields.basal_metabolism'));
         $validation->addField('body_age', ['nullable', 'integer', 'min:10', 'max:150'], __('messages.models.Avaliation.fields.body_age'));
         $validation->addField('body_water_perc', ['nullable', 'numeric', 'min:0', 'max:100'], __('messages.models.Avaliation.fields.body_water_perc'));
@@ -436,7 +436,7 @@ class Avaliation extends Model
 
     public function getFormattedFatMass(): string
     {
-        return SysUtils::formatDbToNumber($this->getFatMassKg(), 2) . 'kg';
+        return SysUtils::formatDbToNumber($this->getFatMassKg(), 1) . 'kg';
     }
 
     public function getLeanMassKg(): float
@@ -637,7 +637,7 @@ class Avaliation extends Model
 
     public function getFormattedBodyFat(): string
     {
-        return SysUtils::formatDbToNumber($this->getBodyFatPerc(), 2) . '%';
+        return SysUtils::formatDbToNumber($this->getBodyFatPerc(), 1) . '%';
     }
 
     public function getBoneMassKg(): float
@@ -661,10 +661,25 @@ class Avaliation extends Model
         return SysUtils::formatDbToNumber($this->getBoneMassKg(), 1) . 'kg';
     }
 
+    public function getFormattedVisceralFatLevel(): string
+    {
+        return SysUtils::formatDbToNumber($this->visceral_fat_level, 1);
+    }
+
+    // Convert level (1–30) to estimated visceral fat in kg (approximation)
+    private function visceralFatKgFromLevel(int $level): float
+    {
+        if ($level < 1) $level = 1;
+        if ($level > 30) $level = 30;
+
+        // Estimativa linear de 0.1 kg a 4.0 kg
+        return round(0.1 + ($level - 1) * ((4.0 - 0.1) / 29), 2);
+    }
+
     public function getVisceralFatKg(): float
     {
-        if ($this->visceral_fat_kg) {
-            $visceralFatKg = $this->visceral_fat_kg;
+        if ($this->visceral_fat_level) {
+            $visceralFatKg = $this->visceralFatKgFromLevel($this->visceral_fat_level);
         } else {
             // check if any of the values are null
             if (null === $this->waist_circ_cm || $this->getBmi() < 0) {

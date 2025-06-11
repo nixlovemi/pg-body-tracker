@@ -118,7 +118,7 @@
                             <div class="row content-line">
                                 <h5>11. Contato</h5>
                                 <p>
-                                    Em caso de dúvidas, envie um e-mail para: <a href="mailto:suporte@pgbodytracker.com.br">suporte@pgbodytracker.com.br</a>.
+                                    Em caso de dúvidas, envie um e-mail para: <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.
                                 </p>
                             </div>
                         </div>

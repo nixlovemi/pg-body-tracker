@@ -154,12 +154,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.models.Avaliation.fields.body_fat_perc') }} (%)
                             </label>
                             @php
-                            $bfat = old("f-bfat") ?: (($AVALIATION?->body_fat_perc) ? number_format($AVALIATION?->body_fat_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $bfat = old("f-bfat") ?: (($AVALIATION?->body_fat_perc) ? number_format($AVALIATION?->body_fat_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-bfat" name="f-bfat" maxlength="5"
+                                id="f-bfat" name="f-bfat" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $bfat }}"
+                                data-precision="1" value="{{ $bfat }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -181,12 +181,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.models.Avaliation.fields.skeletal_muscle_perc') }} (%)
                             </label>
                             @php
-                            $skeletalMp = old("f-skeletal_mp") ?: (($AVALIATION?->skeletal_muscle_perc) ? number_format($AVALIATION?->skeletal_muscle_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $skeletalMp = old("f-skeletal_mp") ?: (($AVALIATION?->skeletal_muscle_perc) ? number_format($AVALIATION?->skeletal_muscle_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-skeletal_mp" name="f-skeletal_mp" maxlength="5"
+                                id="f-skeletal_mp" name="f-skeletal_mp" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $skeletalMp }}"
+                                data-precision="1" value="{{ $skeletalMp }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -200,12 +200,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.models.Avaliation.fields.muscle_mass_perc') }} (%)
                             </label>
                             @php
-                            $muscleMp = old("f-muscle_mp") ?: (($AVALIATION?->muscle_mass_perc) ? number_format($AVALIATION?->muscle_mass_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $muscleMp = old("f-muscle_mp") ?: (($AVALIATION?->muscle_mass_perc) ? number_format($AVALIATION?->muscle_mass_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-muscle_mp" name="f-muscle_mp" maxlength="5"
+                                id="f-muscle_mp" name="f-muscle_mp" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $muscleMp }}"
+                                data-precision="1" value="{{ $muscleMp }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -213,11 +213,19 @@ $RevDateFeature = new $RevaluationDate();
 
                     <div class="col-12 col-md-6">
                         <div class="form-group">
-                            <label class="form-label" title="{{ __('messages.models.Avaliation.fields.visceral_fat_kg') }} (kg)">
-                                {{ __('messages.models.Avaliation.fields.visceral_fat_kg') }} (kg)
+                            <label class="form-label" title="{{ __('messages.models.Avaliation.fields.visceral_fat_level') }}">
+                                @php
+                                $dataContent = __('messages.pages.avaliation.modalAddAvaliation.visceral_fat_level_info');
+                                @endphp
+                                <x-info-icon-modal
+                                    title="{{ __('messages.infoModalTitle') }}"
+                                    :message="$dataContent"
+                                />
+
+                                {{ __('messages.models.Avaliation.fields.visceral_fat_level') }}
                             </label>
                             @php
-                            $visceralFat = old("f-visceral_fat") ?: (($AVALIATION?->visceral_fat_kg) ? number_format($AVALIATION?->visceral_fat_kg, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $visceralFat = old("f-visceral_fat") ?: (($AVALIATION?->visceral_fat_level) ? number_format($AVALIATION?->visceral_fat_level, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
                                 id="f-visceral_fat" name="f-visceral_fat" maxlength="5"
@@ -272,12 +280,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.models.Avaliation.fields.body_water_perc') }} (%)
                             </label>
                             @php
-                            $bWater = old("f-bwater") ?: (($AVALIATION?->body_water_perc) ? number_format($AVALIATION?->body_water_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $bWater = old("f-bwater") ?: (($AVALIATION?->body_water_perc) ? number_format($AVALIATION?->body_water_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-bwater" name="f-bwater" maxlength="5"
+                                id="f-bwater" name="f-bwater" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $bWater }}"
+                                data-precision="1" value="{{ $bWater }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -329,12 +337,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassPerc') }}
                             </label>
                             @php
-                            $value = old("f-la-lmass-perc") ?: (($AVALIATION?->left_arm_lean_mass_perc) ? number_format($AVALIATION?->left_arm_lean_mass_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-la-lmass-perc") ?: (($AVALIATION?->left_arm_lean_mass_perc) ? number_format($AVALIATION?->left_arm_lean_mass_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-la-lmass-perc" name="f-la-lmass-perc" maxlength="5"
+                                id="f-la-lmass-perc" name="f-la-lmass-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -361,12 +369,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatPerc') }}
                             </label>
                             @php
-                            $value = old("f-la-fat-perc") ?: (($AVALIATION?->left_arm_fat_perc) ? number_format($AVALIATION?->left_arm_fat_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-la-fat-perc") ?: (($AVALIATION?->left_arm_fat_perc) ? number_format($AVALIATION?->left_arm_fat_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-la-fat-perc" name="f-la-fat-perc" maxlength="5"
+                                id="f-la-fat-perc" name="f-la-fat-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -399,12 +407,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassPerc') }}
                             </label>
                             @php
-                            $value = old("f-ra-lmass-perc") ?: (($AVALIATION?->right_arm_lean_mass_perc) ? number_format($AVALIATION?->right_arm_lean_mass_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-ra-lmass-perc") ?: (($AVALIATION?->right_arm_lean_mass_perc) ? number_format($AVALIATION?->right_arm_lean_mass_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-ra-lmass-perc" name="f-ra-lmass-perc" maxlength="5"
+                                id="f-ra-lmass-perc" name="f-ra-lmass-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -431,12 +439,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatPerc') }}
                             </label>
                             @php
-                            $value = old("f-ra-fat-perc") ?: (($AVALIATION?->right_arm_fat_perc) ? number_format($AVALIATION?->right_arm_fat_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-ra-fat-perc") ?: (($AVALIATION?->right_arm_fat_perc) ? number_format($AVALIATION?->right_arm_fat_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-ra-fat-perc" name="f-ra-fat-perc" maxlength="5"
+                                id="f-ra-fat-perc" name="f-ra-fat-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -469,12 +477,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassPerc') }}
                             </label>
                             @php
-                            $value = old("f-tr-lmass-perc") ?: (($AVALIATION?->trunk_lean_mass_perc) ? number_format($AVALIATION?->trunk_lean_mass_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-tr-lmass-perc") ?: (($AVALIATION?->trunk_lean_mass_perc) ? number_format($AVALIATION?->trunk_lean_mass_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-tr-lmass-perc" name="f-tr-lmass-perc" maxlength="5"
+                                id="f-tr-lmass-perc" name="f-tr-lmass-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -501,12 +509,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatPerc') }}
                             </label>
                             @php
-                            $value = old("f-tr-fat-perc") ?: (($AVALIATION?->trunk_fat_perc) ? number_format($AVALIATION?->trunk_fat_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-tr-fat-perc") ?: (($AVALIATION?->trunk_fat_perc) ? number_format($AVALIATION?->trunk_fat_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-tr-fat-perc" name="f-tr-fat-perc" maxlength="5"
+                                id="f-tr-fat-perc" name="f-tr-fat-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -539,12 +547,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassPerc') }}
                             </label>
                             @php
-                            $value = old("f-ll-lmass-perc") ?: (($AVALIATION?->left_leg_lean_mass_perc) ? number_format($AVALIATION?->left_leg_lean_mass_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-ll-lmass-perc") ?: (($AVALIATION?->left_leg_lean_mass_perc) ? number_format($AVALIATION?->left_leg_lean_mass_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-ll-lmass-perc" name="f-ll-lmass-perc" maxlength="5"
+                                id="f-ll-lmass-perc" name="f-ll-lmass-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -571,12 +579,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatPerc') }}
                             </label>
                             @php
-                            $value = old("f-ll-fat-perc") ?: (($AVALIATION?->left_leg_fat_perc) ? number_format($AVALIATION?->left_leg_fat_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-ll-fat-perc") ?: (($AVALIATION?->left_leg_fat_perc) ? number_format($AVALIATION?->left_leg_fat_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-ll-fat-perc" name="f-ll-fat-perc" maxlength="5"
+                                id="f-ll-fat-perc" name="f-ll-fat-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -609,12 +617,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelLeanMassPerc') }}
                             </label>
                             @php
-                            $value = old("f-rl-lmass-perc") ?: (($AVALIATION?->right_leg_lean_mass_perc) ? number_format($AVALIATION?->right_leg_lean_mass_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-rl-lmass-perc") ?: (($AVALIATION?->right_leg_lean_mass_perc) ? number_format($AVALIATION?->right_leg_lean_mass_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-rl-lmass-perc" name="f-rl-lmass-perc" maxlength="5"
+                                id="f-rl-lmass-perc" name="f-rl-lmass-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>
@@ -641,12 +649,12 @@ $RevDateFeature = new $RevaluationDate();
                                 {{ __('messages.pages.avaliation.modalAddAvaliation.labelFatPerc') }}
                             </label>
                             @php
-                            $value = old("f-rl-fat-perc") ?: (($AVALIATION?->right_leg_fat_perc) ? number_format($AVALIATION?->right_leg_fat_perc, 2, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
+                            $value = old("f-rl-fat-perc") ?: (($AVALIATION?->right_leg_fat_perc) ? number_format($AVALIATION?->right_leg_fat_perc, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')): '');
                             @endphp
                             <input type="text" class="form-control form-control-user jq-mask-money"
-                                id="f-rl-fat-perc" name="f-rl-fat-perc" maxlength="5"
+                                id="f-rl-fat-perc" name="f-rl-fat-perc" maxlength="4"
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="2" value="{{ $value }}"
+                                data-precision="1" value="{{ $value }}"
                                 {{ $canEdit ? '': 'disabled' }}
                             />
                         </div>

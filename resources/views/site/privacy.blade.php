@@ -130,7 +130,7 @@
                         <div class="row content-line">
                             <h5>10. Contato</h5>
                             <p class="text-muted">
-                                Em caso de dúvidas, solicitações ou para exercer seus direitos previstos na LGPD, entre em contato conosco pelo e-mail: <strong>suporte@pgbodytracker.com.br</strong>.
+                                Em caso de dúvidas, solicitações ou para exercer seus direitos previstos na LGPD, entre em contato conosco pelo e-mail: <strong>{{ env('SUPPORT_EMAIL') }}</strong>.
                             </p>
                         </div>
                     </div>
