@@ -17,6 +17,11 @@
         <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/tiny-slider.css" />
         <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/animate.css" />
         <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/main.css" />
+        <style>
+            body {
+                overflow-x: hidden;
+            }
+        </style>
 
         @yield('SITE_HEADER_CUSTOM_CSS')
     </head>

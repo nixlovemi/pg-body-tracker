@@ -5,7 +5,10 @@
 View variables:
 ===============
     - $PAGE_TITLE: string
+    - $PREMIUM_FLOW: boolean
 */
+
+$PREMIUM_FLOW = $PREMIUM_FLOW ?? false;
 @endphp
 
 @extends('layout.login-base', [
@@ -14,16 +17,33 @@ View variables:
 
 @section('LOGIN_BASE_CONTENT')
     <p>
-        {{ __('messages.pages.login.register.description')}}
+        @if ($PREMIUM_FLOW)
+            {{ __('messages.pages.login.register.descriptionPremium') }}
+        @else
+            {{ __('messages.pages.login.register.description')}}
+        @endif
     </p>
-    
-    <a href="{{ route('app.googleLogin') }}" class="btn btn-google btn-user btn-block">
-        {!! $Icons::GOOGLE !!}
-        {{ __('messages.pages.login.loginGoogle') }}
-    </a>
-    <hr />
-    
-    <form action="{{ route('app.doRegister') }}" class="user" method="post">
+
+    <form action="{{ $PREMIUM_FLOW ? route('app.doRegisterPremium') : route('app.doRegister') }}" class="user" method="post">
+        @if ($PREMIUM_FLOW)
+            <h6 style="font-weight:bold">{{ __('messages.pages.login.register.choosePremiumPlan') }}</h6>
+            <style>
+                #f-subscriptionType {
+                    border-radius: .35rem;
+                    padding: .375rem .75rem;
+                }
+            </style>
+
+            @include('app.subscription.partials.premium-select')
+            <hr />
+        @endif
+
+        <a href="{{ route('app.googleLogin') }}" class="btn btn-google btn-user btn-block">
+            {!! $Icons::GOOGLE !!}
+            {{ __('messages.pages.login.loginGoogle') }}
+        </a>
+        <hr />
+
         @csrf
         <div class="form-group">
             <input type="text" class="form-control form-control-user"

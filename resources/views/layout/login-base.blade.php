@@ -28,10 +28,10 @@ View variables:
                             <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
 
                             <div class="col-lg-6">
-                                <div class="p-5">
+                                <div class="p-4">
                                     <div class="text-center mb-4">
                                         <a href="{{ route('site.home') }}">
-                                            <img class="img-fluid" src="/images/logo-azul.png" alt="PG Body Tracker" />
+                                            <img style="max-width:70%" class="img-fluid" src="/images/logo-azul.png" alt="PG Body Tracker" />
                                         </a>
                                     </div>
 

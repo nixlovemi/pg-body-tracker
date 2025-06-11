@@ -328,6 +328,7 @@ return [
                 'title' => 'Free is already great. Premium is even better!',
                 'text' => 'Use the system for free and enjoy all the essential features. When you want to go even further—with advanced reporting, more customization, and extra tools—just upgrade to Premium. No hassle.',
                 'btnCta' => 'Create your free account',
+                'btnCtaPremium' => 'Choose to be Premium!',
             ],
             'footer' => [
                 'leftText' => 'Turning fitness evaluations into simple, professional experiences. Follow us on social media for tips, news and updates.',
@@ -377,6 +378,8 @@ return [
             'register' => [
                 'title' => 'Register Account',
                 'description' => 'Create a free account and start using our services.',
+                'descriptionPremium' => 'You\'re one step away from becoming Premium! Sign up and enjoy all the features.',
+                'choosePremiumPlan' => 'Choose the Premium plan:',
                 'buttonRegister' => 'Register',
                 'emailExists' => 'We were unable to complete your registration. You may already have an account, or you may be using an invalid email address. If you have any questions, please try to reset your password or contact support.',
                 'successMessage' => 'Account created successfully! Check your email to activate it.',
@@ -621,6 +624,7 @@ return [
                 With the free plan, you already have a solid foundation to perform body evaluations, track goals, generate reports and maintain your clients\' history.
                 But if you want to go further, the <strong>Premium Plan</strong> was tailor-made for you.',
             'labelTotalPricePerFrequency' => '* The subscription will be for the amount of :total every :frequency month(s)',
+            'subscriptionPlanDoestExist' => 'Subscription plan not found! Please try again or contact support.',
             'subscriptionSaveError' => 'Error processing subscription! Please try again.',
             'paymentClassNotFound' => 'Error connecting to payment! Please try again or contact support.',
             'paymentStatusChecked' => 'Payment status verified successfully!',

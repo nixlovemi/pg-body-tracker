@@ -8,9 +8,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Helpers\SysUtils;
 use App\Models\User;
-use App\Models\UserPlans;
+use App\Helpers\Payments\SubscriptionTypes;
 use App\Helpers\ApiResponse;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Auth;
 
 class Login extends Controller
 {
@@ -131,6 +132,42 @@ class Login extends Controller
         }
 
         return null;
+    }
+
+    public function registerPremium()
+    {
+        return view('app.register', [
+            'PAGE_TITLE' => __('messages.pages.login.register.title'),
+            'PREMIUM_FLOW' => true,
+        ]);
+    }
+
+    public function doRegisterPremium(Request $request)
+    {
+        // validate if the user selected a plan
+        $email = $request->input('f-email');
+        $planType = $request->input('f-subscriptionType');
+        $plans = SubscriptionTypes::getPlans();
+        if (!in_array($planType, $plans)) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['msg' => __('messages.pages.premium.subscriptionPlanDoestExist')]);
+        }
+
+        // register the user
+        $ret = $this->doRegister($request);
+        $errors = session('errors');
+        if ($errors && $errors->any()) {
+            return $ret;
+        }
+
+        // all good, redirect to the subscription page
+        $expirationMinutes = 3; // 3 minutes for temporary login
+        SysUtils::loginUserTempById(
+            User::where('email', $email)->first()->id,
+            $expirationMinutes
+        );
+        return redirect()->route('app.subscription.subscribe', ['plan' => $planType]);
     }
 
     public function confirmUser(string $key)

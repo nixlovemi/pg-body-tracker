@@ -14,6 +14,7 @@ use App\Helpers\SysUtils;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubscriptionUpdate;
 use Illuminate\Support\Facades\Cache;
+use \Carbon\Carbon;
 
 class UserPlans extends Model
 {
@@ -138,6 +139,13 @@ class UserPlans extends Model
         return self::fGetStatuses()[$this->status] ?? '-';
     }
 
+    public function getLastLogRow(): ?UserPlanLogs
+    {
+        return $this->logs()
+            ->orderBy('created_at', 'desc')
+            ->first();
+    }
+
     public function getLastPaymentLogRow(): ?UserPlanLogs
     {
         // Get the last log for this user plan
@@ -193,7 +201,7 @@ class UserPlans extends Model
         }
 
         $paymentLog = $this->getLastPaymentLogRow();
-        $logData = json_decode($paymentLog?->data ?? [], true);
+        $logData = json_decode($paymentLog?->data ?? '{}', true);
         $paymentId = $logData['data_id'] ?? null;
 
         $sixHourInSeconds = 21600;
@@ -272,6 +280,29 @@ class UserPlans extends Model
                 'UserPlan' => $this,
             ]
         );
+    }
+
+    public function renewSubscription(Carbon $newEndDate): void
+    {
+        if (false === $newEndDate->gt($this->end_date)) {
+            return;
+        }
+
+        $previousEndDate = $this->end_date;
+        $this->end_date = $newEndDate->format('Y-m-d');
+        $this->status = self::STATUS_ACTIVE;
+        $this->save();
+
+        $this->addLog([
+            'payment_class' => $this->getPaymentClass(),
+            'payment_id' => $this->getColPaymentId(),
+            'data' => json_encode([
+                'type' => 'renewSubscription',
+                'previousEndDate' => $previousEndDate,
+                'newEndDate' => $this->end_date,
+                'data_id' => $this->getPaymentId(),
+            ]),
+        ]);
     }
     // ===============
 

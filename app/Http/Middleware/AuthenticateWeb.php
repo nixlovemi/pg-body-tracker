@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\View\Components\Notification;
 use Illuminate\Support\Facades\Route;
 use App\Helpers\Permissions;
 

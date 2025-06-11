@@ -9,6 +9,7 @@ use App\Helpers\SysUtils;
 use App\Helpers\Payments\SubscriptionTypes;
 use App\Models\UserPlans;
 use App\Helpers\Feature\FeatureAbstract;
+use Carbon\Carbon;
 
 class MercadoPago extends PaymentGatewayAbstract
 {
@@ -259,6 +260,9 @@ class MercadoPago extends PaymentGatewayAbstract
         }
 
         $paymentId = $UserPlan->getPaymentId() ?? null;
+        if (null === $paymentId) {
+            return null;
+        }
         return (new $paymentClass())->getPaymentById($paymentId);
     }
 
@@ -275,6 +279,11 @@ class MercadoPago extends PaymentGatewayAbstract
 
             // Mapeia o status do Preapproval para o UserPlans
             $mappedStatus = $this->mapPreapprovalStatusToUserPlanStatus($preapproval->status);
+
+            // when type is payment, we need to check the new date period
+            if (self::PRE_APPROVAL_STATUS_AUTHORIZED === $preapproval->status) {
+                $this->syncCheckForNewPaymentDate($UserPlan);
+            }
 
             // Se o status atual já for o mesmo, não precisa atualizar
             if ($mappedStatus === $UserPlan->status) {
@@ -400,5 +409,66 @@ class MercadoPago extends PaymentGatewayAbstract
             default:
                 return UserPlans::STATUS_PENDING;
         }
+    }
+
+    private function syncCheckForNewPaymentDate(UserPlans &$UserPlan): void
+    {
+        $lastLog = $UserPlan->getLastLogRow();
+        $lastLogData = json_decode($lastLog?->data ?? '{}', true);
+        if (false === self::isPaymentLog($lastLogData)) {
+            return;
+        }
+
+        $paymentClass = $UserPlan->getPaymentClass();
+        $Payment = (new $paymentClass())->getPaymentById($lastLogData['data_id'] ?? '');
+        if (!$Payment || self::PAYMENT_STATUS_APPROVED !== $Payment->status) {
+            return;
+        }
+
+        $pointOfInteraction = $Payment->point_of_interaction ?? null;
+        if (null === $pointOfInteraction) {
+            return;
+        }
+
+        $transactionData = $pointOfInteraction->transaction_data ?? null;
+        if (null === $transactionData) {
+            return;
+        }
+
+        $billingDate = $transactionData->billing_date ?? null;
+        $period = $transactionData->invoice_period->period ?? null;
+        $type = $transactionData->invoice_period->type ?? null;
+        if (null === $billingDate || null === $period || null === $type) {
+            return;
+        }
+
+        // change the UserPlan dates
+        $newEndDate = $this->calculateNewEndDate($billingDate, $period, $type);
+        if (!$newEndDate) {
+            return;
+        }
+
+        // Update the UserPlan with the new end date
+        $UserPlan->renewSubscription($newEndDate);
+    }
+
+    private static function isPaymentLog(array $logData): bool
+    {
+        return (isset($logData['type']) && $logData['type'] === 'payment') ||
+            (isset($logData['action']) && in_array($logData['action'], [
+                'payment.created',
+                'subscription_authorized_payment',
+                'subscription_authorized_payment.created'
+            ]));
+    }
+
+    private function calculateNewEndDate(string $billingDate, int $period, string $type): ?Carbon
+    {
+        if (!$billingDate || !$period || !$type) {
+            return null;
+        }
+
+        $frequencyType = SubscriptionTypes::getPlanFrequencyType($type);
+        return SysUtils::applyTimezone($billingDate)->add($frequencyType, $period);
     }
 }
