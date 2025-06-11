@@ -23,28 +23,28 @@ class VisceralFat extends AvaliationFieldInfoAbstract
 
     public function getFieldSuffix(): string
     {
-        return 'kg';
+        return '';
     }
 
     public function getFieldValue(): float|int
     {
-        return $this->Avaliation->getVisceralFatKg();
+        return $this->Avaliation->visceral_fat_level;
     }
 
     public function getFieldLabel(): string
     {
-        return $this->Avaliation->getFormattedVisceralFatKg();
+        return $this->Avaliation->getFormattedVisceralFatLevel();
     }
 
     public function getManRanking(): array
     {
-        // Healthy, moderate e high
-        return [2.0, 3.5, PHP_INT_MAX];
+        // low, moderated, high, very high
+        return [9, 14, 20, PHP_INT_MAX];
     }
 
     public function getWomanRanking(): array
     {
-        return [1.8, 3.0, PHP_INT_MAX];
+        return $this->getManRanking();
     }
 
     public function getRankingLabels(): array
@@ -53,6 +53,7 @@ class VisceralFat extends AvaliationFieldInfoAbstract
             __('messages.components.avaliationReport.VisceralFat1'),
             __('messages.components.avaliationReport.VisceralFat2'),
             __('messages.components.avaliationReport.VisceralFat3'),
+            __('messages.components.avaliationReport.VisceralFat4'),
         ];
     }
 
@@ -62,6 +63,7 @@ class VisceralFat extends AvaliationFieldInfoAbstract
             Constants::RANK_COLOR_2,
             Constants::RANK_COLOR_4,
             Constants::RANK_COLOR_6,
+            Constants::RANK_COLOR_8,
         ];
     }
 }

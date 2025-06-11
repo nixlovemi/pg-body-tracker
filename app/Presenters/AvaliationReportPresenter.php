@@ -101,7 +101,7 @@ final class AvaliationReportPresenter
             ],
             [
                 'method' => 'getVisceralFatInfo',
-                'title' => __('messages.models.Avaliation.fields.visceral_fat_kg'),
+                'title' => __('messages.models.Avaliation.fields.visceral_fat_level'),
                 'showReference' => true
             ],
             [

@@ -2,9 +2,9 @@
 
 [IDEAS]
 - https://chatgpt.com/share/67475b3a-585c-8000-952b-41a52dcb3382
-    1) Ver a parte de quando é renovação (tem file no desktop)
-    2) Aceite da política privacidade no cadastro
-    3) Comparação das fotos das avaliações
+    1) Aceite da política privacidade no cadastro
+    2) Comparação das fotos das avaliações
+    3) Logs de pagamento e etc (database?)
     4) Anamnese Personalizada
     5) Exportação de Dados
     6) Traduzir páginas site (privacy, terms, faq)

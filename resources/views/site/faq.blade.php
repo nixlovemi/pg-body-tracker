@@ -23,7 +23,7 @@
                     <div class="col-xxl-6 col-xl-7 col-lg-9 col-md-10">
                         <div class="section-title text-center mb-60">
                             <p class="text-muted">
-                                Aqui estão algumas das perguntas mais comuns sobre o uso do PG BodyTracker. Se ainda restar dúvidas, entre em contato com nosso suporte via suporte@pgbodytracker.com.br.
+                                Aqui estão algumas das perguntas mais comuns sobre o uso do PG BodyTracker. Se ainda restar dúvidas, entre em contato com nosso suporte via {{ env('SUPPORT_EMAIL') }}.
                             </p>
                         </div>
                     </div>

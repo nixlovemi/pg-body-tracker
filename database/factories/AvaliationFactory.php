@@ -54,11 +54,11 @@ class AvaliationFactory extends Factory
                 }
                 return $this->faker->numberBetween(25, 75);
             },
-            'visceral_fat_kg' => function(array $attr) {
+            'visceral_fat_level' => function(array $attr) {
                 if (Avaliation::CALCULATE_PERC_FAT_BY_BIOIMPEDANCE !== $attr['calculate_perc_fat_by']) {
                     return null;
                 }
-                return $this->faker->randomFloat(1, 1, 6);
+                return $this->faker->randomFloat(1, 1, 30);
             },
             'basal_metabolism' => function(array $attr) {
                 if (Avaliation::CALCULATE_PERC_FAT_BY_BIOIMPEDANCE !== $attr['calculate_perc_fat_by']) {

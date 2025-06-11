@@ -289,7 +289,7 @@ class Avaliation extends Controller
         $form['body_fat_perc'] = $request->input('f-bfat') ?? null;
         $form['skeletal_muscle_perc'] = $request->input('f-skeletal_mp') ?? null;
         $form['muscle_mass_perc'] = $request->input('f-muscle_mp') ?? null;
-        $form['visceral_fat_kg'] = $request->input('f-visceral_fat') ?? null;
+        $form['visceral_fat_level'] = $request->input('f-visceral_fat') ?? null;
         $form['basal_metabolism'] = $request->input('f-basal') ?? null;
         $form['body_age'] = $request->input('f-bage') ?? null;
         $form['body_water_perc'] = $request->input('f-bwater') ?? null;
@@ -367,7 +367,7 @@ class Avaliation extends Controller
             'body_fat_perc',
             'skeletal_muscle_perc',
             'muscle_mass_perc',
-            'visceral_fat_kg',
+            'visceral_fat_level',
             'body_water_perc',
             'bone_mass_kg',
             'right_arm_lean_mass_kg',

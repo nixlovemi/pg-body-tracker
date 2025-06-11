@@ -114,7 +114,7 @@ $URLogoFeature = new $UserReportLogo();
                                     'bmi' => __('messages.components.avaliationReport.bmi'),
                                     'bodyFat' => __('messages.components.avaliationReport.bodyFat'),
                                     'whr' => __('messages.components.avaliationReport.WaistToHipRatio'),
-                                    'visceralFat' => __('messages.models.Avaliation.fields.visceral_fat_kg'),
+                                    'visceralFat' => __('messages.models.Avaliation.fields.visceral_fat_level'),
                                 ]) }}
                             </i></small>
                         </div>
