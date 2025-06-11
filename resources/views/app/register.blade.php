@@ -5,7 +5,16 @@
 View variables:
 ===============
     - $PAGE_TITLE: string
+    - $PREMIUM_FLOW: boolean
 */
+
+$PREMIUM_FLOW = $PREMIUM_FLOW ?? false;
+$pMessage = $PREMIUM_FLOW
+    ? __('messages.pages.login.register.descriptionPremium')
+    : __('messages.pages.login.register.description');
+$formAction = $PREMIUM_FLOW
+    ? route('app.doRegisterPremium')
+    : route('app.doRegister');
 @endphp
 
 @extends('layout.login-base', [
@@ -14,16 +23,29 @@ View variables:
 
 @section('LOGIN_BASE_CONTENT')
     <p>
-        {{ __('messages.pages.login.register.description')}}
+        {{ __($pMessage) }}
     </p>
-    
-    <a href="{{ route('app.googleLogin') }}" class="btn btn-google btn-user btn-block">
-        {!! $Icons::GOOGLE !!}
-        {{ __('messages.pages.login.loginGoogle') }}
-    </a>
-    <hr />
-    
-    <form action="{{ route('app.doRegister') }}" class="user" method="post">
+
+    <form action="{{ $formAction }}" class="user" method="post" data-premium="{{ $PREMIUM_FLOW ? '1' : '0' }}">
+        @if ($PREMIUM_FLOW)
+            <h6 style="font-weight:bold">{{ __('messages.pages.login.register.choosePremiumPlan') }}</h6>
+            <style>
+                #f-subscriptionType {
+                    border-radius: .35rem;
+                    padding: .375rem .75rem;
+                }
+            </style>
+
+            @include('app.subscription.partials.premium-select')
+            <hr />
+        @endif
+
+        <a href="{{ route('app.googleLogin') }}" class="btn btn-google btn-user btn-block">
+            {!! $Icons::GOOGLE !!}
+            {{ __('messages.pages.login.loginGoogle') }}
+        </a>
+        <hr />
+
         @csrf
         <div class="form-group">
             <input type="text" class="form-control form-control-user"
@@ -69,4 +91,16 @@ View variables:
             {{ __('messages.pages.login.forgot.returnLogin') }}
         </a>
     </div>
+
+    <script>
+        document.querySelector('.btn-google').addEventListener('click', function(event) {
+            const subscriptionType = document.getElementById('f-subscriptionType');
+            if (subscriptionType) {
+                const selectedPlan = subscriptionType.value;
+                const url = new URL(this.href);
+                url.searchParams.set('plan', selectedPlan);
+                this.href = url.toString();
+            }
+        });
+    </script>
 @endsection

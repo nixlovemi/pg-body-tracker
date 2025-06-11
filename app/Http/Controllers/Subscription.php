@@ -74,46 +74,6 @@ class Subscription extends Controller
         MercadoPago::fProcessWebhookCall($form);
 
         return response()->json(['status' => 'processed'], 200);
-
-        /*
-        // Valida se é tipo assinatura
-        if ($request->input('type') !== 'subscription_preapproval') {
-            return response()->json(['status' => 'ignored'], 200);
-        }
-
-        // Captura o ID da assinatura
-        $preapprovalId = $request->input('data.id');
-
-        // Inicializa SDK
-        $mercadoPago = new MercadoPago();
-
-        // Tenta buscar detalhes da assinatura
-        try {
-            $preapproval = $mercadoPago->findPreapprovalById($preapprovalId);
-
-            // Loga o retorno da assinatura
-            Log::info('Dados da assinatura', $preapproval->toArray());
-            dd($preapproval->toArray());
-
-            // Aqui você pode:
-            // - Atualizar o plano do usuário
-            // - Verificar status
-            // - Salvar informações como next_payment_date, status, etc.
-
-            // Exemplo de extração de dados
-            $status = $preapproval->status; // authorized, paused, cancelled
-            $payerEmail = $preapproval->payer_email;
-            $startDate = $preapproval->auto_recurring['start_date'] ?? null;
-            $nextPaymentDate = $preapproval->next_payment_date ?? null;
-
-            // Sua lógica de negócio aqui...
-
-            return response()->json(['status' => 'processed'], 200);
-        } catch (\Exception $e) {
-            Log::error('Erro ao buscar assinatura MP', ['message' => $e->getMessage()]);
-            return response()->json(['status' => 'error'], 500);
-        }
-        */
     }
 
     public function details(Request $request)

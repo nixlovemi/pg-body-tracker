@@ -138,7 +138,7 @@ $siteString = env('APP_URL');
                 <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;">
                   <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                     <tr>
-                      <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
+                      <td style="font-family:sans-serif; font-size:14px; vertical-align:top;">
                         @if ($HEADER_IMG_FULL != '')
                             @php
                             if (app()->environment('production')) {
@@ -148,7 +148,9 @@ $siteString = env('APP_URL');
                             }
                             @endphp
 
-                            <img style="display: block; width: 516px !important; max-width: 100% !important;" width="516" src="<?=$HEADER_IMG_FULL?>" />
+                            <div style="width:100%; display:block; overflow:hidden; text-align:center;">
+                                <img style="display:inline-block; max-width:516px !important; max-width:100% !important;" src="<?=$HEADER_IMG_FULL?>" />
+                            </div>
                             <br />
                         @endif
 

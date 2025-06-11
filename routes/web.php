@@ -35,6 +35,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     Route::post('/doForgot', 'App\Http\Controllers\Login@doForgot')->name('app.doForgot');
     Route::get('/register', 'App\Http\Controllers\Login@register')->name('app.register');
     Route::post('/doRegister', 'App\Http\Controllers\Login@doRegister')->name('app.doRegister');
+    Route::get('/registerPremium', 'App\Http\Controllers\Login@registerPremium')->name('app.registerPremium');
+    Route::post('/doRegisterPremium', 'App\Http\Controllers\Login@doRegisterPremium')->name('app.doRegisterPremium');
     Route::get('/googleLogin', 'App\Http\Controllers\Login@googleLogin')->name('app.googleLogin');
     Route::get('/googleLoginCallback', 'App\Http\Controllers\Login@googleLoginCallback')->name('app.googleLoginCallback');
     Route::get('/resetPwd/{idKey}', 'App\Http\Controllers\Login@resetPwd')->name('app.resetPwd')->middleware('signed');
@@ -47,7 +49,7 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     // ================================================
     // ADD ROUTE PERMISSIONS ON App\Helpers\Permissions
     // ================================================
-    Route::middleware(['authWeb'])->group(function () {
+    Route::middleware(['authWeb', 'authWeb.expire.at'])->group(function () {
         Route::get('/dashboard', 'App\Http\Controllers\Dashboard@index')->name('app.dashboard.index');
         Route::get('/dashboard/clientsWithoutAvaliation30Days', 'App\Http\Controllers\Dashboard@clientsWithoutAvaliation30Days')->name('app.dashboard.clientsWithoutAvaliation30Days');
         Route::get('/dashboard/clientsWithGoalsDueThisWeek', 'App\Http\Controllers\Dashboard@clientsWithGoalsDueThisWeek')->name('app.dashboard.clientsWithGoalsDueThisWeek');

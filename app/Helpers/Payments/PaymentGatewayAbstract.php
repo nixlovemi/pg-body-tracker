@@ -17,7 +17,7 @@ abstract class PaymentGatewayAbstract implements PaymentGatewayInterface
         // vars
         $PGData = $Payment->extractSubscriptionDataFromWebhook($form);
 
-        // currently, we can't get payment_id when the payment is a subscription_authorized_payment (MercadoPago)
+        // currently, we can't get payment_id when the return is a subscription_authorized_payment (MercadoPago)
         // so, we will try to check the payment status using the body data_id
         if ($PGData->getType() === 'subscription_authorized_payment') {
             // get all user plans with status = 'pending'

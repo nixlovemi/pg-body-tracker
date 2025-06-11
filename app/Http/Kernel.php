@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'report.export.feature' => \App\Http\Middleware\ReportExport::class,
         'report.premium.feature' => \App\Http\Middleware\ReportPremium::class,
         'is.already.premium' => \App\Http\Middleware\IsAlreadyPremium::class,
+        'authWeb.expire.at' => \App\Http\Middleware\AuthenticateWebExpireAt::class,
     ];
 }

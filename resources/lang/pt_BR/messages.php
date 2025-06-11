@@ -261,7 +261,7 @@ return [
                 'menuHome' => 'Home',
                 'menuFeatures' => 'Recursos',
                 'menuAbout' => 'Sobre',
-                'menuWhyUs' => 'Por que nós?',
+                'menuWhyUs' => 'Vantagens',
                 'menuVersions' => 'Versões',
                 'menuClients' => 'Clientes',
                 'menuLogin' => 'Logar!',
@@ -328,6 +328,7 @@ return [
                 'title' => 'Grátis já é ótimo. Premium é ainda melhor!',
                 'text' => 'Use o sistema sem pagar nada e aproveite todos os recursos essenciais. Quando quiser ir além — com relatórios avançados, mais personalização e ferramentas extras — é só fazer o upgrade para o Premium. Sem complicação.',
                 'btnCta' => 'Crie sua conta gratuita',
+                'btnCtaPremium' => 'Escolha ser Premium!',
             ],
             'footer' => [
                 'leftText' => 'Transformando avaliações físicas em experiências simples e profissionais. Siga a gente nas redes sociais para dicas, novidades e atualizações.',
@@ -377,6 +378,8 @@ return [
             'register' => [
                 'title' => 'Registrar Conta',
                 'description' => 'Crie uma conta gratuita e comece a usar nossos serviços.',
+                'descriptionPremium' => 'Você está a um passo de se tornar Premium! Faça seu cadastro e aproveite todos os recursos.',
+                'choosePremiumPlan' => 'Escolha o plano Premium:',
                 'buttonRegister' => 'Registrar',
                 'emailExists' => 'Não foi possível concluir seu cadastro. Talvez você já tenha uma conta ou esteja usando um e-mail inválido. Se tiver dúvidas, recupere sua senha ou entre em contato com o suporte.',
                 'successMessage' => 'Conta criada com sucesso! Verifique seu e-mail para ativar sua conta.',
@@ -621,6 +624,7 @@ return [
                 Com o plano gratuito, você já conta com uma base sólida para realizar avaliações corporais, acompanhar metas, gerar relatórios e manter o histórico dos seus clientes.
                 Mas se você quer ir além, o <strong>Plano Premium</strong> foi feito sob medida para você.',
             'labelTotalPricePerFrequency' => '* A assinatura será no valor de :total a cada :frequency mês(es)',
+            'subscriptionPlanDoestExist' => 'Plano de assinatura não encontrado! Tente novamente ou entre em contato com o suporte.',
             'subscriptionSaveError' => 'Erro ao processar a assinatura! Tente novamente.',
             'paymentClassNotFound' => 'Erro ao conectar com o pagamento! Tente novamente ou entre em contato com o suporte.',
             'paymentStatusChecked' => 'Status do pagamento verificado com sucesso!',

@@ -11,7 +11,7 @@ class ConfirmationLink extends BaseMail
         parent::__construct([
             'EMAIL_TITLE' => __('messages.models.User.ConfirmationLink.subject'),
             'TITLE' => __('messages.models.User.ConfirmationLink.subject'),
-            'HEADER_IMG_FULL' => '/public/images/logo-azul.png',
+            'HEADER_IMG_FULL' => '/public/images/logo-mail.jpg',
             'ARR_TEXT_LINES' => [
                 __('messages.models.User.ConfirmationLink.line1', ['name' => $this->fullUserName]),
                 __('messages.models.User.ConfirmationLink.line2'),

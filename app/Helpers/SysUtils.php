@@ -7,6 +7,8 @@ use Illuminate\Auth\SessionGuard;
 use App\Models\User;
 use DateTime;
 use Illuminate\Support\Facades\File;
+use App\Http\Middleware\AuthenticateWebExpireAt;
+use \Carbon\Carbon;
 
 final class SysUtils {
 
@@ -38,13 +40,31 @@ final class SysUtils {
         return true;
     }
 
+    public static function loginUserTempById(int $userId, int $expireMins): bool
+    {
+        $Auth = SysUtils::getWebAuth();
+        if (false === $Auth->loginUsingId($userId)) {
+            return false;
+        }
+
+        session()->put(AuthenticateWebExpireAt::SESSION_NAME, now()->addMinutes($expireMins));
+        return true;
+    }
+
     public static function logout(bool $flushSession=true): void
     {
         $User = SysUtils::getLoggedInUser();
         if ($User) {
             try {
                 SysUtils::getWebAuth()->logout();
-            } catch (\Throwable $th) { dd($th); }
+            } catch (\Throwable $th) {
+                // TODO: log this error
+            }
+        }
+
+        // clear temp login
+        if (session(AuthenticateWebExpireAt::SESSION_NAME)) {
+            session()->forget(AuthenticateWebExpireAt::SESSION_NAME);
         }
 
         if ($flushSession) {
@@ -58,9 +78,9 @@ final class SysUtils {
         return self::getLoggedInUser() !== null;
     }
 
-    public static function applyTimezone($date)
+    public static function applyTimezone($date): Carbon
     {
-        return \Carbon\Carbon::parse($date)->timezone(getenv('APP_TIME_ZONE'));
+        return Carbon::parse($date)->timezone(getenv('APP_TIME_ZONE'));
     }
 
     public static function timezoneDate($date, $format): string
@@ -68,12 +88,12 @@ final class SysUtils {
         if (empty($date)) {
             return '';
         }
-        return \Carbon\Carbon::parse($date)->setTimezone(env('APP_TIME_ZONE'))->format($format);
+        return Carbon::parse($date)->setTimezone(env('APP_TIME_ZONE'))->format($format);
     }
 
     public static function timezoneNow($format): string
     {
-        return \Carbon\Carbon::now()->setTimezone(env('APP_TIME_ZONE'))->format($format);
+        return Carbon::now()->setTimezone(env('APP_TIME_ZONE'))->format($format);
     }
 
     public static function encodeStr(string $text): string
