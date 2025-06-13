@@ -377,6 +377,10 @@ return [
             ],
         ],
 
+        'site404' => [
+            'errorMsg' => 'Oops! The page you are looking for was not found.<br>It may have been moved or removed.'
+        ],
+
         'login' => [
             'emailPlaceholder' => 'Type your e-mail',
             'passwordPlaceholder' => 'Type your password',
