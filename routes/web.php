@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +19,26 @@ Route::prefix('')->group(function () {
     Route::match(array('GET','POST'), '/privacy', 'App\Http\Controllers\Site@privacy')->name('site.privacy');
     Route::match(array('GET','POST'), '/terms', 'App\Http\Controllers\Site@terms')->name('site.terms');
     Route::match(array('GET','POST'), '/faq', 'App\Http\Controllers\Site@faq')->name('site.faq');
+
+    // TODO: only works locally, not in production
+    if (env('APP_ENV') === 'local') {
+        Route::get('/generateSitemap', function() {
+            $sitemap = Sitemap::create()
+                ->add(Url::create('/')
+                    ->setLastModificationDate(now())
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+                    ->setPriority(1.0))
+                ->add(Url::create('/#features')->setPriority(0.8))
+                ->add(Url::create('/#about')->setPriority(0.8))
+                ->add(Url::create('/#why')->setPriority(0.7))
+                ->add(Url::create('/#versions')->setPriority(0.6))
+                ->add(Url::create('/privacy')->setPriority(0.5))
+                ->add(Url::create('/terms')->setPriority(0.5))
+                ->add(Url::create('/faq')->setPriority(0.5));
+
+            return $sitemap->writeToFile(public_path('sitemap.xml'));
+        })->name('site.sitemap');
+    }
 
     Route::group([], function(){
         Route::fallback(function () {

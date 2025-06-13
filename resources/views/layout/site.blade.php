@@ -8,17 +8,22 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png" />
-        <!-- Place favicon.ico in the root directory -->
+        <meta name="description" content="{{ $META_DESCRIPTION ?? '' }}" />
+        <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico" />
+
+        @if (env('APP_ENV') == 'production')
+            @include('site.partials.google-analytics', ['GOOGLE_CODE' => 'G-EN2Y0DK5RE'])
+            @include('site.partials.schema-markup')
+        @endif
 
         <!-- ======== CSS here ======== -->
-        <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/bootstrap.min.css" rel="preload" />
         <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/lineicons.css" />
         <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/tiny-slider.css" />
         <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/animate.css" />
         <link rel="stylesheet" href="{{ url('/') }}/template/main-site-saaspal-free-lite/assets/css/main.css" />
         <style>
-            body {
+            html, body {
                 overflow-x: hidden;
             }
         </style>
@@ -62,7 +67,7 @@
                         <div class="col-lg-12">
                             <nav class="navbar navbar-expand-lg">
                                 <a class="navbar-brand" href="index.html.htm">
-                                    <img style="max-width: initial;" src="/images/site-logo-top-white.png" alt="PG Body Tracker Logo" />
+                                    <img style="max-width: initial;" src="/images/site-logo-top-white.png" alt="Logotipo PG BodyTracker - sistema de avaliação física" />
                                 </a>
                                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="toggler-icon"></span>
@@ -105,7 +110,7 @@
                             <div class="footer-widget">
                                 <div class="logo mb-30">
                                     <a href="{{ route('site.home') }}">
-                                        <img style="position:relative; left:-50px;" src="/images/site-logo-top-white.png" alt="PG Body Tracker - Logo" />
+                                        <img style="position:relative; left:-50px;" src="/images/site-logo-top-white.png" alt="Logotipo PG BodyTracker - ferramenta para profissionais de saúde e fitness" />
                                     </a>
                                 </div>
                                 <p class="desc mb-30 text-white">
@@ -136,7 +141,7 @@
 
                         <div class="col-xl-2 col-lg-2 col-md-6">
                             <div class="footer-widget">
-                                <h3>{{ __('messages.pages.siteHome.footer.aboutTitle') }}</h3>
+                                <h4 class="text-white font-weight-bold mb-2">{{ __('messages.pages.siteHome.footer.aboutTitle') }}</h4>
                                 <ul class="links">
                                     @foreach (LayoutSitePresenter::getMenuLinks(Route::currentRouteName()) as $item)
                                         <li>
@@ -151,7 +156,7 @@
 
                         <div class="col-xl-3 col-lg-3 col-md-6">
                             <div class="footer-widget">
-                                <h3>{{ __('messages.pages.siteHome.footer.featuresTitle') }}</h3>
+                                <h4 class="text-white font-weight-bold mb-2">{{ __('messages.pages.siteHome.footer.featuresTitle') }}</h4>
                                 <ul class="links">
                                     <li>
                                         <a href="{{ route('site.privacy') }}">

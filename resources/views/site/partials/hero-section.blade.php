@@ -19,7 +19,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="hero-img wow fadeInUp" data-wow-delay=".5s">
-                <img src="/images/site-hero-top.png" alt="PG Body Tracker Dashboard">
+                <img src="/images/site-hero-top.webp" alt="Dashboard do sistema PG BodyTracker exibindo avaliações físicas de clientes">
                 </div>
             </div>
         </div>

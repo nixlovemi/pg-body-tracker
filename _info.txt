@@ -5,9 +5,9 @@
     1) Aceite da política privacidade no cadastro
     2) Comparação das fotos das avaliações
     3) Logs de pagamento e etc (database?)
-    4) Anamnese Personalizada
-    5) Exportação de Dados
-    6) Traduzir páginas site (privacy, terms, faq)
+    4) Compartilhar código pessoal e se alguém virar premium ganha algo (1 mês a mais de premium)?
+    5) Anamnese Personalizada
+    6) Exportação de Dados
 
 [LARAVEL]
 - docker exec "php_audio_video" php artisan migrate:fresh --seed --database=pgsql_test

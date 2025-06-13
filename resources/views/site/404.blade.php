@@ -40,12 +40,15 @@
         <div class="container">
             <div class="row justify-content-center align-items-center">
                 <div class="col-lg-8">
-                    <h1 class="error-title">404</h1>
+                    <div class="text-center">
+                        <img src="/images/site-404.jpg" alt="PG Body Tracker - Página não encontrada" class="img-fluid">
+                    </div>
+
                     <p class="error-message">
-                        Ops! A página que você está procurando não foi encontrada.<br>
-                        Talvez ela tenha sido movida ou removida.
+                        {!! __('messages.pages.site404.errorMsg') !!}
                     </p>
-                    <a href="/" class="btn btn-primary btn-hover error-button">Voltar para o início</a>
+
+                    <a href="{{ route('site.home') }}" class="btn btn-primary btn-hover error-button">{{ __('messages.pages.404.buttonBackToHome') }}</a>
                 </div>
             </div>
         </div>
