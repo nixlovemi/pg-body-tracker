@@ -27,9 +27,11 @@
                     <div class="col-xxl-6 col-xl-7 col-lg-9 col-md-10">
                         <div class="section-title text-center mb-60">
                             <p class="wow fadeInUp" data-wow-delay=".4s">
-                                Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos os dados pessoais dos usuários que utilizam nossa plataforma de avaliação física.
+                                {{ __('messages.pages.sitePrivacy.intro') }}
                             </p>
-                            <small class="text-muted d-block mt-3">Atualizado em {{ now()->format('d/m/Y') }}</small>
+                            <small class="text-muted d-block mt-3">
+                                {{ __('messages.pages.sitePrivacy.updatedAt', ['date' => now()->format('d/m/Y')]) }}
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -38,102 +40,99 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
                         <div class="row content-line">
-                            <h3>1. Controlador dos Dados</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section1Title') }}</h3>
                             <p class="text-muted">
-                                A empresa responsável pelo tratamento dos dados pessoais fornecidos na plataforma é {{ env('APP_NAME') }}, doravante referida como “nós” ou “nosso sistema”.
+                                {{ __('messages.pages.sitePrivacy.section1Text', ['app' => env('APP_NAME')]) }}
                             </p>
                         </div>
 
                         <div class="row content-line">
-                            <h3>2. Dados Coletados</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section2Title') }}</h3>
                             <p class="text-muted">
-                                Coletamos os seguintes dados dos usuários e seus clientes:
+                                {{ __('messages.pages.sitePrivacy.section2Text') }}
                             </p>
                             <ul class="text-muted">
-                                <li>Dados de identificação (nome, e-mail, telefone);</li>
-                                <li>Dados de login e uso do sistema (IP, navegador, horário de acesso);</li>
-                                <li>Dados corporais para fins de avaliação física (peso, altura, circunferências, percentual de gordura, fotos, entre outros);</li>
-                                <li>Informações relacionadas a planos, metas e histórico de avaliações;</li>
-                                <li>Dados de pagamento, exclusivamente para fins de processamento de assinaturas (através de terceiros como o Mercado Pago).</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section2List1') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section2List2') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section2List3') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section2List4') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section2List5') }}</li>
                             </ul>
                         </div>
 
                         <div class="row content-line">
-                            <h3>3. Finalidade do Tratamento</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section3Title') }}</h3>
                             <p class="text-muted">
-                                Os dados coletados são utilizados exclusivamente para:
+                                {{ __('messages.pages.sitePrivacy.section3Text') }}
                             </p>
                             <ul class="text-muted">
-                                <li>Fornecer e manter o funcionamento adequado da plataforma;</li>
-                                <li>Gerar relatórios de avaliação física e acompanhar a evolução dos clientes;</li>
-                                <li>Melhorar a experiência do usuário;</li>
-                                <li>Cumprir obrigações legais e regulatórias;</li>
-                                <li>Processar pagamentos e gerenciar assinaturas.</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section3List1') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section3List2') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section3List3') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section3List4') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section3List5') }}</li>
                             </ul>
                         </div>
 
                         <div class="row content-line">
-                            <h3>4. Compartilhamento de Dados</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section4Title') }}</h3>
                             <p class="text-muted">
-                                Os dados dos clientes são acessíveis apenas pelo profissional que os cadastrou. Não compartilhamos dados pessoais com terceiros, exceto quando necessário para:
+                                {{ __('messages.pages.sitePrivacy.section4Text') }}
                             </p>
                             <ul class="text-muted">
-                                <li>Processamento de pagamentos via plataformas integradas (ex: Mercado Pago);</li>
-                                <li>Atendimento a exigências legais ou ordens judiciais.</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section4List1') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section4List2') }}</li>
                             </ul>
                         </div>
 
                         <div class="row content-line">
-                            <h3>5. Armazenamento e Segurança</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section5Title') }}</h3>
                             <p class="text-muted">
-                                Adotamos medidas técnicas e organizacionais apropriadas para proteger os dados pessoais contra acesso não autorizado, destruição, perda, alteração ou qualquer forma de tratamento inadequado ou ilícito.
+                                {{ __('messages.pages.sitePrivacy.section5Text1') }}
                             </p>
                             <p class="text-muted">
-                                Os dados são armazenados em servidores seguros, com acesso restrito e criptografia aplicada quando necessário.
-                            </p>
-                        </div>
-
-                        <div class="row content-line">
-                            <h3>6. Retenção dos Dados</h3>
-                            <p class="text-muted">
-                                Os dados serão armazenados enquanto houver vínculo com a plataforma. Após a exclusão da conta ou mediante solicitação expressa, os dados poderão ser excluídos definitivamente, respeitando obrigações legais de retenção mínima.
+                                {{ __('messages.pages.sitePrivacy.section5Text2') }}
                             </p>
                         </div>
 
                         <div class="row content-line">
-                            <h3>7. Direitos dos Titulares (LGPD)</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section6Title') }}</h3>
                             <p class="text-muted">
-                                Os titulares dos dados têm direito de:
+                                {{ __('messages.pages.sitePrivacy.section6Text') }}
+                            </p>
+                        </div>
+
+                        <div class="row content-line">
+                            <h3>{{ __('messages.pages.sitePrivacy.section7Title') }}</h3>
+                            <p class="text-muted">
+                                {{ __('messages.pages.sitePrivacy.section7Text') }}
                             </p>
                             <ul class="text-muted">
-                                <li>Acessar e corrigir seus dados pessoais;</li>
-                                <li>Solicitar a exclusão ou anonimização dos dados, quando cabível;</li>
-                                <li>Revogar o consentimento a qualquer momento, quando aplicável;</li>
-                                @php
-                                /*<li>Portabilidade dos dados a outro serviço;</li>*/
-                                @endphp
-                                <li>Informações sobre o uso e compartilhamento dos dados.</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section7List1') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section7List2') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section7List3') }}</li>
+                                <li>{{ __('messages.pages.sitePrivacy.section7List4') }}</li>
                             </ul>
                         </div>
 
                         <div class="row content-line">
-                            <h3>8. Cookies</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section8Title') }}</h3>
                             <p class="text-muted">
-                                Utilizamos cookies essenciais para autenticação, navegação e funcionalidade da plataforma. O usuário pode configurar seu navegador para bloqueá-los, ciente de que isso poderá comprometer algumas funcionalidades.
+                                {{ __('messages.pages.sitePrivacy.section8Text') }}
                             </p>
                         </div>
 
                         <div class="row content-line">
-                            <h3>9. Alterações nesta Política</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section9Title') }}</h3>
                             <p class="text-muted">
-                                Esta Política de Privacidade pode ser atualizada periodicamente. Recomendamos que o usuário revise esta página com frequência. Alterações significativas serão notificadas por e-mail ou dentro do sistema.
+                                {{ __('messages.pages.sitePrivacy.section9Text') }}
                             </p>
                         </div>
 
                         <div class="row content-line">
-                            <h3>10. Contato</h3>
+                            <h3>{{ __('messages.pages.sitePrivacy.section10Title') }}</h3>
                             <p class="text-muted">
-                                Em caso de dúvidas, solicitações ou para exercer seus direitos previstos na LGPD, entre em contato conosco pelo e-mail: <strong>{{ env('SUPPORT_EMAIL') }}</strong>.
+                                {!! __('messages.pages.sitePrivacy.section10Text', ['email' => env('SUPPORT_EMAIL')]) !!}
                             </p>
                         </div>
                     </div>

@@ -8,7 +8,6 @@
     4) Compartilhar código pessoal e se alguém virar premium ganha algo (1 mês a mais de premium)?
     5) Anamnese Personalizada
     6) Exportação de Dados
-    7) Traduzir páginas site (privacy, terms, faq)
 
 [LARAVEL]
 - docker exec "php_audio_video" php artisan migrate:fresh --seed --database=pgsql_test

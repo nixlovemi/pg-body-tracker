@@ -6,5 +6,6 @@
         margin-left: 25px;
         list-style-type: disc;
         font-size: 18px;
+        font-family: Arimo;
     }
 </style>

@@ -27,9 +27,11 @@
                     <div class="col-xxl-6 col-xl-7 col-lg-9 col-md-10">
                         <div class="section-title text-center mb-60">
                             <p class="wow fadeInUp" data-wow-delay=".4s">
-                                Leia com atenção as regras que definem como você pode utilizar nossa plataforma, quais são suas responsabilidades e os direitos oferecidos a você como usuário.
+                                {{ __('messages.pages.siteTerms.intro') }}
                             </p>
-                            <small class="text-muted d-block mt-3">Atualizado em {{ now()->format('d/m/Y') }}</small>
+                            <small class="text-muted d-block mt-3">
+                                {{ __('messages.pages.siteTerms.updatedAt', ['date' => now()->format('d/m/Y')]) }}
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -39,89 +41,74 @@
                     <div class="col-lg-10">
                         <div class="policy-content">
                             <div class="row content-line">
-                                <h3>1. Aceitação dos Termos</h3>
+                                <h3>{{ __('messages.pages.siteTerms.section1Title') }}</h3>
                                 <p>
-                                    Ao criar uma conta e utilizar o sistema {{ env('APP_NAME') }}, você concorda com estes Termos de Serviço e com nossa <a href="{{ route('site.privacy') }}">Política de Privacidade</a>. Caso não concorde, recomendamos que não utilize a plataforma.
+                                    {!! __('messages.pages.siteTerms.section1Text', [
+                                        'app' => env('APP_NAME'),
+                                        'privacyUrl' => route('site.privacy')
+                                    ]) !!}
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h3>2. Objetivo da Plataforma</h3>
-                                <p>
-                                    Esta plataforma oferece ferramentas para profissionais da área de saúde, fitness e bem-estar gerenciarem avaliações físicas de seus clientes, incluindo gráficos, metas, relatórios, reavaliações e gestão de progresso.
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section2Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section2Text') }}</p>
                             </div>
 
                             <div class="row content-line">
-                                <h3>3. Cadastro e Responsabilidade</h3>
-                                <p>
-                                    O profissional é responsável pelas informações inseridas no sistema, incluindo dados dos seus clientes. Ao cadastrar-se, o usuário concorda em fornecer informações verídicas e manter seus dados atualizados.
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section3Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section3Text') }}</p>
                             </div>
 
                             <div class="row content-line">
-                                <h3>4. Uso Adequado</h3>
-                                <p>
-                                    O uso da plataforma deve ser feito de forma ética e responsável. Observe que:
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section4Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section4Text') }}</p>
                                 <ul>
-                                    <li>Não é permitido utilizar o sistema para fins ilegais ou que infrinjam direitos de terceiros.</li>
-                                    <li>O compartilhamento de dados sensíveis fora da plataforma é de total responsabilidade do profissional.</li>
-                                    <li>O acesso à conta é individual e intransferível.</li>
+                                    <li>{{ __('messages.pages.siteTerms.section4List1') }}</li>
+                                    <li>{{ __('messages.pages.siteTerms.section4List2') }}</li>
+                                    <li>{{ __('messages.pages.siteTerms.section4List3') }}</li>
                                 </ul>
                             </div>
 
                             <div class="row content-line">
-                                <h3>5. Planos e Pagamentos</h3>
-                                <p>
-                                    O {{ env('APP_NAME') }} oferece uma versão gratuita e planos pagos com recursos adicionais. Os detalhes dos planos e preços estão disponíveis na plataforma.
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section5Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section5Text', ['app' => env('APP_NAME')]) }}</p>
                                 <ul>
-                                    <li>A versão gratuita tem limitações de uso previamente definidas.</li>
-                                    <li>Os planos pagos são cobrados de forma recorrente via plataforma de pagamento integrada (como o Mercado Pago).</li>
-                                    <li>O cancelamento do plano premium pode ser feito a qualquer momento, mantendo-se o acesso até o fim do ciclo já pago.</li>
+                                    <li>{{ __('messages.pages.siteTerms.section5List1') }}</li>
+                                    <li>{{ __('messages.pages.siteTerms.section5List2') }}</li>
+                                    <li>{{ __('messages.pages.siteTerms.section5List3') }}</li>
                                 </ul>
                             </div>
 
                             <div class="row content-line">
-                                <h3>6. Cancelamento e Exclusão de Conta</h3>
-                                <p>
-                                    O usuário pode solicitar o cancelamento da conta a qualquer momento. O sistema pode reter os dados pelo prazo necessário para cumprimento de obrigações legais, conforme descrito na Política de Privacidade.
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section6Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section6Text') }}</p>
                             </div>
 
                             <div class="row content-line">
-                                <h3>7. Modificações na Plataforma</h3>
-                                <p>
-                                    O sistema poderá ser atualizado ou modificado para melhorias de desempenho, segurança e novas funcionalidades. O uso contínuo da plataforma implica aceitação das alterações.
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section7Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section7Text') }}</p>
                             </div>
 
                             <div class="row content-line">
-                                <h3>8. Isenção de Responsabilidade</h3>
-                                <p>
-                                    Embora adotemos boas práticas de segurança e estabilidade, o {{ env('APP_NAME') }} não se responsabiliza por perdas de dados causadas por fatores externos, falhas na internet ou uso indevido por parte do usuário.
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section8Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section8Text', ['app' => env('APP_NAME')]) }}</p>
                             </div>
 
                             <div class="row content-line">
-                                <h3>9. Propriedade Intelectual</h3>
-                                <p>
-                                    Todo o conteúdo da plataforma, incluindo design, marca, funcionalidades e código-fonte, são protegidos por direitos autorais e pertencem ao proprietário do sistema. É proibida a reprodução ou uso comercial sem autorização.
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section9Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section9Text') }}</p>
                             </div>
 
                             <div class="row content-line">
-                                <h3>10. Foro e Legislação Aplicável</h3>
-                                <p>
-                                    Estes termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de Americana, Estado de São Paulo, como competente para dirimir quaisquer dúvidas ou controvérsias.
-                                </p>
+                                <h3>{{ __('messages.pages.siteTerms.section10Title') }}</h3>
+                                <p>{{ __('messages.pages.siteTerms.section10Text') }}</p>
                             </div>
 
                             <div class="row content-line">
-                                <h3>11. Contato</h3>
+                                <h3>{{ __('messages.pages.siteTerms.section11Title') }}</h3>
                                 <p>
-                                    Em caso de dúvidas, envie um e-mail para: <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.
+                                    {!! __('messages.pages.siteTerms.section11Text', ['email' => env('SUPPORT_EMAIL')]) !!}
                                 </p>
                             </div>
                         </div>
