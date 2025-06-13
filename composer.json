@@ -21,6 +21,7 @@
         "laravel/tinker": "^2.5",
         "mercadopago/dx-php": "^2.6",
         "okipa/laravel-table": "5.2.2",
+        "spatie/laravel-sitemap": "6.4.0",
         "symfony/filesystem": "^6.3",
         "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3"
     },

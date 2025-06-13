@@ -1,2 +1,3 @@
 User-agent: *
 Disallow:
+Sitemap: https://pgbodytracker.com.br/sitemap.xml

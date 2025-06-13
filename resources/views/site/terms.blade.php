@@ -11,6 +11,9 @@
                     <h1 class="wow fadeInUp text-center" data-wow-delay=".4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
                         {{ __('messages.pages.siteTerms.title') }}
                     </h1>
+                    <h2 class="text-white text-center mb-4 wow fadeInUp" data-wow-delay=".2s">
+                        {{ __('messages.pages.siteTerms.h2') }}
+                    </h2>
                 </div>
             </div>
         </div>
@@ -36,28 +39,28 @@
                     <div class="col-lg-10">
                         <div class="policy-content">
                             <div class="row content-line">
-                                <h5>1. Aceitação dos Termos</h5>
+                                <h3>1. Aceitação dos Termos</h3>
                                 <p>
                                     Ao criar uma conta e utilizar o sistema {{ env('APP_NAME') }}, você concorda com estes Termos de Serviço e com nossa <a href="{{ route('site.privacy') }}">Política de Privacidade</a>. Caso não concorde, recomendamos que não utilize a plataforma.
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h5>2. Objetivo da Plataforma</h5>
+                                <h3>2. Objetivo da Plataforma</h3>
                                 <p>
                                     Esta plataforma oferece ferramentas para profissionais da área de saúde, fitness e bem-estar gerenciarem avaliações físicas de seus clientes, incluindo gráficos, metas, relatórios, reavaliações e gestão de progresso.
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h5>3. Cadastro e Responsabilidade</h5>
+                                <h3>3. Cadastro e Responsabilidade</h3>
                                 <p>
                                     O profissional é responsável pelas informações inseridas no sistema, incluindo dados dos seus clientes. Ao cadastrar-se, o usuário concorda em fornecer informações verídicas e manter seus dados atualizados.
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h5>4. Uso Adequado</h5>
+                                <h3>4. Uso Adequado</h3>
                                 <p>
                                     O uso da plataforma deve ser feito de forma ética e responsável. Observe que:
                                 </p>
@@ -69,7 +72,7 @@
                             </div>
 
                             <div class="row content-line">
-                                <h5>5. Planos e Pagamentos</h5>
+                                <h3>5. Planos e Pagamentos</h3>
                                 <p>
                                     O {{ env('APP_NAME') }} oferece uma versão gratuita e planos pagos com recursos adicionais. Os detalhes dos planos e preços estão disponíveis na plataforma.
                                 </p>
@@ -81,42 +84,42 @@
                             </div>
 
                             <div class="row content-line">
-                                <h5>6. Cancelamento e Exclusão de Conta</h5>
+                                <h3>6. Cancelamento e Exclusão de Conta</h3>
                                 <p>
                                     O usuário pode solicitar o cancelamento da conta a qualquer momento. O sistema pode reter os dados pelo prazo necessário para cumprimento de obrigações legais, conforme descrito na Política de Privacidade.
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h5>7. Modificações na Plataforma</h5>
+                                <h3>7. Modificações na Plataforma</h3>
                                 <p>
                                     O sistema poderá ser atualizado ou modificado para melhorias de desempenho, segurança e novas funcionalidades. O uso contínuo da plataforma implica aceitação das alterações.
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h5>8. Isenção de Responsabilidade</h5>
+                                <h3>8. Isenção de Responsabilidade</h3>
                                 <p>
                                     Embora adotemos boas práticas de segurança e estabilidade, o {{ env('APP_NAME') }} não se responsabiliza por perdas de dados causadas por fatores externos, falhas na internet ou uso indevido por parte do usuário.
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h5>9. Propriedade Intelectual</h5>
+                                <h3>9. Propriedade Intelectual</h3>
                                 <p>
                                     Todo o conteúdo da plataforma, incluindo design, marca, funcionalidades e código-fonte, são protegidos por direitos autorais e pertencem ao proprietário do sistema. É proibida a reprodução ou uso comercial sem autorização.
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h5>10. Foro e Legislação Aplicável</h5>
+                                <h3>10. Foro e Legislação Aplicável</h3>
                                 <p>
                                     Estes termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de Americana, Estado de São Paulo, como competente para dirimir quaisquer dúvidas ou controvérsias.
                                 </p>
                             </div>
 
                             <div class="row content-line">
-                                <h5>11. Contato</h5>
+                                <h3>11. Contato</h3>
                                 <p>
                                     Em caso de dúvidas, envie um e-mail para: <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.
                                 </p>

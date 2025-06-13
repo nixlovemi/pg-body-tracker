@@ -17,4 +17,23 @@ final class LayoutSitePresenter
             ['title' => __('messages.pages.siteHome.header.menuLogin'), 'url' => route('app.login')],
         ];
     }
+
+    public static function getFaq(): array
+    {
+        $arrFaq = [];
+
+        for ($i = 1; $i <= 8; $i++) {
+            $questionKey = "messages.pages.siteFaq.faq.question{$i}";
+            $answerKey = "messages.pages.siteFaq.faq.answer{$i}";
+
+            if (__($questionKey) !== $questionKey && __($answerKey) !== $answerKey) {
+                $arrFaq[] = [
+                    'question' => __($questionKey),
+                    'answer' => __($answerKey),
+                ];
+            }
+        }
+
+        return $arrFaq;
+    }
 }

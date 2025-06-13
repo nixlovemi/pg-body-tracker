@@ -257,6 +257,7 @@ return [
     'pages' => [
         'siteHome' => [
             'title' => 'PG Body Tracker - Avaliações Corporais',
+            'metaDescription' => 'PG BodyTracker é a solução completa para avaliações físicas profissionais. Acompanhe a evolução dos seus clientes com facilidade e precisão.',
             'header' => [
                 'menuHome' => 'Home',
                 'menuFeatures' => 'Recursos',
@@ -272,6 +273,8 @@ return [
                 'ctaButton' => 'Experimente Grátis',
             ],
             'featuresSection' => [
+                'title' => 'Recursos do sistema',
+                'text' => 'O PG BodyTracker oferece uma plataforma completa para profissionais de saúde, educação física e nutrição realizarem avaliações físicas, acompanharem bioimpedância, medidas corporais, definirem metas de evolução e gerarem relatórios personalizados com agilidade. Tudo pensado para facilitar sua rotina e elevar a experiência dos seus clientes.',
                 'col1Icon' => 'lni lni-stats-up',
                 'col1Title' => 'Gestão de Avaliações Corporais',
                 'col1Text' => 'Organize avaliações físicas completas e acompanhe o progresso dos seus clientes com precisão.',
@@ -295,7 +298,7 @@ return [
                 'title' => 'A solução ideal para profissionais que acompanham resultados de verdade',
                 'text' => 'Nosso sistema foi desenvolvido para simplificar o dia a dia de quem realiza avaliações físicas. De forma prática, você organiza dados, gera relatórios personalizados e acompanha a evolução dos seus clientes com gráficos e comparativos visuais. Tudo com a sua identidade profissional.',
                 'ctaButton' => 'Comece agora (Grátis!)',
-                'title2' => 'Simples de usar e com recursos que fazem a diferença',
+                'title2' => 'Fácil de usar - Sistema para avaliação física com recursos que fazem a diferença',
                 'text2' => 'Mesmo com tantas funcionalidades, o sistema é fácil de usar desde o primeiro acesso. Tudo foi pensado para que você ganhe tempo e ofereça um atendimento ainda mais profissional.',
                 'li2-1' => 'Acesso rápido de qualquer dispositivo',
                 'li2-2' => 'Relatórios completos e visualmente atrativos',
@@ -325,7 +328,7 @@ return [
                 'col6Text' => 'Suporte humano e direto, por quem entende sua rotina de atendimentos.',
             ],
             'versionSection' => [
-                'title' => 'Grátis já é ótimo. Premium é ainda melhor!',
+                'title' => 'Planos Free e Premium - Avaliação física profissional sob medida',
                 'text' => 'Use o sistema sem pagar nada e aproveite todos os recursos essenciais. Quando quiser ir além — com relatórios avançados, mais personalização e ferramentas extras — é só fazer o upgrade para o Premium. Sem complicação.',
                 'btnCta' => 'Crie sua conta gratuita',
                 'btnCtaPremium' => 'Escolha ser Premium!',
@@ -339,14 +342,39 @@ return [
 
         'sitePrivacy' => [
             'title' => 'Política de Privacidade',
+            'h2' => 'Política de Privacidade da Plataforma PG BodyTracker',
+            'metaDescription' => 'Saiba como o PG BodyTracker coleta, usa e protege os dados pessoais. Transparência e segurança com base na LGPD.',
         ],
 
         'siteTerms' => [
             'title' => 'Termos de Serviço',
+            'h2' => 'Termos de Uso do Sistema PG BodyTracker',
+            'metaDescription' => 'Leia os Termos de Serviço do PG BodyTracker para entender as regras de uso, responsabilidades e condições da nossa plataforma.',
         ],
 
         'siteFaq' => [
             'title' => 'Perguntas Frequentes',
+            'h2' => 'Dúvidas Frequentes sobre o PG BodyTracker',
+            'description' => 'Aqui estão algumas das perguntas mais comuns sobre o uso do PG BodyTracker. Se ainda restar dúvidas, entre em contato com nosso suporte via <strong>:email</strong>.',
+            'metaDescription' => 'Encontre respostas para as perguntas mais comuns sobre o PG BodyTracker. Dúvidas sobre funcionalidades, planos e suporte.',
+            'faq' => [
+                'question1' => 'O que é o PG BodyTracker?',
+                'answer1' => 'É um sistema online criado para ajudar profissionais de saúde e fitness a realizarem avaliações físicas, acompanharem a evolução de seus clientes e gerarem relatórios profissionais com facilidade.',
+                'question2' => 'O sistema é gratuito?',
+                'answer2' => 'Sim! Existe uma versão gratuita com recursos limitados. Para desbloquear funcionalidades avançadas, como exportação de relatórios, inclusão de fotos e envio de avaliações por link, você pode optar por um dos planos premium.',
+                'question3' => 'Como faço para assinar o plano premium?',
+                'answer3' => 'Você pode acessar a página de planos e escolher entre as opções mensal, trimestral, semestral ou anual. Após confirmar o pagamento via Mercado Pago, seu plano é ativado automaticamente.',
+                'question4' => 'Posso cancelar a assinatura a qualquer momento?',
+                'answer4' => 'Sim. Você pode cancelar a renovação automática a qualquer momento. O acesso ao plano premium permanece ativo até o fim do período já pago, sem reembolso parcial.',
+                'question5' => 'Os dados dos meus clientes são seguros?',
+                'answer5' => 'Sim. Toda a plataforma segue boas práticas de segurança e os dados são armazenados com criptografia e acesso restrito. Apenas você, como profissional, tem acesso às informações dos seus clientes.',
+                'question6' => 'O sistema gera relatórios em PDF?',
+                'answer6' => 'Sim! Os relatórios das avaliações podem ser exportados em PDF e CSV, com opção de incluir seu logotipo e informações de contato. Esta função está disponível para usuários premium.',
+                'question7' => 'O sistema funciona em celular?',
+                'answer7' => 'Sim, o PG BodyTracker foi projetado para funcionar em diferentes tamanhos de tela, incluindo smartphones e tablets.',
+                'question8' => 'O que acontece se eu atingir o limite de clientes?',
+                'answer8' => 'O plano gratuito possui um limite de clientes cadastrados. Para adicionar mais, você pode fazer upgrade para o plano premium e ter acesso ilimitado.',
+            ],
         ],
 
         'login' => [

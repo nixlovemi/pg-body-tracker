@@ -8,6 +8,7 @@ class Site extends Controller
     {
         return view('site.home', [
             'PAGE_TITLE' => 'Home',
+            'META_DESCRIPTION' => __('messages.pages.siteHome.metaDescription'),
         ]);
     }
 
@@ -15,6 +16,7 @@ class Site extends Controller
     {
         return view('site.privacy', [
             'PAGE_TITLE' => __('messages.pages.sitePrivacy.title'),
+            'META_DESCRIPTION' => __('messages.pages.sitePrivacy.metaDescription'),
         ]);
     }
 
@@ -22,6 +24,7 @@ class Site extends Controller
     {
         return view('site.terms', [
             'PAGE_TITLE' => __('messages.pages.siteTerms.title'),
+            'META_DESCRIPTION' => __('messages.pages.siteTerms.metaDescription'),
         ]);
     }
 
@@ -29,6 +32,7 @@ class Site extends Controller
     {
         return view('site.faq', [
             'PAGE_TITLE' => __('messages.pages.siteFaq.title'),
+            'META_DESCRIPTION' => __('messages.pages.siteFaq.metaDescription'),
         ]);
     }
 }
