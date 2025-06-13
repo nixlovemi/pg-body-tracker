@@ -15,7 +15,7 @@ $routeName = Route::currentRouteName();
         "sameAs": [
             "https://www.instagram.com/pgbodytracker",
             "https://www.facebook.com/people/PG-Body-Tracker/61577056899425/"
-        ],
+        ]
     }
     </script>
 

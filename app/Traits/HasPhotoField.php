@@ -18,11 +18,6 @@ trait HasPhotoField {
         return SysUtils::getImageBase64($filePath);
     }
 
-    final public function getBase64String(string $filePath): string
-    {
-        return SysUtils::getBase64String($filePath);
-    }
-
     final public function setPhotoUrl(
         string $field,
         ?UploadedFile $file,

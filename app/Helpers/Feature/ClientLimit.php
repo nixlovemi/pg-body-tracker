@@ -13,6 +13,11 @@ class ClientLimit extends FeatureAbstract
 
     public function validate(): bool
     {
+        if (app()->runningInConsole()) {
+            // for migrations, seeders, etc. we allow access
+            return true;
+        }
+
         if ($this->getPlanType() === self::FEATURE_PLAN_TYPE_PREMIUM) {
             return true;
         }

@@ -18,6 +18,10 @@
 - php artisan key:generate (csrf token)
 - php artisan storage:link --relative
 
+[TESTS]
+    - php artisan migrat:fresh --seed --database=mysql_test
+    - php artisan test
+
 [TABLE]
 - https://packagist.org/packages/okipa/laravel-table
 - docker exec "php_audio_video" php artisan make:table UsersTable [--model=App/Models/User]

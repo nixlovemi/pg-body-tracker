@@ -18,7 +18,6 @@ final class Permissions {
     public const ACL_AVALIATION_EDIT = 'avaliation/edit';
 
     public const ACL_CALENDAR_VIEW = 'calendar/view';
-    public const ACL_CALENDAR_EDIT = 'calendar/edit';
 
     private const ACL = [
         self::ACL_DASHBOARD_INDEX => [User::ROLE_MANAGER],
@@ -33,7 +32,6 @@ final class Permissions {
         self::ACL_AVALIATION_EDIT => [User::ROLE_MANAGER],
 
         self::ACL_CALENDAR_VIEW => [User::ROLE_MANAGER, User::ROLE_CLIENT],
-        self::ACL_CALENDAR_EDIT => [User::ROLE_MANAGER],
     ];
 
     private const ROUTE_ACL = [
@@ -104,5 +102,10 @@ final class Permissions {
         // check for true = all blocked except when true
         $hasAcl = (array_search($User?->role, self::ACL[$aclOrRoute] ?? []) !== false);
         return (true === $hasAcl);
+    }
+
+    public static function getAllRouteAcls(): array
+    {
+        return self::ROUTE_ACL;
     }
 }

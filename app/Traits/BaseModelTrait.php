@@ -39,8 +39,12 @@ trait BaseModelTrait {
 
     final public static function fHasAccess(Model $model, ?User $user = null): bool
     {
-        $user = $user ?? SysUtils::getLoggedInUser();
+        if (SysUtils::isRunningMigration()) {
+            // for migrations, seeders, etc. we allow access
+            return true;
+        }
 
+        $user = $user ?? SysUtils::getLoggedInUser();
         if (!$user) {
             return false;
         }
@@ -49,8 +53,13 @@ trait BaseModelTrait {
             return true;
         }
 
-        // new model, skip
-        if (!$model->id && !($model instanceof User)) {
+        // users should not have access to create a new User model
+        if ($model instanceof User && !$model->wasRecentlyCreated) {
+            return false;
+        }
+
+        // new other models, skip
+        if ($model->wasRecentlyCreated) {
             return true;
         }
 

@@ -376,32 +376,6 @@ class User extends Authenticatable
         });
     }
 
-    public static function fHasAccess(self $User): bool
-    {
-        // adding user is ok
-        if (empty($User->id)) {
-            return true;
-        }
-
-        // check logged user
-        $lggdUser = SysUtils::getLoggedInUser();
-        if (null === $lggdUser) {
-            return false;
-        }
-
-        // root can save any client
-        if ($lggdUser->role === User::ROLE_ROOT) {
-            return true;
-        }
-
-        // can only save itself
-        if ($User->id > 0 && $User->id !== $lggdUser->id) {
-            return false;
-        }
-
-        return true;
-    }
-
     public static function fPasswordHash(string $password): string
     {
         // return bcrypt($password);

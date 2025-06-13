@@ -15,8 +15,7 @@ class ChangeVisceralFatAvaliations extends Migration
     public function up()
     {
         DB::statement("
-            ALTER TABLE avaliations CHANGE visceral_fat_kg visceral_fat_level double(2,1) unsigned DEFAULT NULL NULL COMMENT 'Levels 1 - 30, Omron, Tanita';
-            ALTER TABLE avaliations MODIFY COLUMN visceral_fat_level double(2,1) unsigned DEFAULT NULL NULL COMMENT 'Levels 1 - 30, Omron, Tanita';
+            ALTER TABLE avaliations CHANGE visceral_fat_kg visceral_fat_level double(5,1) unsigned DEFAULT NULL;
         ");
     }
 
@@ -28,8 +27,7 @@ class ChangeVisceralFatAvaliations extends Migration
     public function down()
     {
         DB::statement("
-            ALTER TABLE avaliations CHANGE visceral_fat_level visceral_fat_kg double(5,1) unsigned DEFAULT NULL NULL;
-            ALTER TABLE avaliations MODIFY COLUMN visceral_fat_kg double(5,1) unsigned DEFAULT NULL NULL;
+            ALTER TABLE avaliations CHANGE visceral_fat_level visceral_fat_kg double(5,1) unsigned DEFAULT NULL;
         ");
     }
 }

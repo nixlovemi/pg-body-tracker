@@ -15,6 +15,24 @@ final class SysUtils {
     private const ENCODE_FROM_CHARS = '+/=';
     private const ENCODE_TO_CHARS = '-;$';
 
+    public static function isRunningMigration(): bool
+    {
+        if (!app()->runningInConsole()) {
+            return false;
+        }
+
+        $argv = $_SERVER['argv'] ?? [];
+
+        return isset($argv[1]) && in_array($argv[1], [
+            'migrate',
+            'migrate:fresh',
+            'migrate:install',
+            'migrate:refresh',
+            'migrate:reset',
+            'migrate:rollback',
+        ]);
+    }
+
     public static function getWebAuth(): SessionGuard
     {
         return Auth::guard('web');
@@ -168,19 +186,21 @@ final class SysUtils {
 
     public static function hexToRGB(string $hex): array
     {
-        $hex = str_replace('#', '', $hex);
-        if (strlen($hex) == 6) {
-            list($r, $g, $b) = str_split($hex, 2);
-        } elseif (strlen($hex) == 3) {
-            list($r, $g, $b) = str_split(str_repeat($hex, 2), 2);
-        } else {
-            return [0, 0, 0];
+        $sTrimmedString = ltrim($hex, '#');
+
+        if(strlen($sTrimmedString) === 3){
+            list($iRed, $iGreen, $iBlue) = array_map(
+                function($sColor){
+                    return hexdec(str_repeat($sColor, 2));
+                },
+                str_split($sTrimmedString, 1)
+            );
+
+            return [$iRed, $iGreen, $iBlue];
         }
-        return [
-            hexdec($r),
-            hexdec($g),
-            hexdec($b)
-        ];
+
+        list($iRed, $iGreen, $iBlue) = array_map('hexdec', str_split($sTrimmedString, 2));
+        return [$iRed, $iGreen, $iBlue];
     }
 
     public static function getImageBase64(string $filePath): ?string
