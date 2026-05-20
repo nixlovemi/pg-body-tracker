@@ -32,7 +32,7 @@ abstract class FeatureAbstract
     }
     final public function getPlanType(): string
     {
-        return $this->User->getPlanType();
+        return $this?->User?->getPlanType() ?? self::FEATURE_PLAN_TYPE_FREE;
     }
     final public static function fGetLabelPlanType(string $planType): string
     {

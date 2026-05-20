@@ -71,6 +71,10 @@ abstract class AvaliationFieldInfoAbstract
     }
     protected function defineIdealValues(): void
     {
+        if (empty($this->getManRanking()) || empty($this->getWomanRanking())) {
+            throw new \LogicException('Both array rankings must be set before calling defineIdealValues().');
+        }
+
         $this->setManIdealValues($this->getManRanking()[0], $this->getManRanking()[1]);
         $this->setWomanIdealValues($this->getWomanRanking()[0], $this->getWomanRanking()[1]);
     }
