@@ -134,6 +134,15 @@ class UserInfo extends Model
     // static functions
     public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
+        // Allow access during migrations/seed
+        if (\App\Helpers\SysUtils::isRunningMigration()) {
+            return true;
+        }
+
+        if (!$user) {
+            return false;
+        }
+
         if ($model->id > 0 && $model->user_id !== $user->id) {
             return false;
         }

@@ -46,7 +46,7 @@ class UserFactory extends Factory
             'picture_url' => function() use ($gender) {
                 return $this->faker->randomElement($this->userImages[$gender]);
             },
-            'password' => User::fPasswordHash('Mudar123'),
+            'password' => 'Mudar123',
             'password_reset_token' => null,
             'role' => $this->faker->randomElement(array_keys(User::fGetRoles())),
             'active' => $this->faker->randomElement([true, false]),

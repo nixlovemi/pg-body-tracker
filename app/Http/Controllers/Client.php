@@ -17,13 +17,20 @@ class Client extends Controller
 
     public function index()
     {
+        $user = SysUtils::getLoggedInUser();
+        $clientCount = $user ? $user->getClientCount() : 0;
+
         return view('app.client.index', [
             'PAGE_TITLE' => __('messages.pages.client.index.title'),
+            'CLIENT_COUNT' => $clientCount,
         ]);
     }
 
     public function add()
     {
+        $user = SysUtils::getLoggedInUser();
+        $isFirstClient = $user ? $user->isFirstClient() : false;
+
         return view('app.client.register', [
             'PAGE_TITLE' => __('messages.modalAddTitle', [
                 'modelName' => __('messages.models.Client.name')
@@ -31,6 +38,11 @@ class Client extends Controller
             'TYPE' => Constants::FORM_ADD,
             'ACTION' => route('app.client.doSave'),
             'CLIENT' => null,
+            'IS_FIRST_CLIENT' => $isFirstClient,
+            'PREFILL_CLIENT' => [
+                'first_name' => $user?->first_name,
+                'last_name' => $user?->last_name,
+            ],
         ]);
     }
 
@@ -38,6 +50,8 @@ class Client extends Controller
     {
         $form = $this->formatSaveRequest($request);
         $codedId = $form['cid'] ?? null;
+        $user = SysUtils::getLoggedInUser();
+        $hasNoClientsBeforeSave = $user ? $user->isFirstClient() : false;
         $response = mClient::fSave($form, $codedId);
 
         if ($response->isError()) {
@@ -49,6 +63,20 @@ class Client extends Controller
         }
 
         $Client = $response->getValueFromResponse('Client');
+
+        if (
+            !$codedId
+            && $hasNoClientsBeforeSave
+            && '1' === (string) $request->input('f-onboarding-create-first-avaliation', '0')
+        ) {
+            return redirect()
+                ->route('app.avaliation.index', [
+                    'openAvaliation' => 1,
+                    'openAvaliationCID' => $Client->codedId,
+                ])
+                ->withSuccess(__('messages.pages.client.register.selfShortcutSuccess'));
+        }
+
         return redirect()
             ->route('app.client.edit', [
                 'codedId' => $Client->codedId,

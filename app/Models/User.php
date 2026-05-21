@@ -90,6 +90,18 @@ class User extends Authenticatable
         );
     }
 
+    public function avaliations()
+    {
+        return $this->hasManyThrough(
+            Avaliation::class,
+            Client::class,
+            'user_id',
+            'client_id',
+            'id',
+            'id'
+        );
+    }
+
     public function info()
     {
         return $this->hasOne(
@@ -159,6 +171,21 @@ class User extends Authenticatable
     public function getFullName(): string
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getClientCount(): int
+    {
+        return $this->clients()->count();
+    }
+
+    public function getAvaliationCount(): int
+    {
+        return $this->avaliations()->count();
+    }
+
+    public function isFirstClient(): bool
+    {
+        return $this->getClientCount() === 0;
     }
 
     public function isRoot(): bool

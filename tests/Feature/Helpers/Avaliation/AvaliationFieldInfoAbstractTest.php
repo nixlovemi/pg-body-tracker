@@ -5,6 +5,8 @@ namespace Tests\Feature\Helpers\Avaliation;
 use Tests\TestCase;
 use App\Helpers\Avaliation\AvaliationFieldInfoAbstract;
 use App\Models\Client;
+use App\Models\User;
+use App\Models\Avaliation;
 use App\Helpers\Constants;
 
 class DummyAvaliationFieldInfo extends AvaliationFieldInfoAbstract
@@ -49,11 +51,30 @@ class AvaliationFieldInfoAbstractTest extends TestCase
 {
     protected function makeAvaliationWithClient($isMale = true)
     {
-        $client = Client::where('gender', $isMale ? Client::GENDER_MALE : Client::GENDER_FEMALE)
-            ->inRandomOrder()
-            ->first();
+        /** @var User $user */
+        $user = User::factory()->create([
+            'role' => User::ROLE_MANAGER,
+            'active' => true,
+            'confirmation' => true,
+        ]);
+        $this->actingAs($user, 'web');
 
-        return $client->avaliations->first();
+        /** @var Client $client */
+        $client = Client::factory()->create([
+            'user_id' => $user->id,
+            'gender' => $isMale ? Client::GENDER_MALE : Client::GENDER_FEMALE,
+            'birthdate' => '1990-01-01',
+            'height_cm' => 180,
+            'weight_kg' => 80,
+        ]);
+
+        /** @var Avaliation $avaliation */
+        $avaliation = Avaliation::factory()->create([
+            'client_id' => $client->id,
+            'date' => now()->subDay()->format('Y-m-d'),
+        ]);
+
+        return $avaliation;
     }
 
     public function testGetFieldInfoForMale()

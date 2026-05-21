@@ -9,6 +9,7 @@ use DateTime;
 use Illuminate\Support\Facades\File;
 use App\Http\Middleware\AuthenticateWebExpireAt;
 use \Carbon\Carbon;
+use DateTimeInterface;
 
 final class SysUtils {
 
@@ -96,12 +97,12 @@ final class SysUtils {
         return self::getLoggedInUser() !== null;
     }
 
-    public static function applyTimezone($date): Carbon
+    public static function applyTimezone(string|DateTimeInterface $date): Carbon
     {
         return Carbon::parse($date)->timezone(getenv('APP_TIME_ZONE'));
     }
 
-    public static function timezoneDate($date, $format): string
+    public static function timezoneDate(string|DateTimeInterface $date, string $format): string
     {
         if (empty($date)) {
             return '';
@@ -109,7 +110,7 @@ final class SysUtils {
         return Carbon::parse($date)->setTimezone(env('APP_TIME_ZONE'))->format($format);
     }
 
-    public static function timezoneNow($format): string
+    public static function timezoneNow(string $format): string
     {
         return Carbon::now()->setTimezone(env('APP_TIME_ZONE'))->format($format);
     }

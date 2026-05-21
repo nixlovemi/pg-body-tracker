@@ -333,7 +333,7 @@
      */
     function showAlert(typeStr, objVar)
     {
-        Swal.fire({
+        return Swal.fire({
             icon: typeStr,
             title: objVar.title,
             html: objVar.text,
@@ -405,14 +405,20 @@
     });
 
     Livewire.on('laraveltable:action:feedback', (feedbackMessage) => {
-        // Replace this native JS alert by your favorite modal/alert/toast library implementation. Or keep it this way!
-        // window.alert(feedbackMessage);
+        const currentPath = window.location.pathname || '';
+        const isAvaliationIndexPage = currentPath.indexOf(`/${JS_APP_PREFIX}/avaliation`) === 0;
 
         showInfoAlert({
             icon: null,
             title: JS_ALERT_INFO_TITLE,
             text: feedbackMessage,
         });
+
+        if (isAvaliationIndexPage) {
+            setTimeout(function() {
+                window.location.reload();
+            }, 1200);
+        }
     });
 
     Livewire.on('laraveltable:action:confirm', (actionType, actionIdentifier, modelPrimary, confirmationQuestion) => {
@@ -626,6 +632,8 @@
 
     $(document).on('click', 'form#register-avaliation-form .btn-modal-submit', function(e) {
         const FORM = $(this).closest('form');
+        const currentPath = window.location.pathname || '';
+        const isAvaliationIndexPage = currentPath.indexOf(`/${JS_APP_PREFIX}/avaliation`) === 0;
 
         submitModalForm(FORM, function(retorno) {
 
@@ -635,6 +643,14 @@
             });
 
             closeModal(FORM.closest('div.modal').parent());
+
+            if (isAvaliationIndexPage) {
+                setTimeout(function(){
+                    window.location.reload();
+                }, 1200);
+                return;
+            }
+
             setTimeout(function(){
                 refreshLivewireTable(`div#content`);
             }, 250);
