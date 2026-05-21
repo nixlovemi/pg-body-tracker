@@ -139,6 +139,7 @@ class User extends Controller
         $form['UserInfo']['user_id'] = SysUtils::getLoggedInUser()?->id ?? null;
         $form['UserInfo']['title'] = $request->input('f-userinfo-title') ?? null;
         $form['UserInfo']['license_text'] = $request->input('f-userinfo-lictext') ?? null;
+        $form['UserInfo']['evaluation_mode'] = $request->input('f-userinfo-mode') ?? null;
         $form['UserInfo']['whatsapp_phone'] = $request->input('f-userinfo-whats') ?? null;
         $form['UserInfo']['link_telegram'] = $request->input('f-userinfo-telegram') ?? null;
         $form['UserInfo']['link_facebook'] = $request->input('f-userinfo-face') ?? null;

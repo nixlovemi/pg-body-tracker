@@ -168,7 +168,7 @@ class Client extends Controller
         // format weight from kg
         $form['weight_kg'] = SysUtils::formatNumberToDb(
             $form['weight_kg'],
-            3,
+            1,
             __('messages.decimalSeparator'),
             __('messages.thousandSeparator')
         );

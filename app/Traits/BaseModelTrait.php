@@ -7,8 +7,15 @@ use App\Helpers\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
+/**
+ * @mixin Model
+ * @property int|null $id
+ * @method static void creating(callable $callback)
+ * @method static void updating(callable $callback)
+ * @method static void deleting(callable $callback)
+ */
 trait BaseModelTrait {
-    final static function getModelByCodedId(string $codedId): ?\Illuminate\Database\Eloquent\Model
+    final static function getModelByCodedId(string $codedId): ?Model
     {
         $id = SysUtils::decodeStr($codedId);
         if (!is_numeric($id)) {
@@ -16,14 +23,15 @@ trait BaseModelTrait {
         }
 
         try {
-            $Class = get_called_class();
-            return (new $Class)::find($id);
+            /** @var class-string<Model> $Class */
+            $Class = static::class;
+            return $Class::find((int) $id);
         } catch (\Throwable $th) {
             return null;
         }
     }
 
-    final public function getCodedIdAttribute(int $id=null): ?string
+    final public function getCodedIdAttribute(?int $id = null): ?string
     {
         $idValue = $id ?? $this->id;
         if (is_null($idValue)) {
@@ -54,7 +62,7 @@ trait BaseModelTrait {
         }
 
         // users should not have access to create a new User model
-        if ($model instanceof User && !$model->wasRecentlyCreated) {
+        if ($model instanceof User && !$model->exists) {
             return false;
         }
 
@@ -82,7 +90,7 @@ trait BaseModelTrait {
         // get model for insert or update
         $Model = !empty($codedId)
             ? self::getModelByCodedId($codedId)
-            : new self();
+            : new (static::class)();
 
         if ($codedId && !$Model) {
             return new ApiResponse(true, __('messages.saveModelNotFound', [

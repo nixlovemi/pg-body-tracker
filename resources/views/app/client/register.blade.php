@@ -197,12 +197,12 @@ $prefillSelf = (int) request()->input('prefillSelf', 0) === 1;
                             * {{ __('messages.models.Client.fields.weight') }} (kg)
                         </label>
                         @php
-                        $clientWeight = old("f-weight") ?: number_format($CLIENT?->weight_kg, 3, __('messages.decimalSeparator'), __('messages.thousandSeparator'));
+                        $clientWeight = old("f-weight") ?: number_format($CLIENT?->weight_kg, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator'));
                         @endphp
                         <input type="text" class="form-control form-control-user jq-mask-money"
                             id="f-weight" name="f-weight" maxlength="7" {{ ($canEdit) ?: 'disabled' }}
                             data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                            data-precision="3" value="{{ $clientWeight }}"
+                            data-precision="1" value="{{ $clientWeight }}"
                         />
                     </div>
                 </div>
@@ -216,7 +216,7 @@ $prefillSelf = (int) request()->input('prefillSelf', 0) === 1;
                             <input type="text" class="form-control form-control-user jq-mask-money"
                                 disabled maxlength="7" {{ ($canEdit) ?: 'disabled' }}
                                 data-thousands="{{ __('messages.thousandSeparator') }}" data-decimal="{{ __('messages.decimalSeparator') }}"
-                                data-precision="3" value="{{ number_format($CLIENT?->getCurrentWeight(), 3, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}"
+                                data-precision="1" value="{{ number_format($CLIENT?->getCurrentWeight(), 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')) }}"
                             />
                         </div>
                     </div>

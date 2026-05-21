@@ -47,7 +47,12 @@ class UserSeeder extends Seeder
 
                 // if is manager
                 if ($User->isManager()) {
-                    UserInfo::factory()
+                    $userInfoFactory = UserInfo::factory();
+                    if ($i === 0) {
+                        $userInfoFactory = $userInfoFactory->professional();
+                    }
+
+                    $userInfoFactory
                         ->count(1)
                         ->create([
                             'user_id' => $User->id,
