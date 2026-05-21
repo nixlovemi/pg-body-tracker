@@ -1,5 +1,6 @@
 @inject('Constants', 'App\Helpers\Constants')
 @inject('SysUtils', 'App\Helpers\SysUtils')
+@inject('UserInfo', 'App\Models\UserInfo')
 @inject('UserReportLogo', 'App\Helpers\Feature\UserReportLogo')
 
 @php
@@ -161,7 +162,7 @@ $URLogoFeature = new $UserReportLogo();
                 </div>
                 <div class="col-12 col-md-10">
                     <div class="form-row">
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label class="form-label" title="{{ __('messages.models.UserInfo.fields.title') }}">
                                     {{ __('messages.models.UserInfo.fields.title') }}
@@ -175,7 +176,7 @@ $URLogoFeature = new $UserReportLogo();
                                 />
                             </div>
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label class="form-label" title="{{ __('messages.models.UserInfo.fields.license_text') }}">
                                     {{ __('messages.models.UserInfo.fields.license_text') }}
@@ -187,9 +188,33 @@ $URLogoFeature = new $UserReportLogo();
                                     id="f-userinfo-lictext" name="f-userinfo-lictext" maxlength="60"
                                     value="{{ $value }}" placeholder="{{ __('messages.pages.profile.userInfoLicensePlaceholder') }}"
                                 />
+                                <small class="text-muted d-block mt-1">
+                                    {{ __('messages.models.UserInfo.licenseTextHelp') }}
+                                </small>
                             </div>
                         </div>
-                        <div class="col-12 col-md-4">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" title="{{ __('messages.models.UserInfo.fields.evaluation_mode') }}">
+                                    {{ __('messages.models.UserInfo.fields.evaluation_mode') }}
+                                </label>
+                                @php
+                                $evaluationMode = old('f-userinfo-mode') ?: ($USER?->info?->evaluation_mode ?: $UserInfo::EVALUATION_MODE_PERSONAL);
+                                @endphp
+                                <select class="form-control form-control-user" id="f-userinfo-mode" name="f-userinfo-mode">
+                                    @foreach ($UserInfo::fGetEvaluationModes() as $value => $label)
+                                        <option value="{{ $value }}" {{ $value === $evaluationMode ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                                <small class="text-muted d-block mt-1">
+                                    {{ __('messages.models.UserInfo.evaluationModeHelp') }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label class="form-label" title="{{ __('messages.models.UserInfo.fields.whatsapp_phone') }}">
                                     {{ __('messages.models.UserInfo.fields.whatsapp_phone') }}

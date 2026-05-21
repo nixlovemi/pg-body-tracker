@@ -46,6 +46,19 @@ class OnboardingFlowTest extends TestCase
         $response->assertSee('value="1"', false);
     }
 
+    public function testClientRegisterWeightFieldUsesOneDecimalPrecision()
+    {
+        $this->signInManager();
+
+        $response = $this->get(route('app.client.add'));
+
+        $response->assertOk();
+        $this->assertMatchesRegularExpression(
+            '/id="f-weight"[^>]*data-precision="1"/s',
+            $response->getContent()
+        );
+    }
+
     public function testFirstClientSaveWithOnboardingFlagRedirectsToAvaliationIndex()
     {
         $user = $this->signInManager();
@@ -70,6 +83,34 @@ class OnboardingFlowTest extends TestCase
             'openAvaliation' => 1,
             'openAvaliationCID' => $client->codedId,
         ]));
+    }
+
+    public function testFirstClientSavePersistsWeightWithOneDecimal()
+    {
+        $user = $this->signInManager();
+
+        $response = $this->post(route('app.client.doSave'), [
+            'f-cid' => null,
+            'f-name' => 'Jane',
+            'f-surname' => 'Doe',
+            'f-email' => 'jane.doe@example.com',
+            'f-phone' => null,
+            'f-bsex' => Client::GENDER_FEMALE,
+            'f-birth' => '01/01/1992',
+            'f-height' => 168,
+            'f-weight' => '80,1',
+            'f-onboarding-create-first-avaliation' => '0',
+        ]);
+
+        $client = Client::where('user_id', $user->id)
+            ->where('email', 'jane.doe@example.com')
+            ->first();
+
+        $this->assertNotNull($client);
+        $response->assertRedirect(route('app.client.edit', [
+            'codedId' => $client->codedId,
+        ]));
+        $this->assertEquals(80.1, (float) $client->weight_kg);
     }
 
     public function testAvaliationIndexShowsEmptyStateWhenClientExistsWithoutAvaliations()

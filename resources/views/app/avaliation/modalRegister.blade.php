@@ -1,6 +1,7 @@
 @inject('SysUtils', 'App\Helpers\SysUtils')
 @inject('mAvaliation', 'App\Models\Avaliation')
 @inject('mClient', 'App\Models\Client')
+@inject('mUserInfo', 'App\Models\UserInfo')
 @inject('AvaliationPictures', 'App\Helpers\Feature\AvaliationPictures')
 @inject('RevaluationDate', 'App\Helpers\Feature\RevaluationDate')
 
@@ -20,6 +21,7 @@ $CUID = $CUID ?? '';
 $ACTION = $ACTION ?? '';
 $canEdit = (1 == $CEDIT) ? true: false;
 $Client = $mClient::getModelByCodedId($CUID);
+$UserEvaluationMode = $SysUtils::getLoggedInUser()?->info?->evaluation_mode ?? $mUserInfo::EVALUATION_MODE_PERSONAL;
 $APicFeature = new $AvaliationPictures();
 $RevDateFeature = new $RevaluationDate();
 @endphp
@@ -70,6 +72,19 @@ $RevDateFeature = new $RevaluationDate();
 
         <div id="raf-page-1" data-idx="1">
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageOneTitle') }}">
+                <div class="alert alert-info py-2">
+                    <p class="mb-1 font-weight-bold">
+                        {{ $UserEvaluationMode === $mUserInfo::EVALUATION_MODE_PROFESSIONAL
+                            ? __('messages.pages.avaliation.modalAddAvaliation.quickIntroProfessionalTitle')
+                            : __('messages.pages.avaliation.modalAddAvaliation.quickIntroTitle') }}
+                    </p>
+                    <small class="d-block">
+                        {{ $UserEvaluationMode === $mUserInfo::EVALUATION_MODE_PROFESSIONAL
+                            ? __('messages.pages.avaliation.modalAddAvaliation.quickIntroProfessionalDescription')
+                            : __('messages.pages.avaliation.modalAddAvaliation.quickIntroDescription') }}
+                    </small>
+                </div>
+
                 <div class="form-row">
                     <div class="col-12 col-md-6">
                         <div class="form-group">
@@ -98,7 +113,7 @@ $RevDateFeature = new $RevaluationDate();
                                 name="f-cfpb"
                             >
                                 @php
-                                $avaliationCalcBy = old("f-cfpb") ?: $AVALIATION?->calculate_perc_fat_by;
+                                $avaliationCalcBy = old("f-cfpb") ?: ($AVALIATION?->calculate_perc_fat_by ?: $mAvaliation::CALCULATE_PERC_FAT_BY_MEASURES);
                                 @endphp
 
                                 @foreach (array_merge(
@@ -111,6 +126,20 @@ $RevDateFeature = new $RevaluationDate();
                                     >{{ $display }}</option>
                                 @endforeach
                             </select>
+                            <small class="text-muted d-block mt-1">
+                                {{ __('messages.pages.avaliation.modalAddAvaliation.quickModeHint') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-12">
+                        <div class="custom-control custom-switch mb-2">
+                            <input type="checkbox" class="custom-control-input" id="f-show-advanced" name="f-show-advanced" {{ $UserEvaluationMode === $mUserInfo::EVALUATION_MODE_PROFESSIONAL ? 'checked' : '' }} />
+                            <label class="custom-control-label" for="f-show-advanced">
+                                {{ __('messages.pages.avaliation.modalAddAvaliation.quickModeLabel') }}
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -145,7 +174,7 @@ $RevDateFeature = new $RevaluationDate();
             </x-card>
         </div>
 
-        <div class="d-none" id="raf-page-2" data-idx="2">
+        <div class="d-none" id="raf-page-2" data-idx="2" data-flow-hidden="1">
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageTwoTitle') }}">
                 <div class="form-row">
                     <div class="col-12 col-md-6">
@@ -897,7 +926,7 @@ $RevDateFeature = new $RevaluationDate();
             </x-card>
         </div>
 
-        <div class="d-none" id="raf-page-4" data-idx="4">
+        <div class="d-none" id="raf-page-4" data-idx="4" data-flow-hidden="1">
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageFourTitle') }}">
                 <div class="form-row">
                     <div class="col-12">
@@ -1122,6 +1151,19 @@ $RevDateFeature = new $RevaluationDate();
         </div>
 
         <div class="d-none" id="raf-page-5" data-idx="5">
+            @if ($canEdit)
+                <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.quickActionsTitle') }}">
+                    <div id="quick-actions-block">
+                        <button type="button" class="btn btn-sm btn-primary btn-user btn-modal-submit">
+                            {{ __('messages.pages.avaliation.modalAddAvaliation.quickSaveNow') }}
+                        </button>
+                        <a href="javascript:;" class="btn btn-sm btn-link" id="btn-open-advanced-pages">
+                            {{ __('messages.pages.avaliation.modalAddAvaliation.quickOpenExtras') }}
+                        </a>
+                    </div>
+                </x-card>
+            @endif
+
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageFiveTitle') }}">
                 <div class="form-row">
                     <div class="col-12">
@@ -1137,6 +1179,9 @@ $RevDateFeature = new $RevaluationDate();
                                     'DESCRIPTION' => __('messages.components.Features.RevaluationDate.logoPlaceholderText', [
                                         'fieldLabel' => __('messages.models.Avaliation.fields.revaluation_date')
                                     ]),
+                                    'CTA_LABEL' => __('messages.pages.avaliation.modalAddAvaliation.ctaViewPremiumBenefits'),
+                                    'CTA_URL' => route('app.subscription.upgrade'),
+                                    'CTA_TARGET' => '_blank',
                                 ])
                             @else
                                 @php
@@ -1193,7 +1238,7 @@ $RevDateFeature = new $RevaluationDate();
             </x-card>
         </div>
 
-        <div class="d-none" id="raf-page-6" data-idx="6">
+        <div class="d-none" id="raf-page-6" data-idx="6" data-flow-hidden="1">
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageSixTitle') }}">
                 <div class="form-row">
                     @if ($APicFeature->validate())
@@ -1264,8 +1309,11 @@ $RevDateFeature = new $RevaluationDate();
                     @else
                         @include('app.placeholder-premium', [
                             'DIV_CLASSES' => 'w-100',
-                            'TITLE' => __('messages.components.Features.premiumFeature'),
-                            'DESCRIPTION' => __('messages.components.Features.AvaliationPictures.logoPlaceholderText'),
+                            'TITLE' => __('messages.pages.avaliation.modalAddAvaliation.photosPremiumTitle'),
+                            'DESCRIPTION' => __('messages.pages.avaliation.modalAddAvaliation.photosPremiumDescription'),
+                            'CTA_LABEL' => __('messages.pages.avaliation.modalAddAvaliation.ctaViewPremiumBenefits'),
+                            'CTA_URL' => route('app.subscription.upgrade'),
+                            'CTA_TARGET' => '_blank',
                         ])
                     @endif
                 </div>
@@ -1296,12 +1344,52 @@ $RevDateFeature = new $RevaluationDate();
     <script>
         (function($) {
             $(document).ready(function() {
+                const formEl = $('#register-avaliation-form');
+                const modalContainer = formEl.closest('div[id^="avaliation-modal-register"]');
+
+                function setFlowPageVisible(pageIdx, isVisible) {
+                    const page = $(`#raf-page-${pageIdx}`);
+                    const hiddenFlag = isVisible ? '0' : '1';
+                    page.attr('data-flow-hidden', hiddenFlag);
+                    page.data('flowHidden', hiddenFlag);
+                    if (!isVisible) {
+                        page.addClass('d-none');
+                    }
+                }
+
+                function applyQuickFlowByMethod() {
+                    const calcBy = $('#f-cfpb').val();
+                    const showAdvanced = $('#f-show-advanced').is(':checked');
+                    const quickActionsBlock = $('#quick-actions-block');
+
+                    if (showAdvanced) {
+                        setFlowPageVisible(2, true);
+                        setFlowPageVisible(4, true);
+                        setFlowPageVisible(6, true);
+                        quickActionsBlock.addClass('d-none');
+                    } else {
+                        setFlowPageVisible(2, calcBy === '{{ $mAvaliation::CALCULATE_PERC_FAT_BY_BIOIMPEDANCE }}');
+                        setFlowPageVisible(4, calcBy === '{{ $mAvaliation::CALCULATE_PERC_FAT_BY_SKINFOLD }}');
+                        setFlowPageVisible(6, false);
+                        quickActionsBlock.removeClass('d-none');
+                    }
+
+                    modalContainer.trigger('avaliation:refresh-nav');
+                }
+
+                function goToPage(pageIdx) {
+                    const modalBody = modalContainer.find('.modal-body').first();
+                    modalBody.find('div[id^="raf-page-"]').addClass('d-none');
+                    modalBody.find(`#raf-page-${pageIdx}`).removeClass('d-none');
+                    modalContainer.trigger('avaliation:refresh-nav');
+                }
+
                 function displayInputs(formulaKey) {
                     let clientGender = '{!! $Client?->gender !!}';
                     clientGender = clientGender[0].toLowerCase();
 
                     // get json data
-                    let skinFoldsInputCodeArr = JSON.parse({!! json_encode($mAvaliation::fGetJsonSkinFoldsInputCode()) !!});
+                    let skinFoldsInputCodeArr = {!! json_encode($mAvaliation::fGetJsonSkinFoldsInputCode()) !!};
 
                     // get code from json data
                     let skinFoldsInputCode = skinFoldsInputCodeArr[formulaKey];
@@ -1333,6 +1421,26 @@ $RevDateFeature = new $RevaluationDate();
                     let skinFoldsFormulaKey = $(this).val();
                     displayInputs(skinFoldsFormulaKey);
                 });
+
+                $('#f-cfpb').on('change', function() {
+                    applyQuickFlowByMethod();
+                });
+
+                $('#f-show-advanced').on('change', function() {
+                    applyQuickFlowByMethod();
+                });
+
+                $('#btn-open-advanced-pages').on('click', function(e) {
+                    e.preventDefault();
+                    $('#f-show-advanced').prop('checked', true).trigger('change');
+                    goToPage(2);
+                });
+
+                if ('{{ $UserEvaluationMode }}' === '{{ $mUserInfo::EVALUATION_MODE_PROFESSIONAL }}') {
+                    $('#f-show-advanced').prop('checked', true);
+                }
+
+                applyQuickFlowByMethod();
             });
         }(jQuery));
     </script>

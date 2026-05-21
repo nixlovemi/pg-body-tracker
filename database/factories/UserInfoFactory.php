@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\UserInfo;
 
 class UserInfoFactory extends Factory
 {
@@ -35,6 +36,7 @@ class UserInfoFactory extends Factory
             'license_text' => function() {
                 return $this->faker->word() . $this->faker->randomNumber(5);
             },
+            'evaluation_mode' => UserInfo::EVALUATION_MODE_PERSONAL,
             'whatsapp_phone' => $this->faker->optional(0.6)->phoneNumber(),
             'link_telegram' => $this->faker->optional(0.6)->url(),
             'link_facebook' => $this->faker->optional(0.6)->url(),
@@ -43,5 +45,15 @@ class UserInfoFactory extends Factory
             'link_youtube' => $this->faker->optional(0.6)->url(),
             'link_website' => $this->faker->optional(0.6)->url(),
         ];
+    }
+
+    public function professional(): static
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'evaluation_mode' => UserInfo::EVALUATION_MODE_PROFESSIONAL,
+                'title' => $attributes['title'] ?? 'personal trainer',
+            ];
+        });
     }
 }

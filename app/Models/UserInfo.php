@@ -17,6 +17,9 @@ class UserInfo extends Model
     use \App\Traits\BaseModelTrait;
     use \App\Traits\HasPhotoField;
 
+    public const EVALUATION_MODE_PERSONAL = 'personal';
+    public const EVALUATION_MODE_PROFESSIONAL = 'professional';
+
     public const BASE_PHOTOS_FOLDER = '/user-info/photos/';
 
     public $timestamps = false;
@@ -30,6 +33,7 @@ class UserInfo extends Model
         'user_id',
         'title',
         'license_text',
+        'evaluation_mode',
         'whatsapp_phone',
         'link_telegram',
         'link_facebook',
@@ -77,6 +81,13 @@ class UserInfo extends Model
         $validation->addIdField(User::class, __('messages.models.User.name'), 'id', 'ID');
         $validation->addField('title', ['nullable', 'string', 'min:2', 'max:60'], __('messages.models.UserInfo.fields.title'));
         $validation->addField('license_text', ['nullable', 'string', 'min:2', 'max:60'], __('messages.models.UserInfo.fields.license_text'));
+        $validation->addField('evaluation_mode', ['required', 'string', function ($attribute, $value, $fail) {
+            if (false === array_key_exists($value, self::fGetEvaluationModes())) {
+                $fail(
+                    __('messages.helpers.modelValidation.invalidField', ['attribute' => __('messages.models.UserInfo.fields.evaluation_mode')])
+                );
+            }
+        }], __('messages.models.UserInfo.fields.evaluation_mode'));
         $validation->addField('whatsapp_phone', ['nullable', 'string', 'min:2', 'max:35'], __('messages.models.UserInfo.fields.whatsapp_phone'));
         $validation->addField('link_telegram', ['nullable', 'string', 'url', 'min:2', 'max:100'], __('messages.models.UserInfo.fields.link_telegram'));
         $validation->addField('link_facebook', ['nullable', 'string', 'url', 'min:2', 'max:100'], __('messages.models.UserInfo.fields.link_facebook'));
@@ -153,6 +164,14 @@ class UserInfo extends Model
     public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
     {
         return null;
+    }
+
+    public static function fGetEvaluationModes(): array
+    {
+        return [
+            self::EVALUATION_MODE_PERSONAL => __('messages.models.UserInfo.evaluationModes.personal'),
+            self::EVALUATION_MODE_PROFESSIONAL => __('messages.models.UserInfo.evaluationModes.professional'),
+        ];
     }
     // ================
 }

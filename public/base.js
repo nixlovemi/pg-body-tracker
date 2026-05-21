@@ -658,46 +658,80 @@
         });
     });
 
-    $(document).on('click', 'div[id^="avaliation-modal-register"] .modal-header .btn-nav', function(e) {
-        const modaContent = $(this).closest('.modal-content');
-        const modalHeader = modaContent.find('.modal-header');
-        const modalBody = modaContent.find('.modal-body');
+    function getAvaliationVisiblePages(modalBody) {
+        return modalBody
+            .find('div[id^="raf-page-"]')
+            .filter(function() {
+                return String($(this).attr('data-flow-hidden') || '0') !== '1';
+            });
+    }
+
+    function updateAvaliationModalNav(modalContent) {
+        const modalHeader = modalContent.find('.modal-header');
+        const modalBody = modalContent.find('.modal-body');
         const prevObj = modalHeader.find('.btn-prev');
         const nextObj = modalHeader.find('.btn-next');
-        $(this).blur();
+        const visiblePages = getAvaliationVisiblePages(modalBody);
 
-        // jquery selector for div[id^="raf-page-"] that is not hidden
-        const currentPgIdx = modalBody.find('div[id^="raf-page-"]').not('.d-none').data('idx');
-        const nextPgIdx = $(this).data('idx');
+        if (visiblePages.length === 0) {
+            prevObj.data('idx', '').attr('disabled', true);
+            nextObj.data('idx', '').attr('disabled', true);
+            return;
+        }
 
-        // hide current page
-        modalBody.find(`div#raf-page-${currentPgIdx}`).addClass('d-none');
+        let currentVisibleDiv = visiblePages.not('.d-none').first();
+        if (currentVisibleDiv.length === 0) {
+            currentVisibleDiv = visiblePages.first();
+            modalBody.find('div[id^="raf-page-"]').addClass('d-none');
+            currentVisibleDiv.removeClass('d-none');
+        }
 
-        // show next page
-        modalBody.find(`div#raf-page-${nextPgIdx}`).removeClass('d-none');
+        const currentPos = visiblePages.index(currentVisibleDiv);
+        const previousDiv = currentPos > 0 ? visiblePages.eq(currentPos - 1) : null;
+        const nextDiv = currentPos < visiblePages.length - 1 ? visiblePages.eq(currentPos + 1) : null;
 
-        // get current visible div
-        const currentVisibleDiv = modalBody.find(`div#raf-page-${nextPgIdx}`);
-
-        // if there is a previous div, change idx from back button
-        const previousDivIdx = currentVisibleDiv.prev('div[id^="raf-page-"]').data('idx');
-        if (previousDivIdx > 0) {
-            prevObj.data('idx', previousDivIdx);
+        if (previousDiv && previousDiv.length > 0) {
+            prevObj.data('idx', previousDiv.data('idx'));
             prevObj.attr('disabled', false);
         } else {
             prevObj.data('idx', '');
             prevObj.attr('disabled', true);
         }
 
-        // if there is a next div, change idx from next button
-        const nextDivIdx = currentVisibleDiv.next('div[id^="raf-page-"]').data('idx');
-        if (nextDivIdx > 0) {
-            nextObj.data('idx', nextDivIdx);
+        if (nextDiv && nextDiv.length > 0) {
+            nextObj.data('idx', nextDiv.data('idx'));
             nextObj.attr('disabled', false);
         } else {
             nextObj.data('idx', '');
             nextObj.attr('disabled', true);
         }
+    }
+
+    $(document).on('click', 'div[id^="avaliation-modal-register"] .modal-header .btn-nav', function(e) {
+        const modalContent = $(this).closest('.modal-content');
+        const modalBody = modalContent.find('.modal-body');
+        const visiblePages = getAvaliationVisiblePages(modalBody);
+        const targetIdx = Number($(this).data('idx') || 0);
+        $(this).blur();
+
+        if (targetIdx <= 0 || visiblePages.length === 0) {
+            updateAvaliationModalNav(modalContent);
+            return;
+        }
+
+        const nextPage = visiblePages.filter(`[data-idx="${targetIdx}"]`).first();
+        if (nextPage.length === 0) {
+            updateAvaliationModalNav(modalContent);
+            return;
+        }
+
+        modalBody.find('div[id^="raf-page-"]').addClass('d-none');
+        nextPage.removeClass('d-none');
+        updateAvaliationModalNav(modalContent);
+    });
+
+    $(document).on('avaliation:refresh-nav', 'div[id^="avaliation-modal-register"]', function() {
+        updateAvaliationModalNav($(this).find('.modal-content').first());
     });
 
     $(document).on('click', '#btn-add-avaliations', function(e) {
