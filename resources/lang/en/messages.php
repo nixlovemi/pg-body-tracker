@@ -499,11 +499,26 @@ return [
             'buttonBackToHome' => 'Return to Home Page',
         ],
 
+        'dashboard' => [
+            'onboarding' => [
+                'title' => 'Get started in 2 quick steps',
+                'description' => 'To track progress, first create a client profile (it can be yourself), then record your first evaluation.',
+                'stepClient' => 'Create your first client',
+                'stepAvaliation' => 'Record your first evaluation',
+                'ctaClient' => 'Create first client',
+                'ctaAvaliation' => 'Create first evaluation',
+            ],
+        ],
+
         'client' => [
             'index' => [
                 'title' => 'Clients',
                 'deleteConfirmation' => 'Are you sure you want to delete the client :clientName? This operation is permanent and cannot be undone!',
                 'deleteSuccess' => 'Client deleted successfully!',
+                'emptyTitle' => 'No clients yet',
+                'emptyDescription' => 'Create your first client to start tracking body evolution and history.',
+                'emptyCtaPrimary' => 'Create first client',
+                'emptyCtaSecondary' => 'Evaluate myself',
             ],
             'register' => [
                 'title' => 'Register Client',
@@ -516,6 +531,12 @@ return [
                 'btnOldGoals' => 'Old Goals',
                 'btnNewAvaliation' => 'New Evaluation',
                 'labelActualWeight' => 'Actual Weight',
+                'selfShortcutTitle' => 'Personal use shortcut',
+                'selfShortcutDescription' => 'If you are using the app for yourself, you can pre-fill your own basic data and continue faster.',
+                'selfShortcutFill' => 'Fill with my data',
+                'selfShortcutFillAndStart' => 'Fill and open evaluation after saving',
+                'selfShortcutAfterSaveHint' => 'The evaluation screen will open automatically after saving this client.',
+                'selfShortcutSuccess' => 'Your first client was created! Now complete your first evaluation.',
             ],
             'table' => [
                 'colName' => 'Name',
@@ -535,6 +556,12 @@ return [
         'avaliation' => [
             'index' => [
                 'title' => 'Evaluations',
+                'emptyNoClientTitle' => 'You need a client before creating evaluations',
+                'emptyNoClientDescription' => 'Create your first client first. If this is for personal use, choose the shortcut to evaluate yourself.',
+                'emptyNoClientCta' => 'Create first client',
+                'emptyTitle' => 'No evaluations yet',
+                'emptyDescription' => 'Great, you already have a client. Now register the first evaluation to start your progress history.',
+                'emptyCta' => 'Create first evaluation',
             ],
             'modalAddAvaliation' => [
                 'skeletal_muscle_perc_info' => 'If :skeletal_muscle_perc is not specified, the formula by "Lee et al" will be used for calculation.',

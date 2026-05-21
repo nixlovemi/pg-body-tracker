@@ -15,6 +15,9 @@ View variables:
 
 $canEdit = ($Constants::FORM_VIEW !== $TYPE && $Permissions::checkPermission($Permissions::ACL_CLIENT_EDIT));
 $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_EDIT]);
+$isFirstClient = $IS_FIRST_CLIENT ?? false;
+$prefillClient = $PREFILL_CLIENT ?? [];
+$prefillSelf = (int) request()->input('prefillSelf', 0) === 1;
 @endphp
 
 @extends('layout.dashboard', [
@@ -28,6 +31,30 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
         @csrf
         <input type="hidden" name="f-cid" value="{{ $CLIENT?->codedId }}" />
         <input type="hidden" name="f-cedit" value="{{ $canEdit }}" />
+        <input
+            type="hidden"
+            name="f-onboarding-create-first-avaliation"
+            id="f-onboarding-create-first-avaliation"
+            value="{{ old('f-onboarding-create-first-avaliation', $prefillSelf ? '1' : '0') }}"
+        />
+
+        @if ($Constants::FORM_ADD === $TYPE && $isFirstClient)
+            <div class="alert alert-info">
+                <strong>{{ __('messages.pages.client.register.selfShortcutTitle') }}</strong>
+                <div class="mt-1">{{ __('messages.pages.client.register.selfShortcutDescription') }}</div>
+                <div class="mt-2">
+                    <button type="button" class="btn btn-sm btn-primary" id="btn-fill-self-client">
+                        {{ __('messages.pages.client.register.selfShortcutFill') }}
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary ml-1" id="btn-fill-self-and-start-avaliation">
+                        {{ __('messages.pages.client.register.selfShortcutFillAndStart') }}
+                    </button>
+                </div>
+                <small class="d-block mt-2 text-muted">
+                    {{ __('messages.pages.client.register.selfShortcutAfterSaveHint') }}
+                </small>
+            </div>
+        @endif
 
         <x-card title="{{ __('messages.pages.client.register.cardInfo') }}">
             <div class="form-row">
@@ -38,7 +65,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                         </label>
                         <input type="text" class="form-control form-control-user"
                             {{ ($canEdit) ?: 'disabled' }}
-                            id="f-name" name="f-name" maxlength="60" value="{{ old('f-name') ?: $CLIENT?->first_name }}"
+                            id="f-name" name="f-name" maxlength="60" value="{{ old('f-name') ?: ($CLIENT?->first_name ?: ($prefillSelf ? ($prefillClient['first_name'] ?? '') : '')) }}"
                         />
                     </div>
                 </div>
@@ -49,7 +76,7 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
                         </label>
                         <input type="text" class="form-control form-control-user"
                             {{ ($canEdit) ?: 'disabled' }}
-                            id="f-surname" name="f-surname" maxlength="80" value="{{ old('f-surname') ?: $CLIENT?->last_name }}"
+                            id="f-surname" name="f-surname" maxlength="80" value="{{ old('f-surname') ?: ($CLIENT?->last_name ?: ($prefillSelf ? ($prefillClient['last_name'] ?? '') : '')) }}"
                         />
                     </div>
                 </div>
@@ -240,4 +267,43 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
             </div>
         </div>
     </form>
+
+    @if ($Constants::FORM_ADD === $TYPE && $isFirstClient)
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const nameInput = document.getElementById('f-name');
+                const surnameInput = document.getElementById('f-surname');
+                const onboardingInput = document.getElementById('f-onboarding-create-first-avaliation');
+                const fillSelfBtn = document.getElementById('btn-fill-self-client');
+                const fillAndStartBtn = document.getElementById('btn-fill-self-and-start-avaliation');
+
+                const selfFirstName = @json($prefillClient['first_name'] ?? '');
+                const selfLastName = @json($prefillClient['last_name'] ?? '');
+
+                const fillFields = function () {
+                    if (nameInput && !nameInput.value) {
+                        nameInput.value = selfFirstName;
+                    }
+
+                    if (surnameInput && !surnameInput.value) {
+                        surnameInput.value = selfLastName;
+                    }
+                };
+
+                if (fillSelfBtn) {
+                    fillSelfBtn.addEventListener('click', function() {
+                        fillFields();
+                        onboardingInput.value = '0';
+                    });
+                }
+
+                if (fillAndStartBtn) {
+                    fillAndStartBtn.addEventListener('click', function() {
+                        fillFields();
+                        onboardingInput.value = '1';
+                    });
+                }
+            });
+        </script>
+    @endif
 @endsection

@@ -25,8 +25,14 @@ class Avaliation extends Controller
 
     public function index()
     {
+        $user = SysUtils::getLoggedInUser();
+        $clientCount = $user ? $user->getClientCount() : 0;
+        $avaliationCount = $user ? $user->getAvaliationCount() : 0;
+
         return view('app.avaliation.index', [
             'PAGE_TITLE' => __('messages.pages.avaliation.index.title'),
+            'CLIENT_COUNT' => $clientCount,
+            'AVALIATION_COUNT' => $avaliationCount,
         ]);
     }
 
@@ -475,7 +481,10 @@ class Avaliation extends Controller
         $cacheKey = 'avalation_send_' . $channel . '_' . $Avaliation->id . '_' . $key;
 
         if (cache()->has($cacheKey)) {
-            return cache()->get($cacheKey);
+            $cachedLink = cache()->get($cacheKey);
+            if (is_string($cachedLink) && $cachedLink !== '') {
+                return $cachedLink;
+            }
         }
 
         $portalLink = URL::temporarySignedRoute(

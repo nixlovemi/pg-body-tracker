@@ -499,11 +499,26 @@ return [
             'buttonBackToHome' => 'Voltar à Página Inicial',
         ],
 
+        'dashboard' => [
+            'onboarding' => [
+                'title' => 'Comece em 2 passos rápidos',
+                'description' => 'Para acompanhar evolução, primeiro crie um cliente (pode ser você mesmo) e depois registre a primeira avaliação.',
+                'stepClient' => 'Criar o primeiro cliente',
+                'stepAvaliation' => 'Registrar a primeira avaliação',
+                'ctaClient' => 'Criar primeiro cliente',
+                'ctaAvaliation' => 'Criar primeira avaliação',
+            ],
+        ],
+
         'client' => [
             'index' => [
                 'title' => 'Clientes',
                 'deleteConfirmation' => 'Tem certeza que deseja excluir o cliente :clientName? Essa operação é permanente e não pode ser desfeita!',
                 'deleteSuccess' => 'Cliente excluído com sucesso!',
+                'emptyTitle' => 'Nenhum cliente cadastrado',
+                'emptyDescription' => 'Crie seu primeiro cliente para começar a acompanhar evolução corporal e histórico.',
+                'emptyCtaPrimary' => 'Criar primeiro cliente',
+                'emptyCtaSecondary' => 'Avaliar a mim mesmo',
             ],
             'register' => [
                 'title' => 'Cadastrar Cliente',
@@ -516,6 +531,12 @@ return [
                 'btnOldGoals' => 'Objetivos Anteriores',
                 'btnNewAvaliation' => 'Nova Avaliação',
                 'labelActualWeight' => 'Peso Atual',
+                'selfShortcutTitle' => 'Atalho para uso pessoal',
+                'selfShortcutDescription' => 'Se você usa o sistema para si, pode pré-preencher seus dados básicos e continuar mais rápido.',
+                'selfShortcutFill' => 'Preencher com meus dados',
+                'selfShortcutFillAndStart' => 'Preencher e abrir avaliação após salvar',
+                'selfShortcutAfterSaveHint' => 'A tela de avaliação será aberta automaticamente após salvar este cliente.',
+                'selfShortcutSuccess' => 'Seu primeiro cliente foi criado! Agora conclua sua primeira avaliação.',
             ],
             'table' => [
                 'colName' => 'Nome',
@@ -535,6 +556,12 @@ return [
         'avaliation' => [
             'index' => [
                 'title' => 'Avaliações',
+                'emptyNoClientTitle' => 'Você precisa de um cliente para criar avaliações',
+                'emptyNoClientDescription' => 'Crie primeiro seu cliente. Se for uso pessoal, use o atalho para avaliar a si mesmo.',
+                'emptyNoClientCta' => 'Criar primeiro cliente',
+                'emptyTitle' => 'Nenhuma avaliação registrada',
+                'emptyDescription' => 'Perfeito, você já tem cliente. Agora registre a primeira avaliação para iniciar o histórico de evolução.',
+                'emptyCta' => 'Criar primeira avaliação',
             ],
             'modalAddAvaliation' => [
                 'skeletal_muscle_perc_info' => 'Se :skeletal_muscle_perc não for informado, a fórmula de "Lee et al" será utilizada para o cálculo.',
