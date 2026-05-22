@@ -24,6 +24,7 @@ use App\Models\UserPlans;
 use App\Helpers\Feature\FeatureAbstract;
 use Illuminate\Support\Facades\Cache;
 use App\Helpers\GoogleUserLogin;
+use App\Models\UserEngagement;
 
 class User extends Authenticatable
 {
@@ -50,6 +51,7 @@ class User extends Authenticatable
         'role',
         'active',
         'confirmation',
+        'last_login_at',
     ];
 
     /**
@@ -70,6 +72,7 @@ class User extends Authenticatable
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'last_login_at' => 'datetime',
     ];
 
     protected $attributes = [
@@ -114,6 +117,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(
             UserPlans::class, 'user_id',
+            'id'
+        );
+    }
+
+    public function engagement()
+    {
+        return $this->hasOne(
+            UserEngagement::class, 'user_id',
             'id'
         );
     }
@@ -457,6 +468,7 @@ class User extends Authenticatable
 
         // clean reset token
         $User->password_reset_token = null;
+        $User->last_login_at = SysUtils::timezoneNow('Y-m-d H:i:s');
         $User->update();
         $User->refresh();
 
