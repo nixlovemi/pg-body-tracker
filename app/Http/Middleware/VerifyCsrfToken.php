@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     # TODO: use APP_PREFIX_FOLDER
     protected $except = [
         '/admin/subscription/mercadoPago/webhook',
+        '/admin/engagement/dispatch',
     ];
 }
