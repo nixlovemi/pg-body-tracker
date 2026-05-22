@@ -1152,16 +1152,18 @@ $RevDateFeature = new $RevaluationDate();
 
         <div class="d-none" id="raf-page-5" data-idx="5">
             @if ($canEdit)
-                <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.quickActionsTitle') }}">
-                    <div id="quick-actions-block">
-                        <button type="button" class="btn btn-sm btn-primary btn-user btn-modal-submit">
-                            {{ __('messages.pages.avaliation.modalAddAvaliation.quickSaveNow') }}
-                        </button>
-                        <a href="javascript:;" class="btn btn-sm btn-link" id="btn-open-advanced-pages">
-                            {{ __('messages.pages.avaliation.modalAddAvaliation.quickOpenExtras') }}
-                        </a>
-                    </div>
-                </x-card>
+                <div id="quick-actions-card">
+                    <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.quickActionsTitle') }}">
+                        <div id="quick-actions-block">
+                            <button type="button" class="btn btn-sm btn-primary btn-user btn-modal-submit">
+                                {{ __('messages.pages.avaliation.modalAddAvaliation.quickSaveNow') }}
+                            </button>
+                            <a href="javascript:;" class="btn btn-sm btn-link" id="btn-open-advanced-pages">
+                                {{ __('messages.pages.avaliation.modalAddAvaliation.quickOpenExtras') }}
+                            </a>
+                        </div>
+                    </x-card>
+                </div>
             @endif
 
             <x-card title="{{ __('messages.pages.avaliation.modalAddAvaliation.pageFiveTitle') }}">
@@ -1361,6 +1363,17 @@ $RevDateFeature = new $RevaluationDate();
                     const calcBy = $('#f-cfpb').val();
                     const showAdvanced = $('#f-show-advanced').is(':checked');
                     const quickActionsBlock = $('#quick-actions-block');
+                    const quickActionsCard = $('#quick-actions-card');
+
+                    function refreshQuickActionsVisibility() {
+                        if (quickActionsCard.length === 0 || quickActionsBlock.length === 0) {
+                            return;
+                        }
+
+                        const hasActions = quickActionsBlock.find('button, a').length > 0;
+                        const hasVisibleActions = hasActions && !quickActionsBlock.hasClass('d-none');
+                        quickActionsCard.toggleClass('d-none', !hasVisibleActions);
+                    }
 
                     if (showAdvanced) {
                         setFlowPageVisible(2, true);
@@ -1373,6 +1386,8 @@ $RevDateFeature = new $RevaluationDate();
                         setFlowPageVisible(6, false);
                         quickActionsBlock.removeClass('d-none');
                     }
+
+                    refreshQuickActionsVisibility();
 
                     modalContainer.trigger('avaliation:refresh-nav');
                 }
