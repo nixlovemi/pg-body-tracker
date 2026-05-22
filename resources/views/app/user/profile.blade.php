@@ -1,6 +1,7 @@
 @inject('Constants', 'App\Helpers\Constants')
 @inject('SysUtils', 'App\Helpers\SysUtils')
 @inject('UserInfo', 'App\Models\UserInfo')
+@inject('UserEngagement', 'App\Models\UserEngagement')
 @inject('UserReportLogo', 'App\Helpers\Feature\UserReportLogo')
 
 @php
@@ -11,6 +12,7 @@ View variables:
 */
 $USER = $SysUtils::getLoggedInUser() ?? null;
 $URLogoFeature = new $UserReportLogo();
+$engagementPreferences = $USER?->engagement?->getMergedAlertPreferences() ?? $UserEngagement::getDefaultAlertPreferences();
 @endphp
 
 @extends('layout.dashboard', [
@@ -156,6 +158,9 @@ $URLogoFeature = new $UserReportLogo();
                                 'DIV_CLASSES' => 'w-100',
                                 'TITLE' => __('messages.components.Features.premiumFeature'),
                                 'DESCRIPTION' => __('messages.components.Features.UserReportLogo.logoPlaceholderText'),
+                                'CTA_LABEL' => __('messages.pages.avaliation.modalAddAvaliation.ctaViewPremiumBenefits'),
+                                'CTA_URL' => route('app.subscription.upgrade'),
+                                'CTA_TARGET' => '_blank',
                             ])
                         @endif
                     </div>
@@ -332,10 +337,94 @@ $URLogoFeature = new $UserReportLogo();
             </p>
         </x-card>
 
+        <x-card title="{{ __('messages.pages.profile.cardEngagementAlerts') }}">
+            <p class="mb-3 text-muted">
+                {{ __('messages.pages.profile.cardEngagementAlertsHelp') }}
+            </p>
+
+            <div class="form-row">
+                <div class="col-12">
+                    <div class="custom-control custom-switch mb-3">
+                        <input type="checkbox" class="custom-control-input" id="f-engagement-optout" name="f-engagement-optout" value="1" {{ old('f-engagement-optout', $USER?->engagement?->opt_out ? '1' : '0') == '1' ? 'checked' : '' }} />
+                        <label class="custom-control-label" for="f-engagement-optout">
+                            {{ __('messages.pages.profile.engagementOptOutLabel') }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-12 col-md-6">
+                    <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" id="f-engagement-alert-inactive-login" name="f-engagement-alert-inactive-login" value="1" {{ old('f-engagement-alert-inactive-login', $engagementPreferences[$UserEngagement::ALERT_INACTIVE_LOGIN] ? '1' : '0') == '1' ? 'checked' : '' }} />
+                        <label class="custom-control-label" for="f-engagement-alert-inactive-login">{{ __('messages.pages.profile.engagementAlerts.inactive_login') }}</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" id="f-engagement-alert-missing-setup" name="f-engagement-alert-missing-setup" value="1" {{ old('f-engagement-alert-missing-setup', $engagementPreferences[$UserEngagement::ALERT_MISSING_SETUP] ? '1' : '0') == '1' ? 'checked' : '' }} />
+                        <label class="custom-control-label" for="f-engagement-alert-missing-setup">{{ __('messages.pages.profile.engagementAlerts.missing_setup') }}</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" id="f-engagement-alert-birthday-today" name="f-engagement-alert-birthday-today" value="1" {{ old('f-engagement-alert-birthday-today', $engagementPreferences[$UserEngagement::ALERT_BIRTHDAY_TODAY] ? '1' : '0') == '1' ? 'checked' : '' }} />
+                        <label class="custom-control-label" for="f-engagement-alert-birthday-today">{{ __('messages.pages.profile.engagementAlerts.birthday_today') }}</label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" id="f-engagement-alert-goal-near-deadline" name="f-engagement-alert-goal-near-deadline" value="1" {{ old('f-engagement-alert-goal-near-deadline', $engagementPreferences[$UserEngagement::ALERT_GOAL_NEAR_DEADLINE] ? '1' : '0') == '1' ? 'checked' : '' }} />
+                        <label class="custom-control-label" for="f-engagement-alert-goal-near-deadline">{{ __('messages.pages.profile.engagementAlerts.goal_near_deadline') }}</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" id="f-engagement-alert-client-without-recent-avaliation" name="f-engagement-alert-client-without-recent-avaliation" value="1" {{ old('f-engagement-alert-client-without-recent-avaliation', $engagementPreferences[$UserEngagement::ALERT_CLIENT_WITHOUT_RECENT_AVALIATION] ? '1' : '0') == '1' ? 'checked' : '' }} />
+                        <label class="custom-control-label" for="f-engagement-alert-client-without-recent-avaliation">{{ __('messages.pages.profile.engagementAlerts.client_without_recent_avaliation') }}</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" id="f-engagement-alert-revaluation-near" name="f-engagement-alert-revaluation-near" value="1" {{ old('f-engagement-alert-revaluation-near', $engagementPreferences[$UserEngagement::ALERT_REVALUATION_NEAR] ? '1' : '0') == '1' ? 'checked' : '' }} />
+                        <label class="custom-control-label" for="f-engagement-alert-revaluation-near">{{ __('messages.pages.profile.engagementAlerts.revaluation_near') }}</label>
+                    </div>
+                </div>
+            </div>
+        </x-card>
+
         <div class="form-actions">
             <div class="text-right">
                 <button type="submit" class="btn primary btn-user">{{ __('messages.buttonSave') }}</button>
             </div>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileForm = document.getElementById('user-profile-form');
+            const optOutInput = document.getElementById('f-engagement-optout');
+            const engagementAlertInputs = Array.from(document.querySelectorAll('input[id^="f-engagement-alert-"]'));
+
+            if (!optOutInput || engagementAlertInputs.length === 0) {
+                return;
+            }
+
+            const updateEngagementAlertState = function() {
+                const shouldDisable = optOutInput.checked;
+
+                engagementAlertInputs.forEach(function(input) {
+                    input.disabled = shouldDisable;
+                    const control = input.closest('.custom-control');
+                    if (control) {
+                        control.classList.toggle('text-muted', shouldDisable);
+                    }
+                });
+            };
+
+            optOutInput.addEventListener('change', updateEngagementAlertState);
+
+            if (profileForm) {
+                profileForm.addEventListener('submit', function() {
+                    engagementAlertInputs.forEach(function(input) {
+                        input.disabled = false;
+                    });
+                });
+            }
+
+            updateEngagementAlertState();
+        });
+    </script>
 @endsection

@@ -10,6 +10,7 @@ use App\Models\User as mUser;
 use App\Helpers\ApiResponse;
 use App\Helpers\SysUtils;
 use App\Models\UserInfo;
+use App\Models\UserEngagement;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Controller
@@ -57,6 +58,12 @@ class User extends Controller
         if ($response->isError()) {
             return $this->redirect(self::DO_PROFILE_REDIRECT, true, ApiResponse::getValidateMessage($response));
         }
+
+        UserEngagement::updateOrCreate(
+            ['user_id' => $User->id],
+            $form['UserEngagement']
+        );
+
         $User->refresh();
 
         // Pictures
@@ -131,7 +138,7 @@ class User extends Controller
 
     private function formatSaveRequest(Request $request): array
     {
-        $form = ['User' => [], 'UserInfo' => []];
+        $form = ['User' => [], 'UserInfo' => [], 'UserEngagement' => []];
 
         $form['User']['first_name'] = $request->input('f-user-name') ?? null;
         $form['User']['last_name'] = $request->input('f-user-lname') ?? null;
@@ -147,6 +154,17 @@ class User extends Controller
         $form['UserInfo']['link_twitter'] = $request->input('f-userinfo-twit') ?? null;
         $form['UserInfo']['link_youtube'] = $request->input('f-userinfo-yt') ?? null;
         $form['UserInfo']['link_website'] = $request->input('f-userinfo-site') ?? null;
+
+        $form['UserEngagement']['user_id'] = SysUtils::getLoggedInUser()?->id ?? null;
+        $form['UserEngagement']['opt_out'] = (bool) $request->input('f-engagement-optout');
+        $form['UserEngagement']['alert_preferences'] = [
+            UserEngagement::ALERT_INACTIVE_LOGIN => (bool) $request->input('f-engagement-alert-inactive-login', 0),
+            UserEngagement::ALERT_MISSING_SETUP => (bool) $request->input('f-engagement-alert-missing-setup', 0),
+            UserEngagement::ALERT_BIRTHDAY_TODAY => (bool) $request->input('f-engagement-alert-birthday-today', 0),
+            UserEngagement::ALERT_GOAL_NEAR_DEADLINE => (bool) $request->input('f-engagement-alert-goal-near-deadline', 0),
+            UserEngagement::ALERT_CLIENT_WITHOUT_RECENT_AVALIATION => (bool) $request->input('f-engagement-alert-client-without-recent-avaliation', 0),
+            UserEngagement::ALERT_REVALUATION_NEAR => (bool) $request->input('f-engagement-alert-revaluation-near', 0),
+        ];
 
         return $form;
     }

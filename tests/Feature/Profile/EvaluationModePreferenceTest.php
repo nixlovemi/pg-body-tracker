@@ -4,6 +4,7 @@ namespace Tests\Feature\Profile;
 
 use App\Models\Client;
 use App\Models\User;
+use App\Models\UserEngagement;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -56,6 +57,12 @@ class EvaluationModePreferenceTest extends TestCase
             'f-userinfo-twit' => null,
             'f-userinfo-yt' => null,
             'f-userinfo-site' => null,
+            'f-engagement-alert-inactive-login' => '1',
+            'f-engagement-alert-missing-setup' => '1',
+            'f-engagement-alert-birthday-today' => '1',
+            'f-engagement-alert-goal-near-deadline' => '0',
+            'f-engagement-alert-client-without-recent-avaliation' => '1',
+            'f-engagement-alert-revaluation-near' => '0',
         ]);
 
         $response->assertRedirect(route('app.user.profile'));
@@ -65,6 +72,18 @@ class EvaluationModePreferenceTest extends TestCase
             'user_id' => $user->id,
             'evaluation_mode' => 'professional',
         ]);
+
+        $engagement = UserEngagement::where('user_id', $user->id)->first();
+        $this->assertNotNull($engagement);
+        $this->assertFalse($engagement->opt_out);
+        $this->assertSame([
+            UserEngagement::ALERT_INACTIVE_LOGIN => true,
+            UserEngagement::ALERT_MISSING_SETUP => true,
+            UserEngagement::ALERT_BIRTHDAY_TODAY => true,
+            UserEngagement::ALERT_GOAL_NEAR_DEADLINE => false,
+            UserEngagement::ALERT_CLIENT_WITHOUT_RECENT_AVALIATION => true,
+            UserEngagement::ALERT_REVALUATION_NEAR => false,
+        ], $engagement->alert_preferences);
 
         /** @var Client $client */
         $client = Client::factory()->create([
