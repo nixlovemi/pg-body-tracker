@@ -139,6 +139,12 @@ class UserPlans extends Model
         return self::fGetStatuses()[$this->status] ?? '-';
     }
 
+    public function isCanceledButActiveUntilEndDate(): bool
+    {
+        return $this->status === self::STATUS_CANCELED
+            && strtotime($this->end_date) >= strtotime(SysUtils::timezoneNow('Y-m-d'));
+    }
+
     public function getLastLogRow(): ?UserPlanLogs
     {
         return $this->logs()
@@ -241,6 +247,11 @@ class UserPlans extends Model
         );
     }
 
+    public function canHaveSubscriptionCancelled(): bool
+    {
+        return $this->canHaveSubscriptionPaused();
+    }
+
     public function pauseSubscription(): ApiResponse
     {
         if (!$this->canHaveSubscriptionPaused()) {
@@ -269,6 +280,87 @@ class UserPlans extends Model
             'payment_id' => $this->getPaymentId(),
             'data' => json_encode([
                 'type' => 'pauseSubscription',
+                'message' => $successMsg,
+            ]),
+        ]);
+
+        return new ApiResponse(
+            false,
+            $successMsg,
+            [
+                'UserPlan' => $this,
+            ]
+        );
+    }
+
+    public function cancelSubscription(): ApiResponse
+    {
+        $paymentClass = $this->getPaymentClass();
+        if (null === $paymentClass) {
+            return new ApiResponse(true, __('messages.pages.premium.cantCancelSubscription'));
+        }
+
+        $PaymentGateway = new $paymentClass();
+
+        // Se já estiver cancelada no gateway, sincroniza localmente e retorna sucesso.
+        if (!$this->canHaveSubscriptionCancelled()) {
+            $preapproval = method_exists($PaymentGateway, 'getPreapprovalById')
+                ? $PaymentGateway->getPreapprovalById($this->getColPaymentId())
+                : null;
+            $cancelledStatus = defined($paymentClass . '::PRE_APPROVAL_STATUS_CANCELLED')
+                ? $paymentClass::PRE_APPROVAL_STATUS_CANCELLED
+                : 'cancelled';
+
+            if ($preapproval?->status === $cancelledStatus) {
+                $wasCanceled = $this->status === self::STATUS_CANCELED;
+                $this->status = self::STATUS_CANCELED;
+                $this->save();
+
+                if (!$wasCanceled) {
+                    Mail::to($this->user->email)
+                        ->send(
+                            new SubscriptionUpdate(
+                                $this,
+                                'subscriptionCanceled',
+                            )
+                        );
+                }
+
+                return new ApiResponse(false, __('messages.pages.premium.cancelSubscriptionSuccess'), [
+                    'UserPlan' => $this,
+                ]);
+            }
+
+            return new ApiResponse(true, __('messages.pages.premium.cantCancelSubscription'));
+        }
+
+        $response = $PaymentGateway->cancelSubscription($this);
+        if (!$response) {
+            return new ApiResponse(true, __('messages.pages.premium.cantCancelSubscription'));
+        }
+
+        // Update the status of the user plan
+        $wasCanceled = $this->status === self::STATUS_CANCELED;
+        $this->status = self::STATUS_CANCELED;
+        $this->save();
+        $successMsg = __('messages.pages.premium.cancelSubscriptionSuccess');
+
+        if (!$wasCanceled) {
+            Mail::to($this->user->email)
+                ->send(
+                    new SubscriptionUpdate(
+                        $this,
+                        'subscriptionCanceled',
+                    )
+                );
+        }
+
+        // Add a log entry
+        $this->addLog([
+            'payment_class' => $paymentClass,
+            'payment_id' => $this->getPaymentId(),
+            'data' => json_encode([
+                'type' => 'cancelSubscription',
                 'message' => $successMsg,
             ]),
         ]);

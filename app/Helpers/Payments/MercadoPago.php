@@ -5,6 +5,7 @@ namespace App\Helpers\Payments;
 use MercadoPago\SDK;
 use MercadoPago\Preapproval;
 use MercadoPago\Payment;
+use Illuminate\Support\Facades\Log;
 use App\Helpers\SysUtils;
 use App\Helpers\Payments\SubscriptionTypes;
 use App\Models\UserPlans;
@@ -86,15 +87,43 @@ class MercadoPago extends PaymentGatewayAbstract
                 ?? ($payment->point_of_interaction->transaction_data->subscription_id ?? null);
             if ($subsId) {
                 $PGData->setPaymentId($subsId);
+            } else {
+                // Fallback: correlate payment webhook with a plan by payer_id when MP does not include subscription_id.
+                $payerId = $payment->payer->id ?? null;
+                if (!empty($payerId)) {
+                    $candidatePlans = UserPlans::whereIn('status', [UserPlans::STATUS_PENDING, UserPlans::STATUS_ACTIVE])
+                        ->where('payment_data', 'like', '%"payer_id":' . $payerId . '%')
+                        ->orderBy('created_at', 'desc')
+                        ->limit(3)
+                        ->get();
+
+                    if ($candidatePlans->count() === 1) {
+                        $fallbackPaymentId = $candidatePlans->first()->getColPaymentId();
+                        if (!empty($fallbackPaymentId)) {
+                            $PGData->setPaymentId($fallbackPaymentId);
+                            Log::info('Resolved payment webhook by payer_id fallback', [
+                                'data_id' => $dataId,
+                                'payer_id' => $payerId,
+                                'resolved_payment_id' => $fallbackPaymentId,
+                                'user_plan_id' => $candidatePlans->first()->id,
+                            ]);
+                        }
+                    } else {
+                        Log::warning('Unable to resolve payment webhook by payer_id fallback', [
+                            'data_id' => $dataId,
+                            'payer_id' => $payerId,
+                            'candidate_plans' => $candidatePlans->count(),
+                        ]);
+                    }
+                }
             }
         }
 
-        // TODO: there is no way to get the preapproval id from the webhook data when the type is 'subscription_authorized_payment'
+        // For subscription_authorized_payment, data.id is the authorized_payment id (integer), NOT a preapproval UUID.
+        // Calling getPreapprovalById() with it would throw "Unknown error" from the MP SDK.
+        // The preapproval_id is retrieved from the stored UserPlanLogs inside fProcessWebhookCall.
         if ($PGData->getType() === 'subscription_authorized_payment') {
-            $preapproval = $this->getPreapprovalById($dataId);
-            if ($preapproval) {
-                $PGData->setPaymentId($preapproval->id);
-            }
+            // payment_id intentionally left unset; handled separately in fProcessWebhookCall
         }
 
         return $PGData;
@@ -171,12 +200,16 @@ class MercadoPago extends PaymentGatewayAbstract
             }
 
             // Envie a requisição PUT para pausar a assinatura
-            $updatedPreapproval = $preapproval->update([
-                'status' => self::PRE_APPROVAL_STATUS_PAUSED
-            ]);
+            $preapproval->status = self::PRE_APPROVAL_STATUS_PAUSED;
+            $updatedPreapproval = $preapproval->update();
 
-            // Confirma que o status retornado é "paused"
-            if ($updatedPreapproval && $updatedPreapproval->status === self::PRE_APPROVAL_STATUS_PAUSED) {
+            if ($updatedPreapproval) {
+                return true;
+            }
+
+            // Fallback: em caso de retorno inesperado, reconsulta para confirmar o status final.
+            $preapprovalAfterUpdate = $this->getPreapprovalById($preapprovalId);
+            if ($preapprovalAfterUpdate?->status === self::PRE_APPROVAL_STATUS_PAUSED) {
                 return true;
             }
 
@@ -190,28 +223,62 @@ class MercadoPago extends PaymentGatewayAbstract
 
     public function cancelSubscription(UserPlans $UserPlan): bool
     {
+        $preapprovalId = $UserPlan->getColPaymentId();
+
         try {
-            $preapprovalId = $UserPlan->getColPaymentId();
             $preapproval = $this->getPreapprovalById($preapprovalId);
 
-            if (!$preapproval || $preapproval->status === self::PRE_APPROVAL_STATUS_CANCELLED) {
+            if (!$preapproval) {
+                Log::warning('MercadoPago subscription not found while canceling', [
+                    'user_plan_id' => $UserPlan->id,
+                    'payment_id' => $preapprovalId,
+                ]);
+
                 return false;
             }
 
-            // Envie a requisição PUT para cancelar a assinatura
-            $updatedPreapproval = $preapproval->update([
-                'status' => self::PRE_APPROVAL_STATUS_CANCELLED
-            ]);
+            if ($preapproval->status === self::PRE_APPROVAL_STATUS_CANCELLED) {
+                return true;
+            }
 
-            // Confirma que o status retornado é "cancelled"
-            if ($updatedPreapproval && $updatedPreapproval->status === self::PRE_APPROVAL_STATUS_CANCELLED) {
+            // Envie a requisição PUT para cancelar a assinatura
+            $preapproval->status = self::PRE_APPROVAL_STATUS_CANCELLED;
+            $updatedPreapproval = $preapproval->update();
+
+            if ($updatedPreapproval) {
+                return true;
+            }
+
+            // Fallback: em caso de retorno inesperado, reconsulta para confirmar o status final.
+            $preapprovalAfterUpdate = $this->getPreapprovalById($preapprovalId);
+            if ($preapprovalAfterUpdate?->status === self::PRE_APPROVAL_STATUS_CANCELLED) {
                 return true;
             }
 
             // Algo não esperado
+            Log::warning('MercadoPago cancellation returned an unexpected false value', [
+                'user_plan_id' => $UserPlan->id,
+                'payment_id' => $preapprovalId,
+                'current_status' => $preapprovalAfterUpdate?->status ?? null,
+            ]);
+
             return false;
-        } catch (\Exception $e) {
-            // TODO: Log the error or handle it as needed
+        } catch (\Throwable $e) {
+            $preapprovalAfterException = $this->getPreapprovalById($preapprovalId);
+            if ($preapprovalAfterException?->status === self::PRE_APPROVAL_STATUS_CANCELLED) {
+                return true;
+            }
+
+            Log::error('Error canceling MercadoPago subscription', [
+                'user_plan_id' => $UserPlan->id,
+                'payment_id' => $preapprovalId,
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
             return false;
         }
     }
@@ -258,6 +325,10 @@ class MercadoPago extends PaymentGatewayAbstract
     {
         try {
             $preapprovalId = $UserPlan->getColPaymentId();
+            if (empty($preapprovalId) || ctype_digit((string) $preapprovalId)) {
+                return null;
+            }
+
             $preapproval = $this->getPreapprovalById($preapprovalId);
 
             if (!$preapproval) {
@@ -284,8 +355,17 @@ class MercadoPago extends PaymentGatewayAbstract
 
             // TODO: Opcional: você pode logar isso ou adicionar um log no UserPlanLog se quiser
             return $mappedStatus;
-        } catch (\Exception $e) {
-            // TODO: logar o erro se quiser
+        } catch (\Throwable $e) {
+            Log::error('Error syncing MercadoPago subscription status', [
+                'plan_id' => $UserPlan->id,
+                'payment_id' => $UserPlan->getColPaymentId() ?? 'null',
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            // Retorna null ao invés de relançar, mantendo compatibilidade
             return null;
         }
     }
@@ -294,6 +374,10 @@ class MercadoPago extends PaymentGatewayAbstract
     // TODO: make this generic as not all payment gateways will have getPaymentById or getPreapprovalById methods
     public function getPaymentById($paymentId): ?Payment
     {
+        if (empty($paymentId)) {
+            return null;
+        }
+
         if (null !== $this->_payment) {
             return $this->_payment;
         }
@@ -304,6 +388,10 @@ class MercadoPago extends PaymentGatewayAbstract
 
     public function getPreapprovalById($preapprovalId): ?Preapproval
     {
+        if (empty($preapprovalId)) {
+            return null;
+        }
+
         return Preapproval::find_by_id($preapprovalId);
     }
 

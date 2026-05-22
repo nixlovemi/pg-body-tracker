@@ -49,6 +49,13 @@
         $('body').removeClass('modal-open');
     }
 
+    function closeAllModals()
+    {
+        $('div.modal').remove();
+        $('div.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+    }
+
     function showLoader()
     {
         $.LoadingOverlay("show");
@@ -816,7 +823,7 @@
         }, `/${JS_APP_PREFIX}/avaliation/doModalSendMail`);
     });
 
-    $(document).on('click', 'div[id^="subscription-modal-details"] #btn-pause-subscription', function(e) {
+    $(document).on('click', 'div[id^="subscription-modal-details"] #btn-cancel-subscription', function(e) {
         e.preventDefault();
 
         var confirm = getConfirm({
@@ -840,9 +847,9 @@
                     'title': JS_ALERT_SUCCESS_TITLE,
                     'text': retorno.message
                 });
-                closeModal($(this).closest('div.modal').parent());
+                closeAllModals();
 
-            }, `/${JS_APP_PREFIX}/subscription/pauseSubscription`, {codedId:CODED_ID}, true);
+            }, `/${JS_APP_PREFIX}/subscription/cancelSubscription`, {codedId:CODED_ID}, true);
         });
     });
 

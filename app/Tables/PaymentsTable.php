@@ -63,6 +63,12 @@ class PaymentsTable extends AbstractTableConfiguration
             Column::make('status')
                 ->title(__('messages.models.UserPlans.fields.status'))
                 ->format(function(UserPlans $UserPlans) {
+                    if ($UserPlans->isCanceledButActiveUntilEndDate()) {
+                        return __('messages.pages.premium.paymentHistory.statusCanceledButActiveUntil', [
+                            'date' => $UserPlans->getFormattedEndDate(),
+                        ]);
+                    }
+
                     return $UserPlans->getStatuslabel();
                 }),
 
