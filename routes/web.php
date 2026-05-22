@@ -130,7 +130,7 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/subscribe/{plan}', 'App\Http\Controllers\Subscription@subscribe')->name('app.subscription.subscribe')->middleware('is.already.premium');
             Route::get('/mercadoPagoCheckoutMessage', 'App\Http\Controllers\Subscription@mercadoPagoCheckoutMessage')->name('app.subscription.mercadoPagoCheckoutMessage');
             Route::get('/details', 'App\Http\Controllers\Subscription@details')->name('app.subscription.details');
-            Route::post('/pauseSubscription', 'App\Http\Controllers\Subscription@pauseSubscription')->name('app.subscription.pauseSubscription');
+            Route::post('/cancelSubscription', 'App\Http\Controllers\Subscription@cancelSubscription')->name('app.subscription.cancelSubscription');
         });
 
         Route::prefix('support')->group(function () {

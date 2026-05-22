@@ -38,6 +38,12 @@ View variables:
                 <p><strong>{{ __('messages.pages.premium.modalDetails.labelPlanStatus') }}:</strong> {{ $USER_PLAN->getStatuslabel() }}</p>
                 <p><strong>{{ __('messages.pages.premium.modalDetails.labelPlanValidity') }}:</strong> {{ $USER_PLAN->getFormattedStartDate() }} - {{ $USER_PLAN->getFormattedEndDate() }}</p>
                 <p><strong>{{ __('messages.pages.premium.modalDetails.labelPlanType') }}:</strong> {{ $USER_PLAN->getPlanTypeLabel() }}</p>
+
+                @if ($USER_PLAN->isCanceledButActiveUntilEndDate())
+                    <div class="alert alert-warning mt-2 mb-0" role="alert">
+                        {{ __('messages.pages.premium.modalDetails.cancelledButActiveNotice', ['date' => $USER_PLAN->getFormattedEndDate()]) }}
+                    </div>
+                @endif
             </x-card>
 
             @php $MPHelper = new \App\Helpers\Payments\MercadoPago(); @endphp
@@ -55,12 +61,12 @@ View variables:
                         @endif
                     </p>
 
-                    @if ($USER_PLAN->canHaveSubscriptionPaused())
-                        <a href="javascript:;" id="btn-pause-subscription"
-                            class="btn btn-light btn-user btn-sm" data-msg="{{ __('messages.pages.premium.confirmationPauseSubscription') }}"
+                    @if ($USER_PLAN->canHaveSubscriptionCancelled())
+                        <a href="javascript:;" id="btn-cancel-subscription"
+                            class="btn btn-light btn-user btn-sm" data-msg="{{ __('messages.pages.premium.confirmationCancelSubscription') }}"
                             data-cid="{{ $USER_PLAN->codedId }}"
                         >
-                            {{ __('messages.pages.premium.buttonPauseSubscription') }}
+                            {{ __('messages.pages.premium.buttonCancelSubscription') }}
                         </a>
                     @endif
                 @else

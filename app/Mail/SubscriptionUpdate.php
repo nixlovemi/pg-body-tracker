@@ -22,7 +22,7 @@ class SubscriptionUpdate extends BaseMail
 
     private function getTile(): string
     {
-        if (in_array($this->messageClass, ['subscriptionStarted', 'subscriptionApproved', 'subscriptionRejected']) ) {
+        if (in_array($this->messageClass, ['subscriptionStarted', 'subscriptionApproved', 'subscriptionRejected', 'subscriptionCanceled']) ) {
             return __('messages.pages.premium.email.'.$this->messageClass.'.subject');
         }
 
@@ -35,6 +35,7 @@ class SubscriptionUpdate extends BaseMail
             'subscriptionStarted' => 6,
             'subscriptionApproved' => 12,
             'subscriptionRejected' => 5,
+            'subscriptionCanceled' => 5,
         ];
 
         $lines = [];

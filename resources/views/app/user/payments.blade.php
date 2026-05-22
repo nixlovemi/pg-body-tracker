@@ -18,6 +18,12 @@ $CURRENT_PLAN = $USER?->getCurrentPlan() ?? null;
     <h4>{{ $PAGE_TITLE }}</h4>
 
     <x-card title="{{ __('messages.pages.premium.paymentHistory.cardTitle') }}">
+        @if ($CURRENT_PLAN && $CURRENT_PLAN->isCanceledButActiveUntilEndDate())
+            <div class="alert alert-warning" role="alert">
+                {{ __('messages.pages.premium.paymentHistory.cancelledButActiveNotice', ['date' => $CURRENT_PLAN->getFormattedEndDate()]) }}
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-12 col-md-4">
                 <div class="form-group">

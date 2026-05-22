@@ -71,7 +71,19 @@ class Subscription extends Controller
         Log::info('Webhook Mercado Pago', $form);
 
         // proccess webhook
-        MercadoPago::fProcessWebhookCall($form);
+        try {
+            MercadoPago::fProcessWebhookCall($form);
+        } catch (\Throwable $e) {
+            Log::error('Webhook Mercado Pago Error', [
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
 
         return response()->json(['status' => 'processed'], 200);
     }
@@ -88,8 +100,20 @@ class Subscription extends Controller
 
         $paymentClass = $UserPlan->getPaymentClass() ?? '';
         $PaymentGateway = new ($paymentClass)();
-        $payment = $PaymentGateway->getPaymentById($UserPlan->getPaymentId());
-        $preapproval = $PaymentGateway->getPreapprovalById($UserPlan->getColPaymentId());
+        $paymentId = $UserPlan->getPaymentId();
+        $preapprovalId = $UserPlan->getColPaymentId();
+        $payment = $PaymentGateway->getPaymentById($paymentId);
+        $preapproval = $PaymentGateway->getPreapprovalById($preapprovalId);
+
+        if (empty($paymentId) || empty($preapprovalId)) {
+            // this can happen when the user plan is created but the payment process was not completed, so we log it for debugging purposes
+            Log::warning('Subscription details requested without payment identifiers', [
+                'codedId' => $codedId,
+                'user_plan_id' => $UserPlan->id,
+                'payment_id' => $paymentId,
+                'preapproval_id' => $preapprovalId,
+            ]);
+        }
 
         $view = view('app.subscription.modalDetails', [
             'TITLE' => __('messages.pages.premium.modalDetails.title', [
@@ -123,6 +147,22 @@ class Subscription extends Controller
         }
 
         $ret = $UserPlan->pauseSubscription();
+        if ($ret->isError()) {
+            return $this->returnResponse(true, $ret->getMessage(), [], Response::HTTP_OK);
+        }
+
+        return $this->returnResponse(false, $ret->getMessage(), [], Response::HTTP_OK);
+    }
+
+    public function cancelSubscription(Request $request)
+    {
+        $codedId = $request->input('codedId');
+        $UserPlan = $this->getUserPlanOrRedirect($codedId);
+        if (($UserPlan instanceof UserPlans) === false) {
+            return $UserPlan;
+        }
+
+        $ret = $UserPlan->cancelSubscription();
         if ($ret->isError()) {
             return $this->returnResponse(true, $ret->getMessage(), [], Response::HTTP_OK);
         }

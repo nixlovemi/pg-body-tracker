@@ -23,6 +23,7 @@ use Laravel\Socialite\Two\User as SocialiteUser;
 use App\Models\UserPlans;
 use App\Helpers\Feature\FeatureAbstract;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use App\Helpers\GoogleUserLogin;
 use App\Models\UserEngagement;
 
@@ -321,7 +322,7 @@ class User extends Authenticatable
     public function getCurrentPlan(): ?UserPlans
     {
         return $this->plans()
-            ->whereIn('status', [UserPlans::STATUS_ACTIVE, UserPlans::STATUS_PAUSED])
+            ->whereIn('status', [UserPlans::STATUS_ACTIVE, UserPlans::STATUS_PAUSED, UserPlans::STATUS_CANCELED])
             ->where('start_date', '<=', SysUtils::timezoneNow('Y-m-d'))
             ->where('end_date', '>=', SysUtils::timezoneNow('Y-m-d'))
             ->orderBy('end_date', 'desc')
@@ -388,14 +389,26 @@ class User extends Authenticatable
 
         // if status is active/paused and end_date is in the past, return 'expired'
         if (
-            in_array($userPlan->status, [$userPlan::STATUS_ACTIVE, $userPlan::STATUS_PAUSED]) &&
+            in_array($userPlan->status, [$userPlan::STATUS_ACTIVE, $userPlan::STATUS_PAUSED, $userPlan::STATUS_CANCELED]) &&
             strtotime($userPlan->end_date) < strtotime(SysUtils::timezoneNow('Y-m-d'))
         ) {
             $userPlan->status = $userPlan::STATUS_EXPIRED;
             $userPlan->save();
         } else {
             // payment class check
-            (new $paymentClass())->syncSubscriptionStatus($userPlan);
+            try {
+                (new $paymentClass())->syncSubscriptionStatus($userPlan);
+            } catch (\Throwable $e) {
+                Log::error('Error checking plan payment status', [
+                    'user_id' => $this->id,
+                    'plan_id' => $userPlan->id,
+                    'payment_class' => $paymentClass,
+                    'exception' => get_class($e),
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                ]);
+                throw $e;
+            }
         }
 
         Cache::forget($this->getPlanTypeCacheKey());

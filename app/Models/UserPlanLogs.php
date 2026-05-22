@@ -169,5 +169,21 @@ class UserPlanLogs extends Model
                 );
             return;
         }
+
+        $logStatus = $logData['status'] ?? null;
+        $isCanceledByWebhook = in_array($logStatus, [UserPlans::STATUS_CANCELED, 'cancelled']);
+        if ($isCanceledByWebhook && $model->userPlan->status !== UserPlans::STATUS_CANCELED) {
+            $model->userPlan->status = UserPlans::STATUS_CANCELED;
+            $model->userPlan->save();
+
+            Mail::to($model->userPlan->user->email)
+                ->send(
+                    new SubscriptionUpdate(
+                        $model->userPlan,
+                        'subscriptionCanceled',
+                    )
+                );
+            return;
+        }
     }
 }
