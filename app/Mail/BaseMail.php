@@ -10,28 +10,44 @@ abstract class BaseMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $emailTitle;
-    protected $title;
-    protected $preHeader;
-    protected $headerImgFull;
-    protected $arrTextLines;
-    protected $actionButtonUrl;
-    protected $actionButtonText;
+    protected string $emailTitle;
+    protected string $title;
+    protected string $preHeader;
+    protected string $headerImgFull;
+    /**
+     * @var array<int, string>
+     */
+    protected array $arrTextLines;
+    protected string $actionButtonUrl;
+    protected string $actionButtonText;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
+    /**
+     * @param array{
+     *     EMAIL_TITLE?: mixed,
+     *     TITLE?: mixed,
+     *     PRE_HEADER?: mixed,
+     *     HEADER_IMG_FULL?: mixed,
+     *     ARR_TEXT_LINES?: array<int, mixed>|mixed,
+     *     ACTION_BUTTON_URL?: mixed,
+     *     ACTION_BUTTON_TEXT?: mixed
+     * } $arrParam
+     */
     public function __construct(array $arrParam)
     {
-        $this->emailTitle = $arrParam['EMAIL_TITLE'] ?? 'Novo Email';
-        $this->title = $arrParam['TITLE'] ?? 'Mensagem';
-        $this->preHeader = $arrParam['PRE_HEADER'] ?? '';
-        $this->headerImgFull = $arrParam['HEADER_IMG_FULL'] ?? '';
-        $this->arrTextLines = $arrParam['ARR_TEXT_LINES'] ?? [];
-        $this->actionButtonUrl = $arrParam['ACTION_BUTTON_URL'] ?? '';
-        $this->actionButtonText = $arrParam['ACTION_BUTTON_TEXT'] ?? '';
+        $this->emailTitle = (string) ($arrParam['EMAIL_TITLE'] ?? 'Novo Email');
+        $this->title = (string) ($arrParam['TITLE'] ?? 'Mensagem');
+        $this->preHeader = (string) ($arrParam['PRE_HEADER'] ?? '');
+        $this->headerImgFull = (string) ($arrParam['HEADER_IMG_FULL'] ?? '');
+        $this->arrTextLines = is_array($arrParam['ARR_TEXT_LINES'] ?? null)
+            ? array_map(static fn ($line) => (string) $line, $arrParam['ARR_TEXT_LINES'])
+            : [];
+        $this->actionButtonUrl = (string) ($arrParam['ACTION_BUTTON_URL'] ?? '');
+        $this->actionButtonText = (string) ($arrParam['ACTION_BUTTON_TEXT'] ?? '');
     }
 
     /**

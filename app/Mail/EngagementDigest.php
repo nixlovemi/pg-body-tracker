@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\URL;
 
 class EngagementDigest extends BaseMail
 {
@@ -14,7 +15,7 @@ class EngagementDigest extends BaseMail
         parent::__construct([
             'EMAIL_TITLE' => $this->tr('subject'),
             'TITLE' => $this->tr('title', ['name' => $this->user->first_name]),
-            'HEADER_IMG_FULL' => '/public/images/logo-mail.jpg',
+            'HEADER_IMG_FULL' => '/public/images/mail-engagement.jpg',
             'ARR_TEXT_LINES' => $this->buildLines(),
             'ACTION_BUTTON_URL' => $this->resolveActionButtonUrl(),
             'ACTION_BUTTON_TEXT' => $this->resolveActionButtonText(),
@@ -63,6 +64,9 @@ class EngagementDigest extends BaseMail
         }
 
         $lines[] = $this->tr('outroLine');
+        $lines[] = $this->tr('unsubscribeLine', [
+            'url' => $this->resolveUnsubscribeUrl(),
+        ]);
 
         return $lines;
     }
@@ -129,5 +133,14 @@ class EngagementDigest extends BaseMail
     {
         $variant = strtolower((string) ($this->payload['meta']['ab_variant'] ?? 'a'));
         return in_array($variant, ['a', 'b'], true) ? $variant : 'a';
+    }
+
+    private function resolveUnsubscribeUrl(): string
+    {
+        return URL::temporarySignedRoute(
+            'app.engagement.unsubscribe',
+            now()->addDays((int) env('ENGAGEMENT_UNSUBSCRIBE_LINK_DAYS', 30)),
+            ['codedId' => $this->user->codedId]
+        );
     }
 }

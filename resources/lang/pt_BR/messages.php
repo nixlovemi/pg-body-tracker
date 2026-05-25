@@ -957,6 +957,12 @@ return [
         ],
 
         'engagement' => [
+            'unsubscribe' => [
+                'done' => 'Pronto!',
+                'title' => 'E-mails de engajamento desativados',
+                'message' => 'Você não receberá mais e-mails de engajamento. Se quiser reativar, acesse seu perfil no sistema.',
+                'buttonBackToLogin' => 'Voltar para o login',
+            ],
             'email' => [
                 'subject' => 'Passando para te lembrar de algumas coisas importantes',
                 'title' => 'Oi, :name! Como você está?',
@@ -986,6 +992,7 @@ return [
                 'reasonRevaluationNearBody2' => 'Esse é um ótimo momento para revisar resultados, comparar evoluções e manter o acompanhamento sempre atualizado.',
                 'reasonRevaluationNearBody3' => 'Seu futuro eu vai agradecer pela organização 😄',
                 'outroLine' => 'Se quiser, é só abrir o painel e eu te ajudo a colocar tudo em dia.',
+                'unsubscribeLine' => 'Não quer mais receber estes e-mails? <a href=":url" target="_blank" rel="noopener noreferrer">Desativar lembretes de engajamento</a>.',
                 'actionButtonText' => 'Quero ver meu painel',
                 'ctaInactiveLogin' => 'Voltar para o painel',
                 'ctaMissingSetup' => 'Concluir configuração',
