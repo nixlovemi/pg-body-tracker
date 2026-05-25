@@ -957,6 +957,12 @@ return [
         ],
 
         'engagement' => [
+            'unsubscribe' => [
+                'done' => 'Done',
+                'title' => 'Engagement emails disabled',
+                'message' => 'You will no longer receive engagement emails. You can re-enable them from your profile settings.',
+                'buttonBackToLogin' => 'Back to login',
+            ],
             'email' => [
                 'subject' => 'Quick reminder from your account',
                 'title' => 'Hi, :name! How are you doing?',
@@ -986,6 +992,7 @@ return [
                 'reasonRevaluationNearBody2' => 'Great moment to review results, compare progress, and keep follow-up current.',
                 'reasonRevaluationNearBody3' => 'Your future self will thank you for staying organized.',
                 'outroLine' => 'Open your dashboard and I will help you get everything up to date.',
+                'unsubscribeLine' => 'Do not want to receive these emails anymore? <a href=":url" target="_blank" rel="noopener noreferrer">Disable engagement reminders</a>.',
                 'actionButtonText' => 'Open my dashboard now',
                 'ctaInactiveLogin' => 'Back to dashboard',
                 'ctaMissingSetup' => 'Complete setup',

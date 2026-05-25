@@ -65,6 +65,7 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     Route::post('/doResetPwd', 'App\Http\Controllers\Login@doResetPwd')->name('app.doResetPwd')->middleware('signed');
     Route::get('/confirmUser/{key}', 'App\Http\Controllers\Login@confirmUser')->name('app.confirmUser')->middleware('signed');
     Route::post('/engagement/dispatch', 'App\Http\Controllers\Engagement@run')->name('app.engagement.dispatch');
+    Route::get('/engagement/unsubscribe/{codedId}', 'App\Http\Controllers\Engagement@unsubscribe')->name('app.engagement.unsubscribe')->middleware('signed');
     Route::get('/avaliation/showMyAvaliation/{codedId}', 'App\Http\Controllers\Avaliation@showMyAvaliation')->name('app.avaliation.showMyAvaliation')->middleware('signed');
     Route::get('/s/{key}', 'App\Http\Controllers\UrlShortController@redirect')->name('app.urlShortController.redirect');
     Route::post('/subscription/mercadoPago/webhook', 'App\Http\Controllers\Subscription@mercadoPagoWebhook')->name('app.subscription.mercadoPagoWebhook');

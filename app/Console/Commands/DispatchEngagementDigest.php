@@ -14,6 +14,10 @@ use Illuminate\Console\Command;
  */
 class DispatchEngagementDigest extends Command
 {
+    public const COMMAND_NAME = 'engagement:dispatch';
+    public const OPTION_USER_ID = 'user_id';
+    public const OPTION_DRY_RUN = 'dry-run';
+
     /**
      * The name and signature of the console command.
      *
@@ -35,8 +39,8 @@ class DispatchEngagementDigest extends Command
      */
     public function handle(EngagementDigestService $service)
     {
-        $forcedUserId = $this->option('user_id') ? (int) $this->option('user_id') : null;
-        $isDryRun = (bool) $this->option('dry-run');
+        $forcedUserId = $this->option(self::OPTION_USER_ID) ? (int) $this->option(self::OPTION_USER_ID) : null;
+        $isDryRun = (bool) $this->option(self::OPTION_DRY_RUN);
         $result = $service->dispatchDueUsers($forcedUserId, $isDryRun);
 
         if ($isDryRun) {
