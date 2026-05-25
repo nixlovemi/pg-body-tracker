@@ -21,7 +21,7 @@ class BaseModelTraitTest extends TestCase
             'email' => 'testuser+' . uniqid() . '@example.com',
             'password' => 'password',
             'role' => User::ROLE_MANAGER,
-        ]), $attributes);
+        ], $attributes));
     }
 
     /**
