@@ -18,7 +18,7 @@ class BaseModelTraitTest extends TestCase
         return User::create(array_merge([
             'first_name' => 'Test',
             'last_name' => 'User',
-            'email' => 'testuser@example.com',
+            'email' => 'testuser+' . uniqid() . '@example.com',
             'password' => 'password',
             'role' => User::ROLE_MANAGER,
         ]), $attributes);
@@ -69,7 +69,7 @@ class BaseModelTraitTest extends TestCase
     public function testFHasAccessReturnsTrueForRootUser()
     {
         $user = $this->createUser();
-        $loggedInUser = User::where('role', User::ROLE_ROOT)->first();
+        $loggedInUser = $this->createUser(['role' => User::ROLE_ROOT]);
         $this->assertTrue(User::fHasAccess($user, $loggedInUser));
     }
 
@@ -81,14 +81,14 @@ class BaseModelTraitTest extends TestCase
     public function testFHasAccessReturnsFalseWhenNewUserModel()
     {
         $user = new User();
-        $loggedInUser = User::where('role', User::ROLE_MANAGER)->first();
+        $loggedInUser = $this->createUser(['role' => User::ROLE_MANAGER]);
         $this->assertFalse(User::fHasAccess($user, $loggedInUser));
     }
 
     public function testFHasAccessReturnsTrueWhenNewOtherModel()
     {
         $Goal = new Goal();
-        $loggedInUser = User::where('role', User::ROLE_MANAGER)->first();
+        $loggedInUser = $this->createUser(['role' => User::ROLE_MANAGER]);
         $this->assertTrue(User::fHasAccess($Goal, $loggedInUser));
     }
 
@@ -103,7 +103,7 @@ class BaseModelTraitTest extends TestCase
     public function testUpdatingModelWithoutAccessThrowsException()
     {
         // Create a client with access
-        $user = User::where('role', User::ROLE_MANAGER)->first();
+        $user = $this->createUser(['role' => User::ROLE_MANAGER]);
         $this->be($user);
 
         // new client
@@ -140,7 +140,7 @@ class BaseModelTraitTest extends TestCase
 
     public function testFSaveReturnsErrorIfModelNotFound()
     {
-        $loggedInUser = User::where('role', User::ROLE_ROOT)->first();
+        $loggedInUser = $this->createUser(['role' => User::ROLE_ROOT]);
         $this->be($loggedInUser);
 
         $resp = User::fSave([
@@ -158,7 +158,7 @@ class BaseModelTraitTest extends TestCase
 
     public function testFRemoveReturnsErrorIfModelNotFound()
     {
-        $loggedInUser = User::where('role', User::ROLE_ROOT)->first();
+        $loggedInUser = $this->createUser(['role' => User::ROLE_ROOT]);
         $this->be($loggedInUser);
 
         $User = $this->createUser();
@@ -168,7 +168,7 @@ class BaseModelTraitTest extends TestCase
 
     public function testFRemoveReturnsSuccess()
     {
-        $loggedInUser = User::where('role', User::ROLE_ROOT)->first();
+        $loggedInUser = $this->createUser(['role' => User::ROLE_ROOT]);
         $this->be($loggedInUser);
 
         $User = $this->createUser();
@@ -179,10 +179,17 @@ class BaseModelTraitTest extends TestCase
 
     public function testFRemoveReturnsErrorIfNoAccess()
     {
-        $loggedInUser = User::where('role', User::ROLE_MANAGER)->first();
+        $loggedInUser = $this->createUser(['role' => User::ROLE_MANAGER]);
         $this->be($loggedInUser);
 
-        $Client = Client::where('user_id', '<>', $loggedInUser->id)->first();
+        $otherUser = $this->createUser(['role' => User::ROLE_MANAGER]);
+        $Client = Client::factory()->create([
+            'user_id' => $otherUser->id,
+            'gender' => Client::GENDER_MALE,
+            'birthdate' => '2000-01-01',
+            'height_cm' => 175,
+            'weight_kg' => 70,
+        ]);
         $this->assertNotNull($Client);
         $this->assertEquals(Client::class, get_class($Client));
 
