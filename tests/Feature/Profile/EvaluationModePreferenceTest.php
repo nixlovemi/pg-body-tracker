@@ -76,14 +76,18 @@ class EvaluationModePreferenceTest extends TestCase
         $engagement = UserEngagement::where('user_id', $user->id)->first();
         $this->assertNotNull($engagement);
         $this->assertFalse($engagement->opt_out);
-        $this->assertSame([
+        $expectedPreferences = [
             UserEngagement::ALERT_INACTIVE_LOGIN => true,
             UserEngagement::ALERT_MISSING_SETUP => true,
             UserEngagement::ALERT_BIRTHDAY_TODAY => true,
             UserEngagement::ALERT_GOAL_NEAR_DEADLINE => false,
             UserEngagement::ALERT_CLIENT_WITHOUT_RECENT_AVALIATION => true,
             UserEngagement::ALERT_REVALUATION_NEAR => false,
-        ], $engagement->alert_preferences);
+        ];
+        $actualPreferences = $engagement->alert_preferences ?? [];
+        ksort($expectedPreferences);
+        ksort($actualPreferences);
+        $this->assertSame($expectedPreferences, $actualPreferences);
 
         /** @var Client $client */
         $client = Client::factory()->create([
