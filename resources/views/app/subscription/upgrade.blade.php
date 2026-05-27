@@ -17,6 +17,18 @@
                         {!! __('messages.pages.premium.upgradeDescription') !!}
                     </p>
 
+                    <div class="alert alert-info border-left-primary mb-4" role="alert">
+                        <h5 class="alert-heading mb-2">
+                            {{ __('messages.pages.premium.checkinHighlight.title') }}
+                        </h5>
+                        <p class="mb-1">
+                            {{ __('messages.pages.premium.checkinHighlight.description') }}
+                        </p>
+                        <small class="text-muted">
+                            {{ __('messages.pages.premium.checkinHighlight.note') }}
+                        </small>
+                    </div>
+
                     <div class="row justify-content-center">
                         <div class="col-12 col-lg-5 mb-4">
                             <div class="card border-left-secondary shadow text-center h-100">

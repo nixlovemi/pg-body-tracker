@@ -145,6 +145,15 @@ class Avaliation extends Model
             'id'
         );
     }
+
+    public function checkinFields()
+    {
+        return $this->hasMany(
+            AvaliationCheckinField::class,
+            'avaliation_id',
+            'id'
+        );
+    }
     // =========
 
     // class functions
@@ -293,16 +302,15 @@ class Avaliation extends Model
         return $value;
     }
 
-    public function setRevaluationDateAttribute($value)
+    public function setRevaluationDateAttribute(?string $value): void
     {
         $RevDateFeature = new RevaluationDate();
-        if (!$RevDateFeature->validate()) {
+        if (!$RevDateFeature->validate() || $value === null || $value === '') {
             $this->attributes['revaluation_date'] = null;
             return;
         }
 
         $this->attributes['revaluation_date'] = $value;
-        return;
     }
 
     public function getRevaluationDateAttribute(?string $value): ?string
@@ -992,7 +1000,6 @@ class Avaliation extends Model
      * Ranks from 1 to 8.
      * Man [1=6-13%, 2=14-24%, 3=25-27%, 4=28-29%, 5=30-32%, 6=33-35%, 7=36-38%, 8=39%+]
      * Woman [1=16-23%, 2=24-31%, 3=32-34%, 4=35-36%, 5=37-39%, 6=40-42%, 7=43-45%, 8=46%+]
-     * @return string
      */
     public function getBodyFatInfo(): array
     {
@@ -1201,6 +1208,28 @@ class Avaliation extends Model
     }
     // ===============
 
+    /**
+     * Keep check-in scheduling aligned whenever a new evaluation is created,
+     * regardless of which controller/service path saved it.
+     */
+    protected static function booted()
+    {
+        static::created(function (self $avaliation) {
+            $checkinConfig = CheckinConfig::where('client_id', $avaliation->client_id)
+                ->where('active', true)
+                ->first();
+
+            if (!$checkinConfig) {
+                return;
+            }
+
+            $checkinConfig->next_checkin_date = SysUtils::applyTimezone($avaliation->date)
+                ->addDays((int) $checkinConfig->interval_days)
+                ->format('Y-m-d');
+            $checkinConfig->save();
+        });
+    }
+
     // static functions
     public static function fGetCalculatePercFatBy(): array
     {
@@ -1297,7 +1326,7 @@ class Avaliation extends Model
 
     public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
-        if ($model->id > 0 && $model->client->user_id !== $user->id) {
+        if ($model->id > 0 && $model->client->user_id !== $user?->id) {
             return false;
         }
 

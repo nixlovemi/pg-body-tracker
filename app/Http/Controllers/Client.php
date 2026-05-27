@@ -112,6 +112,7 @@ class Client extends Controller
             'TYPE' => Constants::FORM_EDIT,
             'ACTION' => route('app.client.doSave'),
             'CLIENT' => $Client,
+            'CHECKIN_SUMMARY' => $Client->getCheckinSummary(),
         ]);
     }
 
@@ -143,6 +144,7 @@ class Client extends Controller
             'TYPE' => Constants::FORM_VIEW,
             'ACTION' => '',
             'CLIENT' => $Client,
+            'CHECKIN_SUMMARY' => $Client->getCheckinSummary(),
         ]);
     }
 

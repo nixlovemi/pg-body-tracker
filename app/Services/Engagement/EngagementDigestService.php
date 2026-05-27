@@ -202,6 +202,10 @@ class EngagementDigestService
 
     private function buildRevaluationNearReason(User $user, array $preferences): ?array
     {
+        if (!$user->hasPremiumPlan()) {
+            return null;
+        }
+
         $revalDays = (int) env('ENGAGEMENT_REVALUATION_DAYS', 2);
         $clientIds = $user->clients()->pluck('id')->toArray();
         if (empty($clientIds)) {

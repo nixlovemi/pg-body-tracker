@@ -4,6 +4,7 @@
 @inject('mUserInfo', 'App\Models\UserInfo')
 @inject('AvaliationPictures', 'App\Helpers\Feature\AvaliationPictures')
 @inject('RevaluationDate', 'App\Helpers\Feature\RevaluationDate')
+@inject('Permissions', 'App\Helpers\Permissions')
 
 @php
 /*
@@ -22,8 +23,35 @@ $ACTION = $ACTION ?? '';
 $canEdit = (1 == $CEDIT) ? true: false;
 $Client = $mClient::getModelByCodedId($CUID);
 $UserEvaluationMode = $SysUtils::getLoggedInUser()?->info?->evaluation_mode ?? $mUserInfo::EVALUATION_MODE_PERSONAL;
+$isPremiumPlan = $SysUtils::getLoggedInUser()?->hasPremiumPlan() ?? false;
+$canManageCheckin = $canEdit && $Permissions::checkPermission($Permissions::ACL_CHECKIN_EDIT);
 $APicFeature = new $AvaliationPictures();
 $RevDateFeature = new $RevaluationDate();
+$checkinResponseTypeTextarea = \App\Models\AvaliationCheckinField::RESPONSE_TYPE_TEXTAREA;
+$checkinAnswers = [];
+if ($AVALIATION?->id) {
+    $checkinRows = $AVALIATION->checkinFields()->orderBy('id')->get();
+
+    foreach ($checkinRows as $checkinRow) {
+        $fieldMeta = (array) ($checkinRow->field_meta ?? []);
+        $fieldConfig = array_merge($fieldMeta, [
+            'field_key' => (string) $checkinRow->field_key,
+            'label' => (string) ($fieldMeta['label'] ?? ''),
+        ]);
+        $CheckinField = \App\Helpers\CheckinFields\CheckinFieldRegistry::make((string) $checkinRow->field_type, $fieldConfig);
+
+        $fieldLabel = $CheckinField?->getDisplayLabel() ?? ucwords(str_replace('_', ' ', (string) $checkinRow->field_key));
+        $response = $CheckinField?->formatResponseForDisplay($checkinRow->response) ?? trim((string) ($checkinRow->response ?? ''));
+
+        $checkinAnswers[] = [
+            'label' => $fieldLabel,
+            'response' => $response,
+            'isTextarea' => ((string) $checkinRow->response_type === $checkinResponseTypeTextarea) || mb_strlen($response) > 120,
+        ];
+    }
+}
+
+$hasCheckinAnswers = count($checkinAnswers) > 0;
 @endphp
 
 @extends('layout.modal', [
@@ -1205,6 +1233,7 @@ $RevDateFeature = new $RevaluationDate();
                                     {{ __('messages.pages.avaliation.modalAddAvaliation.labelClientNotes') }}
                                 </small>
                             </label>
+
                             @php
                             $value = old("f-cnotes") ?: $AVALIATION?->client_notes;
                             @endphp
@@ -1236,8 +1265,46 @@ $RevDateFeature = new $RevaluationDate();
                             >{{ $value }}</textarea>
                         </div>
                     </div>
+
+                    @if (!$isPremiumPlan && $canManageCheckin)
+                        <div class="alert alert-info border py-2 mb-3">
+                            <small class="d-block">{{ __('messages.pages.avaliation.modalAddAvaliation.checkinUpsellInfo') }}</small>
+                            <div class="mt-2">
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route('app.subscription.upgrade') }}" target="_blank">
+                                    {{ __('messages.pages.avaliation.modalAddAvaliation.ctaViewPremiumBenefits') }}
+                                </a>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </x-card>
+
+            @if ($hasCheckinAnswers)
+                <x-card closed="1" title="{{ __('messages.pages.avaliation.modalAddAvaliation.checkinAnswersTitle') }}">
+                    <div class="alert alert-light border py-2">
+                        <small class="text-muted d-block mb-2">
+                            {{ __('messages.pages.avaliation.modalAddAvaliation.checkinAnswersSubtitle') }}
+                        </small>
+                        <textarea class="form-control form-control-user" rows="2" readonly>{{ $AVALIATION?->private_notes ?: __('messages.pages.avaliation.modalAddAvaliation.checkinAnswersNoObservation') }}</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        @foreach ($checkinAnswers as $checkinAnswer)
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="form-label m-0">{{ $checkinAnswer['label'] }}</label>
+
+                                    @if ($checkinAnswer['isTextarea'])
+                                        <textarea class="form-control form-control-user" rows="3" readonly>{{ $checkinAnswer['response'] }}</textarea>
+                                    @else
+                                        <input type="text" class="form-control form-control-user" value="{{ $checkinAnswer['response'] }}" readonly />
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </x-card>
+            @endif
         </div>
 
         <div class="d-none" id="raf-page-6" data-idx="6" data-flow-hidden="1">
