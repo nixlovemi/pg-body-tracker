@@ -67,6 +67,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
     Route::post('/engagement/dispatch', 'App\Http\Controllers\Engagement@run')->name('app.engagement.dispatch');
     Route::get('/engagement/unsubscribe/{codedId}', 'App\Http\Controllers\Engagement@unsubscribe')->name('app.engagement.unsubscribe')->middleware('signed');
     Route::get('/avaliation/showMyAvaliation/{codedId}', 'App\Http\Controllers\Avaliation@showMyAvaliation')->name('app.avaliation.showMyAvaliation')->middleware('signed');
+    Route::get('/checkin/followup/{configCodedId}', 'App\Http\Controllers\Checkin@followupForm')->name('app.checkin.followup.form')->middleware('signed');
+    Route::post('/checkin/followupSubmit/{configCodedId}', 'App\Http\Controllers\Checkin@followupSubmit')->name('app.checkin.followup.submit')->middleware('signed');
     Route::get('/s/{key}', 'App\Http\Controllers\UrlShortController@redirect')->name('app.urlShortController.redirect');
     Route::post('/subscription/mercadoPago/webhook', 'App\Http\Controllers\Subscription@mercadoPagoWebhook')->name('app.subscription.mercadoPagoWebhook');
 
@@ -116,6 +118,13 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
 
         Route::prefix('calendar')->group(function () {
             Route::get('/', 'App\Http\Controllers\Calendar@index')->name('app.calendar.index');
+        });
+
+        Route::prefix('checkin')->middleware('checkin.followup.feature')->group(function () {
+            Route::get('/config/{clientCodedId}', 'App\Http\Controllers\Checkin@config')->name('app.checkin.config');
+            Route::post('/doSaveConfig', 'App\Http\Controllers\Checkin@doSaveConfig')->name('app.checkin.doSaveConfig');
+            Route::post('/copyConfigFromClient', 'App\Http\Controllers\Checkin@copyConfigFromClient')->name('app.checkin.copyConfigFromClient');
+            Route::post('/sendNow/{clientCodedId}', 'App\Http\Controllers\Checkin@sendNow')->name('app.checkin.sendNow');
         });
 
         Route::prefix('report')->group(function () {

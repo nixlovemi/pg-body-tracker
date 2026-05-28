@@ -18,6 +18,10 @@ $isEditingOrViewing = in_array($TYPE, [$Constants::FORM_VIEW, $Constants::FORM_E
 $isFirstClient = $IS_FIRST_CLIENT ?? false;
 $prefillClient = $PREFILL_CLIENT ?? [];
 $prefillSelf = (int) request()->input('prefillSelf', 0) === 1;
+$LoggedUser = $SysUtils::getLoggedInUser();
+$isPremiumPlan = $LoggedUser?->hasPremiumPlan() ?? false;
+$canManageCheckin = $canEdit && $Permissions::checkPermission($Permissions::ACL_CHECKIN_EDIT);
+$checkinSummary = $CHECKIN_SUMMARY ?? null;
 @endphp
 
 @extends('layout.dashboard', [
@@ -255,6 +259,47 @@ $prefillSelf = (int) request()->input('prefillSelf', 0) === 1;
                     />
                 </div>
             </x-card>
+
+            @if ($canManageCheckin)
+                <x-card title="{{ __('messages.pages.client.register.cardCheckin') }}" closed="true">
+                    @if ($isPremiumPlan)
+                        <p class="mb-2">
+                            {{ __('messages.pages.client.register.checkinDescription') }}
+                        </p>
+
+                        @if ($checkinSummary)
+                            <div class="alert alert-light border mb-3">
+                                <strong>{{ __('messages.pages.client.register.checkinSummaryTitle') }}</strong>
+
+                                <div class="mt-2">
+                                    <div><strong>{{ __('messages.pages.client.register.checkinSummaryStatus') }}:</strong> {{ $checkinSummary['active'] ? __('messages.pages.client.register.checkinStatusActive') : __('messages.pages.client.register.checkinStatusInactive') }}</div>
+                                    <div><strong>{{ __('messages.pages.client.register.checkinSummaryInterval') }}:</strong> {{ __('messages.pages.client.register.checkinSummaryIntervalValue', ['days' => $checkinSummary['interval_days']]) }}</div>
+                                    <div><strong>{{ __('messages.pages.client.register.checkinSummaryNextDate') }}:</strong> {{ $checkinSummary['next_checkin_date'] ?: __('messages.pages.client.register.checkinSummaryNotScheduled') }}</div>
+                                    <div><strong>{{ __('messages.pages.client.register.checkinSummaryLastSent') }}:</strong> {{ $checkinSummary['last_checkin_sent_date'] ?: __('messages.pages.client.register.checkinSummaryNoSentYet') }}</div>
+                                    <div><strong>{{ __('messages.pages.client.register.checkinSummaryLastResponse') }}:</strong> {{ $checkinSummary['last_checkin_responded_date'] ?: __('messages.pages.client.register.checkinSummaryNoResponseYet') }}</div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="alert alert-light border mb-3">
+                            <strong>{{ __('messages.pages.client.register.checkinRuleTitle') }}</strong>
+                            <div class="mt-1">{{ __('messages.pages.client.register.checkinRuleBody') }}</div>
+                        </div>
+
+                        <a class="btn btn-primary btn-sm" href="{{ route('app.checkin.config', ['clientCodedId' => $CLIENT->codedId]) }}">
+                            {{ __('messages.pages.client.register.btnConfigureCheckin') }}
+                        </a>
+                    @else
+                        @include('app.placeholder-premium', [
+                            'DIV_CLASSES' => 'w-100 h-auto',
+                            'TITLE' => __('messages.components.Features.premiumFeature'),
+                            'DESCRIPTION' => __('messages.pages.client.register.checkinDescription') . ' ' . __('messages.pages.client.register.checkinRuleBody') . ' ' . __('messages.pages.client.register.checkinPremiumHint'),
+                            'CTA_LABEL' => __('messages.pages.avaliation.modalAddAvaliation.ctaViewPremiumBenefits'),
+                            'CTA_URL' => route('app.subscription.upgrade'),
+                        ])
+                    @endif
+                </x-card>
+            @endif
         @endif
 
         <div class="form-actions">

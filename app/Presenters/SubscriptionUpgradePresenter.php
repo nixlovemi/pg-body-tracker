@@ -33,6 +33,7 @@ final class SubscriptionUpgradePresenter
             ['label' => __('messages.pages.premium.freeVsPremium.features.line15'), 'free' => false],
             ['label' => __('messages.pages.premium.freeVsPremium.features.line16'), 'free' => false],
             ['label' => __('messages.pages.premium.freeVsPremium.features.line17'), 'free' => false],
+            ['label' => __('messages.pages.premium.freeVsPremium.features.line18'), 'free' => false],
         ];
 
         return $data;

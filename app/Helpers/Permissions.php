@@ -17,6 +17,9 @@ final class Permissions {
     public const ACL_AVALIATION_VIEW = 'avaliation/view';
     public const ACL_AVALIATION_EDIT = 'avaliation/edit';
 
+    public const ACL_CHECKIN_VIEW = 'checkin/view';
+    public const ACL_CHECKIN_EDIT = 'checkin/edit';
+
     public const ACL_CALENDAR_VIEW = 'calendar/view';
 
     private const ACL = [
@@ -30,6 +33,9 @@ final class Permissions {
 
         self::ACL_AVALIATION_VIEW => [User::ROLE_MANAGER, User::ROLE_CLIENT],
         self::ACL_AVALIATION_EDIT => [User::ROLE_MANAGER],
+
+        self::ACL_CHECKIN_VIEW => [User::ROLE_MANAGER],
+        self::ACL_CHECKIN_EDIT => [User::ROLE_MANAGER],
 
         self::ACL_CALENDAR_VIEW => [User::ROLE_MANAGER, User::ROLE_CLIENT],
     ];
@@ -70,6 +76,11 @@ final class Permissions {
         'app.avaliation.doModalSendMail' => self::ACL_AVALIATION_EDIT,
 
         'app.calendar.index' => self::ACL_CALENDAR_VIEW,
+
+        'app.checkin.config' => self::ACL_CHECKIN_VIEW,
+        'app.checkin.doSaveConfig' => self::ACL_CHECKIN_EDIT,
+        'app.checkin.copyConfigFromClient' => self::ACL_CHECKIN_EDIT,
+        'app.checkin.sendNow' => self::ACL_CHECKIN_EDIT,
 
         'app.report.index' => self::ACL_DASHBOARD_INDEX,
         'app.report.view' => self::ACL_DASHBOARD_INDEX,

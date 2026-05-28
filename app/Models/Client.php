@@ -81,6 +81,14 @@ class Client extends Model
             'id'
         );
     }
+
+    public function checkinConfig()
+    {
+        return $this->hasOne(
+            CheckinConfig::class, 'client_id',
+            'id'
+        );
+    }
     // =========
 
     // class functions
@@ -190,10 +198,6 @@ class Client extends Model
             ->first();
     }
 
-    /**
-     * Get the two most recent evaluations for the client.
-     * @return array[?Avaliation]
-     */
     public function getTwoLastAvaliations(): array
     {
         $avaliations = $this->avaliations()
@@ -210,6 +214,49 @@ class Client extends Model
     public function getFormattedHeight(): string
     {
         return SysUtils::formatDbToNumber($this->height_cm, 0) . 'cm';
+    }
+
+    public function getCheckinSummary(): ?array
+    {
+        $checkinConfig = $this->checkinConfig;
+        if (!$checkinConfig) {
+            return null;
+        }
+
+        return [
+            'active' => (bool) $checkinConfig->active,
+            'interval_days' => (int) $checkinConfig->interval_days,
+            'next_checkin_date' => $this->formatCheckinSummaryDate($checkinConfig->next_checkin_date),
+            'last_checkin_sent_date' => $this->formatCheckinSummaryDate($checkinConfig->last_checkin_sent_date),
+            'last_checkin_responded_date' => $this->getLastCheckinRespondedDateFromResponses(),
+        ];
+    }
+
+    public function getLastCheckinRespondedDateFromResponses(): ?string
+    {
+        $lastRespondedDate = $this->avaliations()
+            ->whereHas('checkinFields')
+            ->orderBy('date', 'DESC')
+            ->value('date');
+
+        return $this->formatCheckinSummaryDate($lastRespondedDate);
+    }
+
+    private function formatCheckinSummaryDate($dateValue): ?string
+    {
+        if (!$dateValue) {
+            return null;
+        }
+
+        $dateYmd = method_exists($dateValue, 'format')
+            ? $dateValue->format('Y-m-d')
+            : (string) $dateValue;
+
+        if ($dateYmd === '') {
+            return null;
+        }
+
+        return SysUtils::reformatDate($dateYmd, 'Y-m-d', __('messages.dateFormat'));
     }
 
     public function getAvgDaysBtwAvaliations(): ?float
