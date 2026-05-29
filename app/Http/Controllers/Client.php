@@ -8,8 +8,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Helpers\Constants;
 use App\Models\Client as mClient;
+use App\Presenters\ClientInsightsCardPresenter;
 use App\Helpers\SysUtils;
 use App\Helpers\ApiResponse;
+use App\Services\PatientInsights\PatientInsightsSnapshotService;
 
 class Client extends Controller
 {
@@ -84,8 +86,10 @@ class Client extends Controller
             ->withSuccess($response->getMessage());
     }
 
-    public function edit(string $codedId)
+    public function edit(string $codedId, PatientInsightsSnapshotService $insightsSnapshotService)
     {
+        $loggedUser = SysUtils::getLoggedInUser();
+        $isPremiumPlan = $loggedUser?->hasPremiumPlan() ?? false;
         $Client = mClient::getModelByCodedId($codedId);
         if (null === $Client) {
             return redirect()
@@ -104,6 +108,11 @@ class Client extends Controller
                     'modelName' => __('messages.models.Client.name')
                 ])]);
         }
+
+        $insightsCard = $isPremiumPlan
+            ? $insightsSnapshotService->buildPremiumCard($Client)
+            : $insightsSnapshotService->buildFreeCard($Client);
+        $insightsFreeCardPresented = ClientInsightsCardPresenter::present($insightsCard, $isPremiumPlan);
 
         return view('app.client.register', [
             'PAGE_TITLE' => __('messages.modalEditTitle', [
@@ -113,11 +122,15 @@ class Client extends Controller
             'ACTION' => route('app.client.doSave'),
             'CLIENT' => $Client,
             'CHECKIN_SUMMARY' => $Client->getCheckinSummary(),
+            'PATIENT_INSIGHTS_FREE_CARD' => $insightsCard,
+            'PATIENT_INSIGHTS_FREE_CARD_PRESENTED' => $insightsFreeCardPresented,
         ]);
     }
 
-    public function view(string $codedId)
+    public function view(string $codedId, PatientInsightsSnapshotService $insightsSnapshotService)
     {
+        $loggedUser = SysUtils::getLoggedInUser();
+        $isPremiumPlan = $loggedUser?->hasPremiumPlan() ?? false;
         $Client = mClient::getModelByCodedId($codedId);
         if (null === $Client) {
             return redirect()
@@ -137,6 +150,11 @@ class Client extends Controller
                 ])]);
         }
 
+        $insightsCard = $isPremiumPlan
+            ? $insightsSnapshotService->buildPremiumCard($Client)
+            : $insightsSnapshotService->buildFreeCard($Client);
+        $insightsFreeCardPresented = ClientInsightsCardPresenter::present($insightsCard, $isPremiumPlan);
+
         return view('app.client.register', [
             'PAGE_TITLE' => __('messages.modalEditTitle', [
                 'modelName' => __('messages.models.Client.name')
@@ -145,6 +163,8 @@ class Client extends Controller
             'ACTION' => '',
             'CLIENT' => $Client,
             'CHECKIN_SUMMARY' => $Client->getCheckinSummary(),
+            'PATIENT_INSIGHTS_FREE_CARD' => $insightsCard,
+            'PATIENT_INSIGHTS_FREE_CARD_PRESENTED' => $insightsFreeCardPresented,
         ]);
     }
 

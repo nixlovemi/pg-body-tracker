@@ -21,6 +21,10 @@ class UserInfoFactory extends Factory
             '/demo/logos/logo-03.png',
         ];
 
+        $shortUrl = function () {
+            return 'https://' . $this->faker->domainName();
+        };
+
         return [
             'user_id' => function() {
                 return User::where('role', '=', User::ROLE_MANAGER)
@@ -38,12 +42,12 @@ class UserInfoFactory extends Factory
             },
             'evaluation_mode' => UserInfo::EVALUATION_MODE_PERSONAL,
             'whatsapp_phone' => $this->faker->optional(0.6)->phoneNumber(),
-            'link_telegram' => $this->faker->optional(0.6)->url(),
-            'link_facebook' => $this->faker->optional(0.6)->url(),
-            'link_instagram' => $this->faker->optional(0.6)->url(),
-            'link_twitter' => $this->faker->optional(0.6)->url(),
-            'link_youtube' => $this->faker->optional(0.6)->url(),
-            'link_website' => $this->faker->optional(0.6)->url(),
+            'link_telegram' => $this->faker->optional(0.6)->passthrough($shortUrl()),
+            'link_facebook' => $this->faker->optional(0.6)->passthrough($shortUrl()),
+            'link_instagram' => $this->faker->optional(0.6)->passthrough($shortUrl()),
+            'link_twitter' => $this->faker->optional(0.6)->passthrough($shortUrl()),
+            'link_youtube' => $this->faker->optional(0.6)->passthrough($shortUrl()),
+            'link_website' => $this->faker->optional(0.6)->passthrough($shortUrl()),
         ];
     }
 

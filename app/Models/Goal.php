@@ -153,11 +153,27 @@ class Goal extends Model
 
     public function isObjectiveWeightLoss(): bool
     {
+        if ($this->objective === self::OBJECTIVE_WEIGHT_LOSS) {
+            return true;
+        }
+
+        if ($this->objective === self::OBJECTIVE_MUSCLE_GAIN || $this->objective === self::OBJECTIVE_HEALTH) {
+            return false;
+        }
+
         return $this->initial_weight_kg > $this->target_weight_kg;
     }
 
     public function isObjectiveMuscleGain(): bool
     {
+        if ($this->objective === self::OBJECTIVE_MUSCLE_GAIN) {
+            return true;
+        }
+
+        if ($this->objective === self::OBJECTIVE_WEIGHT_LOSS || $this->objective === self::OBJECTIVE_HEALTH) {
+            return false;
+        }
+
         return $this->initial_weight_kg < $this->target_weight_kg;
     }
 
