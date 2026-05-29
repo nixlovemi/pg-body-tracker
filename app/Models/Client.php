@@ -89,6 +89,14 @@ class Client extends Model
             'id'
         );
     }
+
+    public function patientSignalSnapshots()
+    {
+        return $this->hasMany(
+            PatientSignalSnapshot::class, 'client_id',
+            'id'
+        );
+    }
     // =========
 
     // class functions

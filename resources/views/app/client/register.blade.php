@@ -22,6 +22,7 @@ $LoggedUser = $SysUtils::getLoggedInUser();
 $isPremiumPlan = $LoggedUser?->hasPremiumPlan() ?? false;
 $canManageCheckin = $canEdit && $Permissions::checkPermission($Permissions::ACL_CHECKIN_EDIT);
 $checkinSummary = $CHECKIN_SUMMARY ?? null;
+$insightsFreeCardPresented = $PATIENT_INSIGHTS_FREE_CARD_PRESENTED ?? null;
 @endphp
 
 @extends('layout.dashboard', [
@@ -229,6 +230,100 @@ $checkinSummary = $CHECKIN_SUMMARY ?? null;
         </x-card>
 
         @if ($isEditingOrViewing)
+            <x-card title="{{ $insightsFreeCardPresented['card_title'] ?? __('messages.pages.client.register.cardInsights') }}" closed="true">
+                @if ($insightsFreeCardPresented)
+
+                    <div class="alert alert-light border mb-3">
+                        <div>
+                            <strong>{{ __('messages.pages.client.register.insightsCurrentStatus') }}:</strong>
+                            <span class="badge badge-{{ $insightsFreeCardPresented['status_badge_class'] }}">{{ $insightsFreeCardPresented['status_label'] }}</span>
+                        </div>
+                        @if ($insightsFreeCardPresented['show_risk_percent'])
+                            <div class="mt-1">
+                                <strong>{{ __('messages.pages.client.register.insightsRiskPercent') }}:</strong>
+                                {{ $insightsFreeCardPresented['risk_percent_display'] }}%
+                            </div>
+                        @endif
+
+                        @if ($insightsFreeCardPresented['show_analysis_coverage'])
+                            <div class="mt-1">
+                                <strong>{{ __('messages.pages.client.register.insightsAnalysisCoverage') }}:</strong>
+                                {{ $insightsFreeCardPresented['analysis_coverage_display'] }}%
+                            </div>
+                        @endif
+                    </div>
+
+                    @if ($insightsFreeCardPresented['show_low_confidence_alert'])
+                        <div class="alert alert-warning mb-3">
+                            <strong>{{ __('messages.pages.client.register.insightsLowConfidenceTitle') }}</strong>
+                            <div class="mt-1">
+                                {{ __('messages.pages.client.register.insightsLowConfidenceBody', [
+                                    'minConfidence' => $insightsFreeCardPresented['min_confidence_display'],
+                                ]) }}
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($insightsFreeCardPresented['show_reasons'])
+                        <div class="mb-3">
+                            <strong>{{ __('messages.pages.client.register.insightsReasonsTitle') }}</strong>
+                            <ul class="mb-0 mt-2 pl-3">
+                                @foreach ($insightsFreeCardPresented['reasons'] as $reason)
+                                    <li class="mb-1">
+                                        <strong>{{ $reason['label'] }}:</strong>
+                                        {{ $reason['message'] }}
+
+                                        @if ($reason['has_indicator_text'])
+                                            <div class="small text-muted mt-1">
+                                                {{ __('messages.pages.client.register.insightsIndicatorPrefix') }} {{ $reason['indicator_text'] }}
+                                            </div>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if ($insightsFreeCardPresented['show_history'])
+                        <div class="mb-3">
+                            <strong>{{ __('messages.pages.client.register.insightsHistoryTitle') }}</strong>
+                            <div class="mt-2 d-flex flex-wrap" style="gap: 8px;">
+                                @foreach ($insightsFreeCardPresented['history'] as $historyItem)
+                                    <span class="badge badge-{{ $historyItem['badge_class'] }}" title="{{ $historyItem['tooltip'] }}">
+                                        {{ $historyItem['snapshot_date_label'] }} - {{ $historyItem['status_label'] }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($insightsFreeCardPresented['show_suggestions'])
+                        <div class="mb-3">
+                            <strong>{{ $insightsFreeCardPresented['suggestions_title'] }}</strong>
+                            <ul class="mb-0 mt-2 pl-3">
+                                @foreach ($insightsFreeCardPresented['suggestions'] as $suggestion)
+                                    <li class="mb-1">{{ $suggestion }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if ($insightsFreeCardPresented['show_cta'])
+                        <div class="alert alert-info mt-3 mb-0">
+                            <strong>{{ $insightsFreeCardPresented['cta_title'] }}</strong>
+                            <div class="mt-1">{{ $insightsFreeCardPresented['cta_body'] }}</div>
+                            <a href="{{ route('app.subscription.upgrade') }}" class="btn btn-sm btn-primary mt-2">
+                                {{ $insightsFreeCardPresented['cta_button_label'] }}
+                            </a>
+                        </div>
+                    @endif
+                @else
+                    <div class="alert alert-light border mb-0">
+                        {{ __('messages.pages.client.register.insightsNoData') }}
+                    </div>
+                @endif
+            </x-card>
+
             <x-card title="{{ __('messages.pages.client.register.cardGoals') }}" closed="true">
                 <div id='dv-card-client-goals'>
                     @include('app.client.partials.cardGoalsContent', [

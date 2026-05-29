@@ -5,38 +5,117 @@ namespace App\Presenters;
 use App\Helpers\Icons;
 use App\Helpers\Payments\SubscriptionTypes;
 use App\Helpers\SysUtils;
-use Mockery\Matcher\Subset;
 
 final class SubscriptionUpgradePresenter
 {
     public static function getFeaturesFreePremium(bool $free = true): array
     {
-        $maxClientsLabel = $free ?
-            __('messages.pages.premium.freeVsPremium.features.line1Free'):
-            __('messages.pages.premium.freeVsPremium.features.line1Premium');
+        $features = __('messages.pages.premium.freeVsPremium.features');
+        if (!is_array($features)) {
+            return [];
+        }
 
-        $data = [
-            ['label' => $maxClientsLabel, 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line2'), 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line3'), 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line4'), 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line5'), 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line6'), 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line7'), 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line8'), 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line9'), 'free' => true],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line10'), 'free' => false],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line11'), 'free' => false],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line12'), 'free' => false],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line13'), 'free' => false],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line14'), 'free' => false],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line15'), 'free' => false],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line16'), 'free' => false],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line17'), 'free' => false],
-            ['label' => __('messages.pages.premium.freeVsPremium.features.line18'), 'free' => false],
-        ];
+        $groupedByLine = [];
+        foreach ($features as $key => $value) {
+            if (!is_string($key)) {
+                continue;
+            }
+
+            if (!preg_match('/^line(\d+)(Free|Premium|FreeEnabled)$/', $key, $matches)) {
+                continue;
+            }
+
+            $lineNumber = (int) $matches[1];
+            $variant = $matches[2];
+
+            if (!isset($groupedByLine[$lineNumber])) {
+                $groupedByLine[$lineNumber] = [
+                    'free_label' => null,
+                    'premium_label' => null,
+                    'free_enabled' => null,
+                ];
+            }
+
+            if ($variant === 'Free') {
+                if (!is_string($value)) {
+                    continue;
+                }
+
+                $groupedByLine[$lineNumber]['free_label'] = $value;
+                continue;
+            }
+
+            if ($variant === 'Premium') {
+                if (!is_string($value)) {
+                    continue;
+                }
+
+                $groupedByLine[$lineNumber]['premium_label'] = $value;
+                continue;
+            }
+
+            if (is_bool($value)) {
+                $groupedByLine[$lineNumber]['free_enabled'] = $value;
+            }
+        }
+
+        if (count($groupedByLine) === 0) {
+            return [];
+        }
+
+        ksort($groupedByLine);
+
+        $data = [];
+        foreach ($groupedByLine as $lineNumber => $lineData) {
+            $label = self::resolveFeatureLabel($lineData, $free);
+            if ($label === '') {
+                continue;
+            }
+
+            $isAvailableForFreePlan = self::isAvailableForFreePlan($lineData);
+            $data[] = [
+                'label' => $label,
+                'free' => $isAvailableForFreePlan,
+            ];
+        }
 
         return $data;
+    }
+
+    /**
+     * @param array{free_label: string|null, premium_label: string|null, free_enabled: bool|null} $lineData
+     */
+    private static function resolveFeatureLabel(array $lineData, bool $free): string
+    {
+        if ($free && is_string($lineData['free_label'])) {
+            return $lineData['free_label'];
+        }
+
+        if (!$free && is_string($lineData['premium_label'])) {
+            return $lineData['premium_label'];
+        }
+
+        if ($free && is_string($lineData['premium_label'])) {
+            return $lineData['premium_label'];
+        }
+
+        if (!$free && is_string($lineData['free_label'])) {
+            return $lineData['free_label'];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param array{free_label: string|null, premium_label: string|null, free_enabled: bool|null} $lineData
+     */
+    private static function isAvailableForFreePlan(array $lineData): bool
+    {
+        if (is_bool($lineData['free_enabled'])) {
+            return $lineData['free_enabled'];
+        }
+
+        return is_string($lineData['free_label']);
     }
 
     public static function getIconTrue(): string

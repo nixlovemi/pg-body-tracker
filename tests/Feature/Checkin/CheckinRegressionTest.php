@@ -222,6 +222,35 @@ class CheckinRegressionTest extends TestCase
             ->assertSee(__('messages.no'));
     }
 
+    public function testFollowupFormPrefillsCurrentClientWeightInsteadOfInitialWeight(): void
+    {
+        [$user, $client] = $this->createManagerAndClient();
+        $this->actingAs($user, 'web');
+
+        // Keep initial profile weight at 80.0, but latest evaluation at 82.7.
+        Avaliation::fSave([
+            'client_id' => $client->id,
+            'date' => '2026-05-25',
+            'weight_kg' => 82.7,
+            'calculate_perc_fat_by' => Avaliation::CALCULATE_PERC_FAT_BY_BIOIMPEDANCE,
+        ]);
+
+        $config = CheckinConfig::create([
+            'client_id' => $client->id,
+            'active' => true,
+            'interval_days' => 7,
+            'link_expires_hours' => 24,
+            'fields_config' => [],
+        ]);
+
+        [$formUrl] = $this->buildSignedFollowupUrls($config);
+
+        $this->get($formUrl)
+            ->assertOk()
+            ->assertSee('82,7')
+            ->assertDontSee('80,0');
+    }
+
     public function testFollowupSubmitPersistsYesNoResponseAsBooleanType(): void
     {
         [$user, $client] = $this->createManagerAndClient();

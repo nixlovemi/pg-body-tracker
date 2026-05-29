@@ -28,7 +28,8 @@
         <div class="form-group">
             <label for="f-weight">{{ __('messages.pages.checkin.followup.weightLabel') }}</label>
             @php
-                $weight = old('f-weight') ?: ($CLIENT->weight_kg ? number_format($CLIENT->weight_kg, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')) : '');
+                $currentWeight = $CLIENT->getCurrentWeight();
+                $weight = old('f-weight') ?: ($currentWeight ? number_format($currentWeight, 1, __('messages.decimalSeparator'), __('messages.thousandSeparator')) : '');
             @endphp
             <input
                 type="text"

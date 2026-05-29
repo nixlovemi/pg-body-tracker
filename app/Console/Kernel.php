@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Scheduling disabled for patient insights snapshot.
+        // In production this project executes it via scripts/patient-insights-snapshot.php.
     }
 
     /**
