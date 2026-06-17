@@ -217,7 +217,8 @@ final class SysUtils {
         }
 
         // check if file exists in public
-        $publicPath = str_replace(env('APP_PREFIX_FOLDER') . DIRECTORY_SEPARATOR, '', public_path(self::getOsPhotosFolder($filePath, env('APP_PREFIX_FOLDER'))));
+        $appPrefix = env('APP_PREFIX_FOLDER') ?? 'app';
+        $publicPath = str_replace($appPrefix . DIRECTORY_SEPARATOR, '', public_path(self::getOsPhotosFolder($filePath, $appPrefix)));
         if (file_exists($publicPath)) {
             return self::getBase64String($publicPath);
         }

@@ -96,6 +96,8 @@ $URLogoFeature = new $UserReportLogo();
                 @if ($DIV_CLIENT_INFO_EXTRA_SPACE ?? false)
                     <!-- matching size with Progress card -->
                     &nbsp;<br />
+                    &nbsp;<br />
+                    &nbsp;<br />
                 @endif
             </div>
         </div>
@@ -115,8 +117,24 @@ $URLogoFeature = new $UserReportLogo();
                                     'bodyFat' => __('messages.components.avaliationReport.bodyFat'),
                                     'whr' => __('messages.components.avaliationReport.WaistToHipRatio'),
                                     'visceralFat' => __('messages.models.Avaliation.fields.visceral_fat_level'),
+                                    'estimatedIdealWeight' => __('messages.components.avaliationReport.estimatedIdealWeight'),
                                 ]) }}
                             </i></small>
+                            @php
+                                $progressContext = $Avaliation->getProgressContextInfo();
+                            @endphp
+                            <br />
+                            <small>
+                                {{ __('messages.components.avaliationReport.progressWeightLine', [
+                                    'status' => $progressContext['weightStatusLabel']
+                                ]) }}
+                            </small>
+                            <br />
+                            <small>
+                                {{ __('messages.components.avaliationReport.progressRiskLine', [
+                                    'status' => $progressContext['riskStatusLabel']
+                                ]) }}
+                            </small>
                         </div>
 
                         @include($PROGRESS_BAR_VIEW_NAME, [

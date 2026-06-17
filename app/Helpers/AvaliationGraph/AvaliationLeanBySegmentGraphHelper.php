@@ -103,16 +103,27 @@ final class AvaliationLeanBySegmentGraphHelper extends AvaliationGraphAbstract
 
     private function appendChartPoint(array &$data, string $label, Avaliation $avaliation, array &$arrPoints): void
     {
+        $segmentValues = [];
+        foreach (array_keys(self::SEGMENTS) as $segment) {
+            $segmentValues[$segment] = $avaliation->{$segment};
+        }
+
+        if (count(array_filter($segmentValues, static fn ($value) => $value !== null)) === 0) {
+            return;
+        }
+
         $data['labels'][] = $label;
         $row = [$label];
 
         $i = 0;
         foreach (array_keys(self::SEGMENTS) as $segment) {
-            $value = $avaliation->{$segment};
+            $value = $segmentValues[$segment];
             $data['datasets'][$i++]['data'][] = $value;
-            $arrPoints[] = $value;
+            if ($value !== null) {
+                $arrPoints[] = $value;
+            }
 
-            $row[] = SysUtils::formatDbToNumber($value, 1) . self::PREFIX;
+            $row[] = $value === null ? '-' : SysUtils::formatDbToNumber($value, 1) . self::PREFIX;
         }
 
         $this->addBodyItem(...$row);
@@ -157,6 +168,10 @@ final class AvaliationLeanBySegmentGraphHelper extends AvaliationGraphAbstract
 
     private function calculateStepSize(array $points): int
     {
+        if (empty($points)) {
+            return 1;
+        }
+
         $min = min($points);
         $max = max($points);
         $range = $max - $min;

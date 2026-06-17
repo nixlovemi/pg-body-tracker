@@ -60,8 +60,38 @@ final class AvaliationReportPresenter
                 'showReference' => true
             ],
             [
+                'method' => 'getEstimatedIdealWeightInfo',
+                'title' => __('messages.components.avaliationReport.estimatedIdealWeight'),
+                'showReference' => true
+            ],
+            [
+                'method' => 'getBodyFatInfo',
+                'title' => __('messages.components.avaliationReport.bodyFat'),
+                'showReference' => true
+            ],
+            [
+                'method' => 'getFatMassInfo',
+                'title' => __('messages.components.avaliationReport.fatMass'),
+                'showReference' => true
+            ],
+            [
+                'method' => 'getLeanMassInfo',
+                'title' => __('messages.components.avaliationReport.leanMass'),
+                'showReference' => true
+            ],
+            [
                 'method' => 'getSkeletalMuscleInfo',
                 'title' => __('messages.components.avaliationReport.skeletalMuscle'),
+                'showReference' => true
+            ],
+            [
+                'method' => 'getTrunkFatPercentageInfo',
+                'title' => __('messages.components.avaliationReport.trunkFatPercentage'),
+                'showReference' => true
+            ],
+            [
+                'method' => 'getBmiInfo',
+                'title' => __('messages.components.avaliationReport.bmi'),
                 'showReference' => true
             ],
             [
@@ -75,23 +105,37 @@ final class AvaliationReportPresenter
                 'showReference' => true
             ],
             [
+                'method' => 'getVisceralFatInfo',
+                'title' => __('messages.models.Avaliation.fields.visceral_fat_level'),
+                'showReference' => true
+            ],
+            [
+                'method' => 'getWaistAbdomenCircumferenceInfo',
+                'title' => __('messages.components.avaliationReport.waistAbdomenCircumference'),
+                'showReference' => true
+            ],
+            [
+                'method' => 'getWaistToHipRatioInfo',
+                'title' => __('messages.components.avaliationReport.WaistToHipRatio'),
+                'showReference' => true
+            ],
+            [
                 'method' => 'getBodyAgeInfo',
                 'title' => __('messages.models.Avaliation.fields.body_age'),
                 'showReference' => false
             ],
             [
+                'method' => 'getBasalMetabolismInfo',
+                'title' => __('messages.models.Avaliation.fields.basal_metabolism'),
+                'showReference' => true
+            ],
+            // DEPRECATED: The following cards are currently not displayed.
+            // They are preserved in the model but hidden from UI reports.
+            // Uncomment if needed in the future.
+            /*
+            [
                 'method' => 'getFFMIInfo',
                 'title' => __('messages.components.avaliationReport.FFMI'),
-                'showReference' => true
-            ],
-            [
-                'method' => 'getBmiInfo',
-                'title' => __('messages.components.avaliationReport.bmi'),
-                'showReference' => true
-            ],
-            [
-                'method' => 'getBodyFatInfo',
-                'title' => __('messages.components.avaliationReport.bodyFat'),
                 'showReference' => true
             ],
             [
@@ -99,21 +143,7 @@ final class AvaliationReportPresenter
                 'title' => __('messages.components.avaliationReport.BAI'),
                 'showReference' => true
             ],
-            [
-                'method' => 'getVisceralFatInfo',
-                'title' => __('messages.models.Avaliation.fields.visceral_fat_level'),
-                'showReference' => true
-            ],
-            [
-                'method' => 'getBasalMetabolismInfo',
-                'title' => __('messages.models.Avaliation.fields.basal_metabolism'),
-                'showReference' => true
-            ],
-            [
-                'method' => 'getWaistToHipRatioInfo',
-                'title' => __('messages.components.avaliationReport.WaistToHipRatio'),
-                'showReference' => true
-            ]
+            */
         ];
 
         return array_map(function ($item) use ($Avaliation) {
@@ -130,10 +160,11 @@ final class AvaliationReportPresenter
     {
         return [
             ['title' => __('messages.models.Client.fields.weight'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationWeightGraphHelper'],
-            ['title' => __('messages.components.avaliationFatLeanMassGraph.title', [
-                'fatMass' => __('messages.models.Avaliation.labelFatMass'),
-                'leanMass' => __('messages.models.Avaliation.labelLeanMass'),
-            ]), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationFatLeanMassGraphHelper'],
+            ['title' => __('messages.components.avaliationReport.fatMass'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationFatMassGraphHelper'],
+            ['title' => __('messages.components.avaliationReport.leanMass'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationLeanMassGraphHelper'],
+            ['title' => __('messages.components.avaliationReport.waistAbdomenCircumference'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationWaistAbdomenCircumferenceGraphHelper'],
+            ['title' => __('messages.components.avaliationReport.trunkFatPercentage'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationTrunkFatPercentageGraphHelper'],
+            ['title' => __('messages.components.avaliationReport.skeletalMuscle'), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationSkeletalMuscleGraphHelper'],
             ['title' => __('messages.components.AvaliationBodyCompositionGraph.title', []), 'helperClass' => 'App\Helpers\AvaliationGraph\AvaliationBodyCompositionGraphHelper'],
             ['title' => __('messages.components.AvaliationMuscleFatPercGraph.title', [
                 'fatMass' => __('messages.models.Avaliation.labelFatMass'),
