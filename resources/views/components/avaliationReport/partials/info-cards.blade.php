@@ -6,11 +6,15 @@ View variables:
 ===============
     - $AVALIATION: Avaliation
     - $IS_PDF: bool
+    - $infoCardsData: ?array (optional pre-calculated data for PDF optimization)
 */
+
+// Use pre-calculated data if available (PDF optimization), otherwise calculate on demand
+$cardsData = $infoCardsData ?? $ARPresenter::getInfoCardsData($AVALIATION);
 @endphp
 
 <div @class(['row', 'mt-3' => !$IS_PDF, 'mt-0' => $IS_PDF])>
-    @foreach ($ARPresenter::getInfoCardsData($AVALIATION) as $item)
+    @foreach ($cardsData as $item)
         <div @class(['mb-3', 'col-12 col-lg-4' => !$IS_PDF, 'col-6' => $IS_PDF])>
             @include('components.avaliation-report-info-card', [
                 'TITLE' => $item['title'],

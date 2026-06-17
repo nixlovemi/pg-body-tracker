@@ -2,27 +2,27 @@
 
 namespace App\Helpers\AvaliationGraph;
 
-use App\Models\Avaliation;
+use App\Helpers\Avaliation\FatMass;
 use App\Helpers\Constants;
-use App\Helpers\Avaliation\BodyWater;
 use App\Helpers\SysUtils;
+use App\Models\Avaliation;
 
-final class AvaliationBodyWaterGraphHelper extends AvaliationGraphAbstract
+final class AvaliationFatMassGraphHelper extends AvaliationGraphAbstract
 {
-    private BodyWater $BodyWater;
+    private FatMass $FatMass;
 
     public function __construct(
         protected int $avaliationId,
         protected bool $isForPdf = false
     ) {
         parent::__construct($avaliationId, $isForPdf);
-        $this->BodyWater = new BodyWater($this->getAvaliation());
+        $this->FatMass = new FatMass($this->getAvaliation());
         $this->addTableHeaders();
     }
 
     public function getClassName(): string
     {
-        return 'AvaliationBodyWaterGraph';
+        return 'AvaliationFatMassGraph';
     }
 
     public function getAvaliation(): Avaliation
@@ -32,44 +32,41 @@ final class AvaliationBodyWaterGraphHelper extends AvaliationGraphAbstract
 
     public function getConfig(): array
     {
-        $Avaliation = $this->getAvaliation();
-        $idealMin = $this->BodyWater->getMinIdealValue();
-        $idealMax = $this->BodyWater->getMaxIdealValue();
-        $lineColor = $this->BodyWater->getFieldInfo()[Constants::FI_RANK_COLOR];
+        $avaliation = $this->getAvaliation();
+        $lineColor = $this->FatMass->getFieldInfo()[Constants::FI_RANK_COLOR];
 
-        $backgroundColor = Constants::GRAPH_COLOR_LIGHT_BLUE;
+        $rgb = SysUtils::hexToRGB(Constants::RANK_COLOR_2);
+        $backgroundColor = sprintf('rgba(%d, %d, %d, 0.1)', ...$rgb);
+
         $dateFormat = strtolower(__('messages.dateFormat'));
         $queryLimit = 9;
 
         $data = $this->initChartData($backgroundColor, $lineColor);
-        $arrMinMax = [$idealMin, $idealMax];
+        $arrValues = [];
 
-        // previous avaliations
         $avaliations = $this->getPreviousAvaliations($queryLimit);
+
         foreach ($avaliations as $av) {
-            $value = $av->getBodyWaterPerc();
-            if ($value === Constants::RETURN_INT_CANT_CALCULATE) {
-                continue;
-            }
-
-            $this->appendChartPoint($data, SysUtils::reformatDate($av->date, 'Y-m-d', $dateFormat), $idealMin, $idealMax, $value);
-            $arrMinMax[] = $value;
+            $fatMass = new FatMass($av);
+            $this->appendChartPoint(
+                $data,
+                SysUtils::reformatDate($av->date, 'Y-m-d', $dateFormat),
+                $fatMass->getMinIdealValue(),
+                $fatMass->getMaxIdealValue(),
+                $av->getFatMassKg()
+            );
+            $arrValues[] = $av->getFatMassKg();
+            $arrValues[] = $fatMass->getMinIdealValue();
+            $arrValues[] = $fatMass->getMaxIdealValue();
         }
 
-        // current avaliation
-        $currentValue = $Avaliation->getBodyWaterPerc();
-        if ($currentValue !== Constants::RETURN_INT_CANT_CALCULATE) {
-            $this->appendChartPoint($data, SysUtils::reformatDate($Avaliation->date, 'Y-m-d', $dateFormat), $idealMin, $idealMax, $currentValue);
-            $arrMinMax[] = $currentValue;
-        }
+        $this->appendCurrentChartPoint($data, $avaliation, $dateFormat, $arrValues);
 
-        if (count($arrMinMax) === 2) {
-            return [];
-        }
+        $max = max($arrValues);
+        $min = min($arrValues);
+        $stepSize = min(max((($max - $min) / 5), 1), 15);
 
-        $stepSize = min(max(($max = max($arrMinMax)) - ($min = min($arrMinMax)) / 5, 1), 10);
-
-        $config = [
+        return [
             'type' => 'line',
             'data' => $data,
             'options' => [
@@ -79,7 +76,7 @@ final class AvaliationBodyWaterGraphHelper extends AvaliationGraphAbstract
                 ],
                 'legend' => [
                     'display' => false,
-                    'position' => 'top'
+                    'position' => 'top',
                 ],
                 'scales' => [
                     'yAxes' => [[
@@ -87,39 +84,54 @@ final class AvaliationBodyWaterGraphHelper extends AvaliationGraphAbstract
                             'suggestedMin' => $min - $stepSize,
                             'suggestedMax' => $max + $stepSize,
                             'stepSize' => $stepSize,
-                            'padding' => 2.5
+                            'padding' => 2.5,
                         ],
                         'scaleLabel' => [
                             'display' => true,
-                            'labelString' => __('messages.components.avaliationReport.bodyWater', []) . ' ' . $this->BodyWater->getFieldSuffix(),
-                        ]
+                            'labelString' => __('messages.components.avaliationReport.fatMass') . ' ' . $this->FatMass->getFieldSuffix(),
+                        ],
                     ]],
                     'xAxes' => [[
                         'ticks' => ['padding' => 2.5],
-                        'scaleLabel' => ['display' => false]
-                    ]]
+                        'scaleLabel' => ['display' => false],
+                    ]],
                 ],
-            ]
+            ],
         ];
-
-        return $config;
     }
 
-    private function appendChartPoint(array &$data, string $label, $min, $max, float $value): void
+    private function appendCurrentChartPoint(array &$data, Avaliation $avaliation, string $dateFormat, array &$arrValues): void
+    {
+        $fatMass = new FatMass($avaliation);
+        $value = $avaliation->getFatMassKg();
+
+        $this->appendChartPoint(
+            $data,
+            SysUtils::reformatDate($avaliation->date, 'Y-m-d', $dateFormat),
+            $fatMass->getMinIdealValue(),
+            $fatMass->getMaxIdealValue(),
+            $value
+        );
+
+        $arrValues[] = $value;
+        $arrValues[] = $fatMass->getMinIdealValue();
+        $arrValues[] = $fatMass->getMaxIdealValue();
+    }
+
+    private function appendChartPoint(array &$data, string $label, float $min, float $max, float $value): void
     {
         $data['labels'][] = $label;
         $data['datasets'][0]['data'][] = $min;
         $data['datasets'][1]['data'][] = $max;
         $data['datasets'][2]['data'][] = $value;
 
-        // table data
-        $this->addBodyItem($label, SysUtils::formatDbToNumber($value, 1) . ' ' . $this->BodyWater->getFieldSuffix());
+        $this->addBodyItem($label, SysUtils::formatDbToNumber($value, 1) . ' ' . $this->FatMass->getFieldSuffix());
     }
 
     private function addTableHeaders(): void
     {
         $this->addHeadItem(__('messages.models.Avaliation.fields.date'));
-        $this->addHeadItem(__('messages.components.avaliationReport.bodyWater', []));
+        $this->addHeadItem(__('messages.components.avaliationReport.fatMass'));
     }
 
     private function initChartData(string $bgColor, string $lineColor): array
@@ -148,12 +160,12 @@ final class AvaliationBodyWaterGraphHelper extends AvaliationGraphAbstract
                     'borderColor' => 'transparent',
                 ],
                 [
-                    'label' => __('messages.components.avaliationReport.bodyWater', []) . ' ' . $this->BodyWater->getFieldSuffix(),
+                    'label' => __('messages.components.avaliationReport.fatMass') . ' ' . $this->FatMass->getFieldSuffix(),
                     'data' => [],
                     'borderColor' => $lineColor,
                     'backgroundColor' => 'transparent',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

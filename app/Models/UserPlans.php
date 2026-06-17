@@ -232,24 +232,57 @@ class UserPlans extends Model
         }
 
         $paymentClass = $this->getPaymentClass();
-        if (null === $paymentClass) {
+        if (null === $paymentClass || !class_exists($paymentClass)) {
             return false;
         }
 
-        $Payment = (new $paymentClass())->getPreapprovalById($this->getColPaymentId());
-        if (null === $Payment) {
+        $preapprovalStatus = $this->getPreapprovalStatus($paymentClass);
+        if (null === $preapprovalStatus) {
             return false;
         }
+
+        $authorizedStatus = defined($paymentClass . '::PRE_APPROVAL_STATUS_AUTHORIZED')
+            ? $paymentClass::PRE_APPROVAL_STATUS_AUTHORIZED
+            : 'authorized';
 
         return in_array(
-            $Payment?->status,
-            [$paymentClass::PAYMENT_STATUS_AUTHORIZED, $paymentClass::PAYMENT_STATUS_APPROVED]
+            $preapprovalStatus,
+            [$authorizedStatus],
+            true
         );
     }
 
     public function canHaveSubscriptionCancelled(): bool
     {
-        return $this->canHaveSubscriptionPaused();
+        $paymentClass = $this->getPaymentClass();
+        if (null === $paymentClass || !class_exists($paymentClass)) {
+            return false;
+        }
+
+        $preapprovalStatus = $this->getPreapprovalStatus($paymentClass);
+        if (null === $preapprovalStatus) {
+            return false;
+        }
+
+        $authorizedStatus = defined($paymentClass . '::PRE_APPROVAL_STATUS_AUTHORIZED')
+            ? $paymentClass::PRE_APPROVAL_STATUS_AUTHORIZED
+            : 'authorized';
+        $pausedStatus = defined($paymentClass . '::PRE_APPROVAL_STATUS_PAUSED')
+            ? $paymentClass::PRE_APPROVAL_STATUS_PAUSED
+            : 'paused';
+
+        return in_array($preapprovalStatus, [$authorizedStatus, $pausedStatus], true);
+    }
+
+    private function getPreapprovalStatus(string $paymentClass): ?string
+    {
+        $PaymentGateway = new $paymentClass();
+        if (!method_exists($PaymentGateway, 'getPreapprovalById')) {
+            return null;
+        }
+
+        $preapproval = $PaymentGateway->getPreapprovalById($this->getColPaymentId());
+        return $preapproval->status ?? null;
     }
 
     public function pauseSubscription(): ApiResponse

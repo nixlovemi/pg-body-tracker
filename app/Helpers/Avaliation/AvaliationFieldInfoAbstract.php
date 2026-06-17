@@ -134,7 +134,7 @@ abstract class AvaliationFieldInfoAbstract
         if ($fieldValue == Constants::RETURN_INT_CANT_CALCULATE) {
             $fieldLabel = __('messages.components.avaliationReport.notCalculated');
             $fieldValue = null;
-            $rankLabel = '';
+            $rankLabel = __('messages.components.avaliationReport.dataNotFilled');
             $idealLabel = '';
             $rankColor = Constants::RANK_COLOR_DEFAULT;
         }

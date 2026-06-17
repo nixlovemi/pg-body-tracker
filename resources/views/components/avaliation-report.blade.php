@@ -22,14 +22,19 @@
         <!-- Info Cards -->
         @include('components.avaliationReport.partials.info-cards', [
             'AVALIATION' => $Avaliation,
-            'IS_PDF' => $isPdf
+            'IS_PDF' => $isPdf,
+            'infoCardsData' => $infoCardsData ?? null,
         ])
 
         <!-- Graphs -->
-        @yield('AVALIATION_REPORT_GRAPHS')
+        @if ($includeGraphs ?? true)
+            @yield('AVALIATION_REPORT_GRAPHS')
+        @endif
 
         <!-- pictures -->
-        @yield('AVALIATION_REPORT_PICTURES')
+        @if ($includePictures ?? true)
+            @yield('AVALIATION_REPORT_PICTURES')
+        @endif
 
         <!-- observation -->
         @yield('AVALIATION_REPORT_CLIENT_NOTES')

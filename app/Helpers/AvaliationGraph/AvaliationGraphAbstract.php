@@ -14,6 +14,7 @@ abstract class AvaliationGraphAbstract
         'body' => [],
     ];
     protected string $defaultColor = Constants::RANK_COLOR_DEFAULT;
+    private $cachedPreviousAvaliations = null; // Cache for pre-loaded previous avaliations
 
     public function __construct(
         protected int $avaliationId,
@@ -23,6 +24,17 @@ abstract class AvaliationGraphAbstract
     abstract protected function getAvaliation(): Avaliation;
     abstract protected function getConfig(): array;
     abstract protected function getClassName(): string;
+
+    /**
+     * Set pre-loaded previous avaliations to avoid N+1 queries during PDF generation.
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $previousAvaliations
+     * @return void
+     */
+    public final function setPreviousAvaliations($previousAvaliations): void
+    {
+        $this->cachedPreviousAvaliations = $previousAvaliations;
+    }
 
     protected final function getUID(): string
     {
@@ -41,6 +53,12 @@ abstract class AvaliationGraphAbstract
 
     protected final function getPreviousAvaliations(int $limit)
     {
+        // If pre-loaded avaliations are available (from PDF generation), use them
+        if ($this->cachedPreviousAvaliations !== null) {
+            return $this->cachedPreviousAvaliations->take($limit);
+        }
+
+        // Otherwise, fetch from database (used in web reports, etc)
         $Avaliation = $this->getAvaliation();
 
         return Avaliation::where('date', '<', $Avaliation->date)

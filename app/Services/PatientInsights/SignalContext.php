@@ -55,7 +55,7 @@ class SignalContext
             $client,
             $contextNow,
             $avaliations,
-            $client->getCurrentGoal(),
+            $client->getCurrentGoal($contextNow),
             $client->checkinConfig()->first()
         );
     }

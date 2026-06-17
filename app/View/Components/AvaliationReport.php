@@ -17,6 +17,10 @@ class AvaliationReport extends Component
     public function __construct(
         public int $avaliationId,
         public bool $isPdf = false,
+        public $previousAvaliations = null, // Pre-loaded for PDF optimization
+        public $infoCardsData = null, // Pre-calculated card data for PDF optimization
+        public bool $includeGraphs = true,
+        public bool $includePictures = true,
     ) {
         $this->Avaliation = Avaliation::find($this->avaliationId);
     }

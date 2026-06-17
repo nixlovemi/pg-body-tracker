@@ -44,25 +44,43 @@ final class AvaliationMuscleFatPercGraphHelper extends AvaliationGraphAbstract
         // prev avaliations
         $prevAvaliations = $this->getPreviousAvaliations($queryLimit);
         foreach ($prevAvaliations as $av) {
+            $fatPerc = $av->getBodyFatPerc();
+            $skeletalPerc = $av->getSkeletalMuscleMassPerc();
+            if (
+                $fatPerc === Constants::RETURN_INT_CANT_CALCULATE ||
+                $skeletalPerc === Constants::RETURN_INT_CANT_CALCULATE
+            ) {
+                continue;
+            }
+
             $this->appendChartPoint(
                 $data,
                 SysUtils::reformatDate($av->date, 'Y-m-d', $dateFormat),
-                $av->getBodyFatPerc(),
-                $av->getSkeletalMuscleMassPerc()
+                $fatPerc,
+                $skeletalPerc
             );
-            $arrPoints[] = $av->getBodyFatPerc();
-            $arrPoints[] = $av->getSkeletalMuscleMassPerc();
+            $arrPoints[] = $fatPerc;
+            $arrPoints[] = $skeletalPerc;
         }
 
         // current avaliation
+        $currentFatPerc = $Avaliation->getBodyFatPerc();
+        $currentSkeletalPerc = $Avaliation->getSkeletalMuscleMassPerc();
+        if (
+            $currentFatPerc === Constants::RETURN_INT_CANT_CALCULATE ||
+            $currentSkeletalPerc === Constants::RETURN_INT_CANT_CALCULATE
+        ) {
+            return [];
+        }
+
         $this->appendChartPoint(
             $data,
             SysUtils::reformatDate($Avaliation->date, 'Y-m-d', $dateFormat),
-            $Avaliation->getBodyFatPerc(),
-            $Avaliation->getSkeletalMuscleMassPerc()
+            $currentFatPerc,
+            $currentSkeletalPerc
         );
-        $arrPoints[] = $Avaliation->getBodyFatPerc();
-        $arrPoints[] = $Avaliation->getSkeletalMuscleMassPerc();
+        $arrPoints[] = $currentFatPerc;
+        $arrPoints[] = $currentSkeletalPerc;
 
         // $stepSize = 10;
         $stepSize = min(max(($max = max($arrPoints)) - ($min = min($arrPoints)) / 5, 1), 15);

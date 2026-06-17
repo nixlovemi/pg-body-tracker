@@ -28,6 +28,9 @@ class VisceralFat extends AvaliationFieldInfoAbstract
 
     public function getFieldValue(): float|int
     {
+        if ($this->Avaliation->visceral_fat_level === null) {
+            return Constants::RETURN_INT_CANT_CALCULATE;
+        }
         return $this->Avaliation->visceral_fat_level;
     }
 

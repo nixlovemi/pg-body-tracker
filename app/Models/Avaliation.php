@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Helpers\Feature\AvaliationPictures;
 use App\Helpers\Feature\RevaluationDate;
+use App\Helpers\Avaliation\EstimatedIdealWeight;
 
 class Avaliation extends Model
 {
@@ -33,6 +34,13 @@ class Avaliation extends Model
     public const SKIN_FOLDS_FORMULA_4_FOLDS_DURNIN_WOMERSLEY = '4_FOLDS_DURNIN_WOMERSLEY';
 
     public const BASE_PHOTOS_FOLDER = '/avaliations/photos/';
+
+    private const BCI_ADIPOSITY_WEIGHTS = [
+        'bmi' => 0.30,
+        'bodyFat' => 0.30,
+        'waistToHipRatio' => 0.15,
+        'visceralFat' => 0.15,
+    ];
 
     /** we use this to display the correct fields in the UI */
     public const SKIN_FOLDS_FORMULA_INPUT_CODE = [
@@ -671,6 +679,9 @@ class Avaliation extends Model
 
     public function getFormattedVisceralFatLevel(): string
     {
+        if ($this->visceral_fat_level === null) {
+            return '-';
+        }
         return SysUtils::formatDbToNumber($this->visceral_fat_level, 1);
     }
 
@@ -1013,6 +1024,12 @@ class Avaliation extends Model
         return $Weight->getFieldInfo();
     }
 
+    public function getEstimatedIdealWeightInfo(): array
+    {
+        $EstimatedIdealWeight = new EstimatedIdealWeight($this);
+        return $EstimatedIdealWeight->getFieldInfo();
+    }
+
     public function getSkeletalMuscleInfo(): array
     {
         $SkeletalMuscle = new \App\Helpers\Avaliation\SkeletalMuscle($this);
@@ -1061,105 +1078,217 @@ class Avaliation extends Model
         return $WaistToHipRatio->getFieldInfo();
     }
 
+    public function getWaistAbdomenCircumferenceInfo(): array
+    {
+        $WaistAbdomenCircumference = new \App\Helpers\Avaliation\WaistAbdomenCircumference($this);
+        return $WaistAbdomenCircumference->getFieldInfo();
+    }
+
+    public function getTrunkFatPerc(): float
+    {
+        // 1. Se temos diretamente o trunk fat perc, retorna
+        if ($this->trunk_fat_perc !== null) {
+            return $this->trunk_fat_perc;
+        }
+
+        // 2. Tenta estimar usando Katch-McArdle com circunferências
+        $estimatedPerc = $this->estimateTrunkFatPercByKatchMcArdle();
+        if ($estimatedPerc != Constants::RETURN_INT_CANT_CALCULATE) {
+            return $estimatedPerc;
+        }
+
+        // 3. Tenta estimar usando proporção do body_fat_perc total
+        $estimatedPerc = $this->estimateTrunkFatPercByBodyFatPercentage();
+        if ($estimatedPerc != Constants::RETURN_INT_CANT_CALCULATE) {
+            return $estimatedPerc;
+        }
+
+        return Constants::RETURN_INT_CANT_CALCULATE;
+    }
+
+    private function estimateTrunkFatPercByKatchMcArdle(): float
+    {
+        // Requer circunferências e altura
+        if (
+            null === $this->waist_circ_cm ||
+            null === $this->abdomen_circ_cm ||
+            null === $this->height_cm
+        ) {
+            return Constants::RETURN_INT_CANT_CALCULATE;
+        }
+
+        // Circunferência média abdominal e cintura
+        $avgCircumference = ($this->waist_circ_cm + $this->abdomen_circ_cm) / 2;
+
+        // Altura em metros
+        $heightM = $this->height_cm / 100;
+
+        // Fator sexo: homens 3.8, mulheres 3.2 (baseado em correlação circunferência-gordura)
+        $sexFactor = $this->client->isMale() ? 3.8 : 3.2;
+
+        // Estimativa de trunk fat %
+        // trunk_fat_perc = (circunferência média / altura em metros) * fator_sexo
+        $estimatedPerc = round(($avgCircumference / $heightM) * ($sexFactor / 10), 2);
+
+        // Limita a valores realistas (0-100%)
+        return max(0, min(100, $estimatedPerc));
+    }
+
+    private function estimateTrunkFatPercByBodyFatPercentage(): float
+    {
+        // Requer body_fat_perc
+        $bodyFatPerc = $this->getBodyFatPerc();
+        if ($bodyFatPerc == Constants::RETURN_INT_CANT_CALCULATE) {
+            return Constants::RETURN_INT_CANT_CALCULATE;
+        }
+
+        // Proporção do tronco na gordura corporal total
+        // Estudos mostram que o tronco representa ~45% da gordura corporal em homens e ~50% em mulheres
+        $trunkProportion = $this->client->isMale() ? 0.45 : 0.50;
+
+        $estimatedPerc = round($bodyFatPerc * $trunkProportion, 2);
+
+        return max(0, min(100, $estimatedPerc));
+    }
+
+    public function getFormattedTrunkFatPerc(): string
+    {
+        $perc = $this->getTrunkFatPerc();
+        if ($perc === Constants::RETURN_INT_CANT_CALCULATE) {
+            return '-';
+        }
+        return SysUtils::formatDbToNumber($perc, 1) . '%';
+    }
+
+    public function getTrunkFatPercentageInfo(): array
+    {
+        $TrunkFatPercentage = new \App\Helpers\Avaliation\TrunkFatPercentage($this);
+        return $TrunkFatPercentage->getFieldInfo();
+    }
+
     /**
      * Body Composition Index (BCI)
      *
      */
     public function getBciInfo(): array
     {
-        // TODO: maybe use App\Helpers\Avaliation classes
-        $score = 0;
-        $isMale = $this->client->isMale();
+        $weightedScore = 0.0;
+        $weightSum = 0.0;
 
-        // BMI
-        $bmi = $this->getBmi();
-        if ($bmi < 18.5) {
-            $score += 1;
-        } elseif ($bmi <= 24.9) {
-            $score += 0;
-        } elseif ($bmi <= 29.9) {
-            $score += 1;
-        } elseif ($bmi <= 34.9) {
-            $score += 2;
-        } else {
-            $score += 3;
+        $metrics = [
+            [
+                'info' => $this->getBmiInfo(),
+                'weight' => self::BCI_ADIPOSITY_WEIGHTS['bmi'],
+                'map' => function (array $info): ?int {
+                    $bmi = $info[Constants::FI_FIELD_VALUE] ?? null;
+                    if ($bmi === null) {
+                        return null;
+                    }
+
+                    if ($bmi < 25) {
+                        return 0;
+                    }
+
+                    if ($bmi < 30) {
+                        return 1;
+                    }
+
+                    if ($bmi < 35) {
+                        return 2;
+                    }
+
+                    return 3;
+                },
+            ],
+            [
+                'info' => $this->getBodyFatInfo(),
+                'weight' => self::BCI_ADIPOSITY_WEIGHTS['bodyFat'],
+                'map' => function (array $info): ?int {
+                    $rank = (int) ($info[Constants::FI_RANK] ?? -1);
+                    if ($rank <= 0) {
+                        return null;
+                    }
+
+                    if ($rank <= 2) {
+                        return 0;
+                    }
+
+                    if ($rank <= 4) {
+                        return 1;
+                    }
+
+                    if ($rank <= 6) {
+                        return 2;
+                    }
+
+                    return 3;
+                },
+            ],
+            [
+                'info' => $this->getWaistToHipRatioInfo(),
+                'weight' => self::BCI_ADIPOSITY_WEIGHTS['waistToHipRatio'],
+                'map' => fn (array $info): ?int => match ((int) ($info[Constants::FI_RANK] ?? -1)) {
+                    1 => 0,
+                    2 => 1,
+                    3 => 2,
+                    default => null,
+                },
+            ],
+            [
+                'info' => $this->getVisceralFatInfo(),
+                'weight' => self::BCI_ADIPOSITY_WEIGHTS['visceralFat'],
+                'map' => fn (array $info): ?int => match ((int) ($info[Constants::FI_RANK] ?? -1)) {
+                    1 => 0,
+                    2 => 1,
+                    3 => 2,
+                    4 => 3,
+                    default => null,
+                },
+            ],
+        ];
+
+        foreach ($metrics as $metric) {
+            $riskPoint = $metric['map']($metric['info']);
+            if ($riskPoint === null) {
+                continue;
+            }
+
+            $weightedScore += $riskPoint * $metric['weight'];
+            $weightSum += $metric['weight'];
         }
 
-        // Gordura corporal (%)
-        $bodyFatPerc = $this->getBodyFatPerc();
-        if ($isMale) {
-            if ($bodyFatPerc < 10) {
-                $score += 1;
-            } elseif ($bodyFatPerc <= 20) {
-                $score += 0;
-            } elseif ($bodyFatPerc <= 25) {
-                $score += 1;
-            } else {
-                $score += 2;
-            }
-        } else {
-            if ($bodyFatPerc < 20) {
-                $score += 1;
-            } elseif ($bodyFatPerc <= 30) {
-                $score += 0;
-            } elseif ($bodyFatPerc <= 35) {
-                $score += 1;
-            } else {
-                $score += 2;
-            }
+        if ($weightSum <= 0) {
+            return [
+                Constants::FI_FIELD_LABEL => __('messages.components.avaliationReport.notCalculated'),
+                Constants::FI_FIELD_VALUE => null,
+                Constants::FI_FIELD_SUFFIX => '',
+                Constants::FI_RANK => -1,
+                Constants::FI_RANK_IDX => -1,
+                Constants::FI_RANK_LABEL => __('messages.components.avaliationReport.dataNotFilled'),
+                Constants::FI_RANK_COLOR => Constants::RANK_COLOR_DEFAULT,
+                Constants::FI_IDEAL_MIN => '',
+                Constants::FI_IDEAL_MAX => '',
+                Constants::FI_IDEAL_LABEL => '',
+            ];
         }
 
-        // Relação cintura-quadril
-        $whr = $this->getWaistToHipRatio();
-        if ($isMale) {
-            if ($whr < 0.90) {
-                $score += 0;
-            } elseif ($whr <= 0.99) {
-                $score += 1;
-            } else {
-                $score += 2;
-            }
+        $riskScore = $weightedScore / $weightSum;
+
+        // Keep the same 8-step bar UI, but map adiposity risk into its central range.
+        // 1=low, 2=normal, 3..5=elevated adiposity risk.
+        if ($riskScore < 0.25) {
+            $rank = 1;
+        } elseif ($riskScore < 0.75) {
+            $rank = 2;
+        } elseif ($riskScore < 1.5) {
+            $rank = 3;
+        } elseif ($riskScore < 2.25) {
+            $rank = 4;
         } else {
-            if ($whr < 0.80) {
-                $score += 0;
-            } elseif ($whr <= 0.84) {
-                $score += 1;
-            } else {
-                $score += 2;
-            }
+            $rank = 5;
         }
 
-        // Gordura visceral (kg)
-        $vf = $this->getVisceralFatKg();
-        if ($isMale) {
-            if ($vf <= 1.0) {
-                $score += 0;
-            } elseif ($vf <= 2.0) {
-                $score += 1;
-            } else {
-                $score += 2;
-            }
-        } else {
-            if ($vf <= 0.9) {
-                $score += 0;
-            } elseif ($vf <= 1.8) {
-                $score += 1;
-            } else {
-                $score += 2;
-            }
-        }
-
-        // classification
-        $idx = match(true) {
-            $score <= 1 => 0,
-            $score === 2 => 1,
-            $score === 3 => 2,
-            $score === 4 => 3,
-            $score === 5 => 4,
-            $score === 6 => 5,
-            $score === 7 => 6,
-            default => 7,
-        };
+        $idx = $rank - 1;
 
         // return like other "info" methods
         return [
@@ -1176,12 +1305,62 @@ class Avaliation extends Model
         ];
     }
 
+    public function getProgressContextInfo(): array
+    {
+        $estimatedIdealWeight = $this->getEstimatedIdealWeightInfo();
+        $weightRank = (int) ($estimatedIdealWeight[Constants::FI_RANK] ?? -1);
+
+        $weightStatusLabel = match ($weightRank) {
+            1 => __('messages.components.avaliationReport.progressWeightBelow'),
+            2 => __('messages.components.avaliationReport.progressWeightWithin'),
+            3 => __('messages.components.avaliationReport.progressWeightAbove'),
+            default => __('messages.components.avaliationReport.dataNotFilled'),
+        };
+
+        $riskRank = (int) ($this->getBciInfo()[Constants::FI_RANK] ?? -1);
+        $riskStatusLabel = match (true) {
+            $riskRank === -1 => __('messages.components.avaliationReport.dataNotFilled'),
+            $riskRank <= 2 => __('messages.components.avaliationReport.progressRiskLow'),
+            $riskRank <= 3 => __('messages.components.avaliationReport.progressRiskModerate'),
+            default => __('messages.components.avaliationReport.progressRiskHigh'),
+        };
+
+        return [
+            'weightStatusLabel' => $weightStatusLabel,
+            'riskStatusLabel' => $riskStatusLabel,
+        ];
+    }
+
+    public function getFatMassInfo(): array
+    {
+        $FatMass = new \App\Helpers\Avaliation\FatMass($this);
+        return $FatMass->getFieldInfo();
+    }
+
+    public function getLeanMassInfo(): array
+    {
+        $LeanMass = new \App\Helpers\Avaliation\LeanMass($this);
+        return $LeanMass->getFieldInfo();
+    }
+
+    /**
+     * @deprecated beta.3.2.0
+     * DEPRECATED: getFFMIInfo() is currently not displayed in UI reports.
+     * Fat-Free Mass Index (FFMI) is more relevant for fitness/athletic assessment.
+     * Not used in progress calculations (BCI - Body Composition Index).
+     */
     public function getFFMIInfo(): array
     {
         $FFMIInfo = new \App\Helpers\Avaliation\FatFreeMassIndex($this);
         return $FFMIInfo->getFieldInfo();
     }
 
+    /**
+     * @deprecated beta.3.2.0
+     * DEPRECATED: getBAInfo() is currently not displayed in UI reports.
+     * Body Adiposity Index (BAI) is complementary to body fat % but not widely used in nutritional assessment.
+     * Not used in progress calculations (BCI - Body Composition Index).
+     */
     public function getBAInfo(): array
     {
         $BAInfo = new \App\Helpers\Avaliation\BodyAdiposityIndex($this);
@@ -1357,6 +1536,23 @@ class Avaliation extends Model
             })
             ->whereBetween('date', [$firstDayOfMonth, $lastDayOfMonth])
             ->count();
+    }
+
+    /**
+     * Load previous avaliations for reports in batch to avoid N+1 queries.
+     * Used by graph helpers during PDF generation.
+     *
+     * @param int $limit Maximum number of previous records to fetch (default: 9)
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPreviousAvaliationsForReports(int $limit = 9)
+    {
+        return self::where('date', '<', $this->date)
+            ->where('client_id', $this->client_id)
+            ->where('id', '!=', $this->id)
+            ->orderByDesc('date')
+            ->limit($limit)
+            ->get();
     }
     // ================
 }

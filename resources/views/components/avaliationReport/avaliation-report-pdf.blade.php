@@ -4,6 +4,8 @@ View variables from component (App\View\Components\AvaliationReport):
 =====================================================================
     - $Avaliation: Avaliation
     - isPdf: bool
+    - $previousAvaliations: ?Illuminate\Database\Eloquent\Collection (pre-loaded for optimization)
+    - $infoCardsData: ?array (pre-calculated for optimization)
 */
 @endphp
 
@@ -32,6 +34,7 @@ View variables from component (App\View\Components\AvaliationReport):
         'AVALIATION' => $Avaliation,
         'DIV_CARD_CLASSES' => 'card border-left-secondary shadow py-2',
         'DIV_CARD_HAS_BREAK_CLASS' => true,
+        'previousAvaliations' => $previousAvaliations ?? null,
     ])
 @endsection
 

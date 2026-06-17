@@ -6,6 +6,7 @@ View variables:
 ===============
     - $DIV_CARD_CLASSES: string
     - $DIV_CARD_HAS_BREAK_CLASS: bool
+    - $previousAvaliations: ?Illuminate\Database\Eloquent\Collection (optional, for PDF optimization)
 */
 @endphp
 
@@ -25,7 +26,7 @@ View variables:
         <div class="col-12 col-lg-6 mb-3">
             <div @class([
                 $DIV_CARD_CLASSES,
-                'is-pdf-card-graph-first' => $DIV_CARD_HAS_BREAK_CLASS && $loop->index === 0,
+                'is-pdf-card-graph-first' => $DIV_CARD_HAS_BREAK_CLASS && $loop->index === 0 && FALSE, // disabled for now, as the first graph was breaking into two pages
                 'is-pdf-card-graph' => $DIV_CARD_HAS_BREAK_CLASS && $loop->index !== 0,
             ])>
                 <div class="card-body">
@@ -34,6 +35,7 @@ View variables:
                         :isPdf="$DIV_CARD_HAS_BREAK_CLASS"
                         title="{{ $graph['title'] }}"
                         helperClass="{{  $graph['helperClass'] }}"
+                        :previousAvaliations="$previousAvaliations ?? null"
                     />
                 </div>
             </div>
