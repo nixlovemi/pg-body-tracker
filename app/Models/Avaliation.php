@@ -1537,5 +1537,22 @@ class Avaliation extends Model
             ->whereBetween('date', [$firstDayOfMonth, $lastDayOfMonth])
             ->count();
     }
+
+    /**
+     * Load previous avaliations for reports in batch to avoid N+1 queries.
+     * Used by graph helpers during PDF generation.
+     *
+     * @param int $limit Maximum number of previous records to fetch (default: 9)
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPreviousAvaliationsForReports(int $limit = 9)
+    {
+        return self::where('date', '<', $this->date)
+            ->where('client_id', $this->client_id)
+            ->where('id', '!=', $this->id)
+            ->orderByDesc('date')
+            ->limit($limit)
+            ->get();
+    }
     // ================
 }

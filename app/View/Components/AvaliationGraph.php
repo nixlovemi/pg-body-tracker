@@ -19,10 +19,16 @@ class AvaliationGraph extends Component
         public string $title,
         public string $helperClass,
         public bool $isPdf = false,
+        public $previousAvaliations = null, // Pre-loaded previous avaliations to avoid N+1 queries
     ) {
         /** AvaliationGraphAbstract $helper */
         $this->helper = new $this->helperClass($this->avaliationId, $this->isPdf);
         $this->helper->fullHtmlTable = $this->isPdf;
+
+        // Set pre-loaded previous avaliations if provided (optimization for PDF generation)
+        if ($this->previousAvaliations !== null) {
+            $this->helper->setPreviousAvaliations($this->previousAvaliations);
+        }
     }
 
     /**

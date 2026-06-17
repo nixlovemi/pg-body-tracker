@@ -6,6 +6,7 @@ View variables:
 ===============
     - $DIV_CARD_CLASSES: string
     - $DIV_CARD_HAS_BREAK_CLASS: bool
+    - $previousAvaliations: ?Illuminate\Database\Eloquent\Collection (optional, for PDF optimization)
 */
 @endphp
 
@@ -34,6 +35,7 @@ View variables:
                         :isPdf="$DIV_CARD_HAS_BREAK_CLASS"
                         title="{{ $graph['title'] }}"
                         helperClass="{{  $graph['helperClass'] }}"
+                        :previousAvaliations="$previousAvaliations ?? null"
                     />
                 </div>
             </div>

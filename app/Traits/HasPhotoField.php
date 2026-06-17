@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
 use App\Helpers\SysUtils;
@@ -15,7 +16,23 @@ trait HasPhotoField {
             $filePath = $defaultImage;
         }
 
-        return SysUtils::getImageBase64($filePath);
+        if (empty($filePath)) {
+            return null;
+        }
+
+        $cacheKey = 'photo-base64-' . hash('sha256', (string) $filePath);
+        $cached = Cache::get($cacheKey);
+        if (!empty($cached)) {
+            return $cached;
+        }
+
+        $base64 = SysUtils::getImageBase64($filePath);
+        if (!empty($base64)) {
+            // Short TTL reduces stale image risk while still improving repeated PDF renders.
+            Cache::put($cacheKey, $base64, 600);
+        }
+
+        return $base64;
     }
 
     final public function setPhotoUrl(

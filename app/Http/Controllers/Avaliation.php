@@ -15,6 +15,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\Constants;
 use Illuminate\Support\Facades\URL;
 use App\Helpers\Feature\RevaluationDate;
+use App\Services\AvaliationPdfCacheService;
+use App\Jobs\GenerateAvaliationPdfCacheJob;
 
 class Avaliation extends Controller
 {
@@ -70,6 +72,11 @@ class Avaliation extends Controller
         $Avaliation = $response->getValueFromResponse('Avaliation');
         if ($Avaliation) {
             $this->saveAvaliationsPhotos($Avaliation, $request);
+
+            // True async pre-generation: enqueue job and return immediately.
+            GenerateAvaliationPdfCacheJob::dispatch($Avaliation->id, true, true)
+                ->onConnection('database')
+                ->onQueue('pdf');
         }
 
         return $this->returnResponse(false, $response->getMessage(), [], Response::HTTP_OK);
@@ -166,17 +173,60 @@ class Avaliation extends Controller
         ]);
     }
 
-    public function viewReportPDF(string $codedId)
+    public function viewReportPDF(Request $request, string $codedId)
     {
         $Avaliation = mAvaliation::getModelByCodedId($codedId);
         if (null === $Avaliation) {
             return $this->redirectWithError('app.client.index', __('messages.modelErrorNoAccess'));
         }
 
-        $pdf = Pdf::loadView('app.avaliation.viewReportPDF', [
-            'AVALIATION' => $Avaliation,
-        ]);
-        return $pdf->stream();
+        $includeGraphs = filter_var($request->query('graphs', '1'), FILTER_VALIDATE_BOOLEAN);
+        $includePictures = filter_var($request->query('pictures', '1'), FILTER_VALIDATE_BOOLEAN);
+
+        $pdfCacheService = app(AvaliationPdfCacheService::class);
+
+        $existingCache = $pdfCacheService->getCurrentSnapshotCache($Avaliation, $includeGraphs, $includePictures);
+        if ($pdfCacheService->isReadyCache($existingCache)) {
+            return response()->file($pdfCacheService->absolutePath($existingCache->storage_path), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="avaliation-' . $Avaliation->codedId . '.pdf"',
+            ]);
+        }
+
+        // Ensure legacy/no-hash cases create a cache record on first PDF open.
+        $cache = $pdfCacheService->ensurePendingCacheRecord($Avaliation, $includeGraphs, $includePictures);
+
+        // Enqueue async generation if file is not ready yet.
+        GenerateAvaliationPdfCacheJob::dispatch($Avaliation->id, $includeGraphs, $includePictures)
+            ->onConnection('database')
+            ->onQueue('pdf');
+
+        if ($request->query('sync') === '1') {
+            // Optional fallback for manual troubleshooting.
+            $syncCache = $pdfCacheService->ensureCurrentPdfCached($Avaliation, $includeGraphs, $includePictures);
+            if ($syncCache !== null && !empty($syncCache->storage_path)) {
+                return response()->file($pdfCacheService->absolutePath($syncCache->storage_path), [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="avaliation-' . $Avaliation->codedId . '.pdf"',
+                ]);
+            }
+        }
+
+        $syncUrl = $request->fullUrlWithQuery(['sync' => 1]);
+
+        $waitHtml = sprintf(
+            '<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="3">'
+            . '<title>Gerando PDF</title><style>body{font-family:Arial,sans-serif;padding:24px;line-height:1.5;} .muted{color:#666;}</style></head><body>'
+            . '<h3>Estamos gerando o PDF, esse processo pode demorar um pouco.</h3>'
+            . '<p><a href="%s">Se quiser, clique aqui para forçar a criação do PDF.</a></p>'
+            . '<p class="muted">A página vai atualizar automaticamente em 3 segundos.</p>'
+            . '</body></html>',
+            e($syncUrl)
+        );
+
+        return response($waitHtml, 202)
+            ->header('Content-Type', 'text/html; charset=UTF-8')
+            ->header('Retry-After', '3');
     }
 
     public function htmlModalSendWhats(Request $request)
@@ -281,7 +331,7 @@ class Avaliation extends Controller
     /** signed route */
     public function showMyAvaliation(string $codedId)
     {
-        return $this->viewReportPDF($codedId);
+        return $this->viewReportPDF(request(), $codedId);
     }
 
     private function formatSaveRequest(Request $request): array

@@ -3,6 +3,10 @@
 View variables:
 ===============
     - $AVALIATION: App\Models\Avaliations
+    - $PREVIOUS_AVALIATIONS: Illuminate\Database\Eloquent\Collection (pre-loaded for PDF optimization)
+    - $INFO_CARDS_DATA: array (pre-calculated for PDF optimization)
+    - $INCLUDE_GRAPHS: bool
+    - $INCLUDE_PICTURES: bool
 */
 @endphp
 
@@ -19,4 +23,8 @@ View variables:
 <x-avaliation-report
     :avaliationId="$AVALIATION->id"
     isPdf="true"
+    :previousAvaliations="$PREVIOUS_AVALIATIONS ?? null"
+    :infoCardsData="$INFO_CARDS_DATA ?? null"
+    :includeGraphs="$INCLUDE_GRAPHS ?? true"
+    :includePictures="$INCLUDE_PICTURES ?? true"
 />

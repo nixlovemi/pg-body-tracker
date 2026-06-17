@@ -76,7 +76,10 @@ class ChartPhp extends Component
 
     private function getCacheKey(): string
     {
-        return 'chart-' . $this->elementId;
+        // OPTIMIZATION: Use hash of config instead of elementId to allow cache reuse
+        // across different avaliations that have identical chart configurations.
+        // This significantly improves cache hit rate in PDF generation.
+        return 'chart-' . hash('sha256', $this->config);
     }
 
     /**
