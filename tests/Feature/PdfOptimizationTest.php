@@ -16,6 +16,11 @@ class PdfOptimizationTest extends TestCase
      */
     public function test_pdf_optimization_batch_loading()
     {
+        // Authenticate a user to avoid permission errors during seeding
+        /** @var User $user */
+        $user = User::factory()->create(['role' => User::ROLE_MANAGER]);
+        $this->actingAs($user, 'web');
+
         // Seed the database
         $this->seed();
 
@@ -71,6 +76,11 @@ class PdfOptimizationTest extends TestCase
      */
     public function test_pdf_generation_with_optimizations()
     {
+        // Authenticate a user to avoid permission errors during seeding
+        /** @var User $user */
+        $user = User::factory()->create(['role' => User::ROLE_MANAGER]);
+        $this->actingAs($user, 'web');
+
         $this->seed();
 
         $avaliation = Avaliation::with('client')->firstWhere('client_id', '>', 0);

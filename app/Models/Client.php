@@ -126,10 +126,11 @@ class Client extends Model
         return $validation->validate();
     }
 
-    public function getCurrentGoal(): ?Goal
+    public function getCurrentGoal(?Carbon $now = null): ?Goal
     {
+        $nowDate = $now?->format('Y-m-d') ?? SysUtils::timezoneNow('Y-m-d');
         return $this->goals()
-            ->where('deadline', '>=', SysUtils::timezoneNow('Y-m-d'))
+            ->where('deadline', '>=', $nowDate)
             ->orderBy('deadline', 'DESC')
             ->first();
     }
