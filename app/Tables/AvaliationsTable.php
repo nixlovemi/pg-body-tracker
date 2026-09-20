@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Tables\Filters\DateRangeFilter;
 use Okipa\LaravelTable\RowActions\RedirectRowAction;
 use App\Helpers\Constants;
+use App\Tables\Helpers\LiteralLike;
 use Jenssegers\Agent\Agent;
 
 class AvaliationsTable extends AbstractTableConfiguration
@@ -89,7 +90,7 @@ class AvaliationsTable extends AbstractTableConfiguration
                 })
                 ->sortable()
                 ->searchable(function($query, string $searchBy) {
-                    return $query->whereRaw("CONCAT(clients.first_name, ' ', clients.last_name) LIKE '%{$searchBy}%'");
+                    return $query->whereRaw("CONCAT(clients.first_name, ' ', clients.last_name) LIKE ? ESCAPE '!'", [LiteralLike::contains($searchBy)]);
                 });
         }
 

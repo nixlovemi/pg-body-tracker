@@ -12,6 +12,7 @@ use Okipa\LaravelTable\RowActions\EditRowAction;
 use Okipa\LaravelTable\RowActions\ShowRowAction;
 use Okipa\LaravelTable\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Tables\Helpers\LiteralLike;
 
 class ClientsTable extends AbstractTableConfiguration
 {
@@ -41,14 +42,15 @@ class ClientsTable extends AbstractTableConfiguration
             Column::make('first_name')
                 ->title(__('messages.pages.client.table.colName'))
                 ->searchable(function($query, string $searchBy) {
-                    return $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%{$searchBy}%'");
+                    return $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ? ESCAPE '!'", [LiteralLike::contains($searchBy)]);
                 })
                 ->format(function(Client $Client) {
                     // return first_name and last_name
                     return $Client->first_name . ' ' . $Client->last_name;
                 })
-                ->sortable(function($query, string $searchBy) {
-                    return $query->orderByRaw("CONCAT(first_name, ' ', last_name) {$searchBy}");
+                ->sortable(function($query, string $direction) {
+                    $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
+                    return $query->orderByRaw("CONCAT(first_name, ' ', last_name) {$direction}");
                 }),
 
             Column::make('email')
