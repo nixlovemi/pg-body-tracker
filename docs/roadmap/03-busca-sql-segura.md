@@ -1,7 +1,7 @@
 # Busca e ordenação SQL seguras
 
 - **Prioridade:** P0
-- **Estado:** planejado
+- **Estado:** concluído
 - **Esforço relativo:** P
 - **Dependências:** Nenhuma.
 
@@ -24,11 +24,18 @@ Tratar busca como parâmetro e restringir direção de ordenação a valores per
 
 ## Critérios de aceite
 
-- [ ] Aspas e texto semelhante a SQL não mudam estrutura da consulta.
-- [ ] Busca e ordenação continuam corretas.
-- [ ] Direção inválida é rejeitada ou normalizada.
+- [x] Aspas e texto semelhante a SQL não mudam estrutura da consulta.
+- [x] Busca e ordenação continuam corretas.
+- [x] Direção inválida é rejeitada ou normalizada.
 
 ## Verificação
 
 - Testes de HTTP/componente com entradas especiais e dois tenants.
 - Inspecionar SQL gerado e parâmetros em teste.
+
+## Implementado
+
+- As buscas por nome composto usam parâmetro vinculado e escapam `%`, `_` e `!` para tratar o termo como texto literal.
+- A ordenação por nome composto aceita `asc` e `desc`; qualquer outra direção é normalizada para `asc`.
+- As demais consultas `Raw` em `app` foram revisadas e não interpolam entrada da requisição.
+- `TableSqlSafetyTest` verifica resultados com dois profissionais, aspas, curingas, ordenação e vínculos SQL.
