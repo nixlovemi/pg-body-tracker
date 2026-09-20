@@ -6,13 +6,14 @@ use App\Helpers\ApiResponse;
 use App\Helpers\ModelValidation;
 use App\Helpers\SysUtils;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Avaliation;
 
-class Client extends Model
+class Client extends Model implements \App\Contracts\TenantVisible
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;
@@ -64,6 +65,15 @@ class Client extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function scopeVisibleTo(Builder $query, User $user): Builder
+    {
+        if (!$user->isRoot()) {
+            $query->where('user_id', $user->id);
+        }
+
+        return $query;
     }
 
     public function goals()

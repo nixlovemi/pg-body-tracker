@@ -4,6 +4,8 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 use App\Models\Client;
+use App\Helpers\SysUtils;
+use App\Support\TenantResourceResolver;
 
 class ListClientPastGoals extends Component
 {
@@ -20,13 +22,15 @@ class ListClientPastGoals extends Component
         public string $clientCodedId,
         public ?string $beforeDeadline = null
     ) {
-        $this->Client = Client::getModelByCodedId($clientCodedId);
+        $this->Client = app(TenantResourceResolver::class)->resolve('client', $clientCodedId, SysUtils::getLoggedInUser());
         $this->arrPastGoals = $this->getArrGoals();
         $lastDisplayedId = count($this->arrPastGoals) > 0 ? $this->arrPastGoals[count($this->arrPastGoals) - 1]['id'] : null;
-        $lastDisplayedGoal = $this->Client->getPastGoals()->where('id', $lastDisplayedId)->first();
+        $lastDisplayedGoal = $lastDisplayedId ? $this->Client->getPastGoals()->where('id', $lastDisplayedId)->first() : null;
 
         // check if there are more goals to display after this one
-        $this->showMoreButton = $this->Client->getPastGoals()->where('deadline', '<', $lastDisplayedGoal->deadline)->count() > 0;
+        $this->showMoreButton = $lastDisplayedGoal
+            ? $this->Client->getPastGoals()->where('deadline', '<', $lastDisplayedGoal->deadline)->count() > 0
+            : false;
     }
 
     private function getArrGoals(): array

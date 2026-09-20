@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use App\Helpers\ApiResponse;
 use App\Helpers\ModelValidation;
@@ -16,7 +17,7 @@ use App\Mail\SubscriptionUpdate;
 use Illuminate\Support\Facades\Cache;
 use \Carbon\Carbon;
 
-class UserPlans extends Model
+class UserPlans extends Model implements \App\Contracts\TenantVisible
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;
@@ -65,6 +66,15 @@ class UserPlans extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function scopeVisibleTo(Builder $query, User $user): Builder
+    {
+        if (!$user->isRoot()) {
+            $query->where('user_id', $user->id);
+        }
+
+        return $query;
     }
 
     public function logs()

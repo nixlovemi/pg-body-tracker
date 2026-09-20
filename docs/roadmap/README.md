@@ -51,7 +51,7 @@ Este diretório transforma a revisão arquitetural de 20/09/2026 em 39 entregas 
 | [34](34-insights-explicaveis.md) | P2 | Insights explicáveis | 24, 25 |
 | [35](35-acessibilidade.md) | P2 | Acessibilidade dos fluxos | 27 |
 | [36](36-separacao-modelo-avaliacao.md) | P3 | Separação do modelo de avaliação | 21, 25 |
-| [37](37-autorizacao-centralizada.md) | P3 | Autorização centralizada | 01, 02, 21 |
+| [37](37-autorizacao-centralizada.md) | P1 | Autorização centralizada (em andamento) | 01, 02, 21 |
 | [38](38-operacao-agendamentos.md) | P3 | Operação e agendamentos padronizados | 09, 23, 24 |
 | [39](39-limpeza-codigo-config.md) | P3 | Limpeza de código e configuração | 19, 36, 38 |
 

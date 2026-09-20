@@ -7,9 +7,10 @@ use App\Helpers\ModelValidation;
 use App\Helpers\SysUtils;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 
-class CheckinConfig extends Model
+class CheckinConfig extends Model implements \App\Contracts\TenantVisible
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;
@@ -78,6 +79,17 @@ class CheckinConfig extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id', 'id');
+    }
+
+    public function scopeVisibleTo(Builder $query, User $user): Builder
+    {
+        if (!$user->isRoot()) {
+            $query->whereHas('client', function ($clientQuery) use ($user) {
+                $clientQuery->where('user_id', $user->id);
+            });
+        }
+
+        return $query;
     }
     // =========
 

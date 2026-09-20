@@ -89,31 +89,31 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/', 'App\Http\Controllers\Client@index')->name('app.client.index');
             Route::get('/add', 'App\Http\Controllers\Client@add')->name('app.client.add');
             Route::post('/doSave', 'App\Http\Controllers\Client@doSave')->name('app.client.doSave');
-            Route::get('/edit/{codedId}', 'App\Http\Controllers\Client@edit')->name('app.client.edit');
-            Route::get('/view/{codedId}', 'App\Http\Controllers\Client@view')->name('app.client.view');
+            Route::get('/edit/{codedId}', 'App\Http\Controllers\Client@edit')->name('app.client.edit')->middleware('tenant.resource:client,codedId,update');
+            Route::get('/view/{codedId}', 'App\Http\Controllers\Client@view')->name('app.client.view')->middleware('tenant.resource:client,codedId,view');
         });
 
         Route::prefix('goal')->group(function () {
-            Route::get('/htmlModalAdd', 'App\Http\Controllers\Goal@htmlModalAdd')->name('app.goal.htmlModalAdd');
-            Route::post('/doModalAdd', 'App\Http\Controllers\Goal@doModalAdd')->name('app.goal.doModalAdd');
-            Route::post('/doModalRemove', 'App\Http\Controllers\Goal@doModalRemove')->name('app.goal.doModalRemove');
-            Route::match(array('GET','POST'), '/htmlModalPastGoals', 'App\Http\Controllers\Goal@htmlModalPastGoals')->name('app.goal.htmlModalPastGoals');
+            Route::get('/htmlModalAdd', 'App\Http\Controllers\Goal@htmlModalAdd')->name('app.goal.htmlModalAdd')->middleware('tenant.resource:client,cuid,update');
+            Route::post('/doModalAdd', 'App\Http\Controllers\Goal@doModalAdd')->name('app.goal.doModalAdd')->middleware('tenant.resource:client,f-cid,update');
+            Route::post('/doModalRemove', 'App\Http\Controllers\Goal@doModalRemove')->name('app.goal.doModalRemove')->middleware('tenant.resource:goal,f-gcid,delete', 'tenant.resource:client,f-cid,view');
+            Route::match(array('GET','POST'), '/htmlModalPastGoals', 'App\Http\Controllers\Goal@htmlModalPastGoals')->name('app.goal.htmlModalPastGoals')->middleware('tenant.resource:client,cuid,view');
         });
 
         Route::prefix('avaliation')->group(function () {
             Route::get('/', 'App\Http\Controllers\Avaliation@index')->name('app.avaliation.index');
-            Route::get('/htmlModalView', 'App\Http\Controllers\Avaliation@htmlModalView')->name('app.avaliation.htmlModalView');
-            Route::get('/htmlModalAdd', 'App\Http\Controllers\Avaliation@htmlModalAdd')->name('app.avaliation.htmlModalAdd');
-            Route::post('/doModalAdd', 'App\Http\Controllers\Avaliation@doModalAdd')->name('app.avaliation.doModalAdd');
+            Route::get('/htmlModalView', 'App\Http\Controllers\Avaliation@htmlModalView')->name('app.avaliation.htmlModalView')->middleware('tenant.resource:avaliation,codedId,view');
+            Route::get('/htmlModalAdd', 'App\Http\Controllers\Avaliation@htmlModalAdd')->name('app.avaliation.htmlModalAdd')->middleware('tenant.resource:client,cuid,update');
+            Route::post('/doModalAdd', 'App\Http\Controllers\Avaliation@doModalAdd')->name('app.avaliation.doModalAdd')->middleware('tenant.resource:client,f-cid,update');
             Route::get('/htmlModalSelectClient', 'App\Http\Controllers\Avaliation@htmlModalSelectClient')->name('app.avaliation.htmlModalSelectClient');
-            Route::get('/htmlModalEdit', 'App\Http\Controllers\Avaliation@htmlModalEdit')->name('app.avaliation.htmlModalEdit');
-            Route::get('/photo/{fileName}', 'App\Http\Controllers\Avaliation@showPhoto')->name('app.avaliation.showPhoto');
-            Route::get('/viewReport/{codedId}', 'App\Http\Controllers\Avaliation@viewReport')->name('app.avaliation.viewReport');
-            Route::get('/viewReportPDF/{codedId}', 'App\Http\Controllers\Avaliation@viewReportPDF')->name('app.avaliation.viewReportPDF');
-            Route::get('/htmlModalSendWhats', 'App\Http\Controllers\Avaliation@htmlModalSendWhats')->name('app.avaliation.htmlModalSendWhats')->middleware('avaliation.send.link.feature');
-            Route::post('/doModalSendWhats', 'App\Http\Controllers\Avaliation@doModalSendWhats')->name('app.avaliation.doModalSendWhats')->middleware('avaliation.send.link.feature');
-            Route::get('/htmlModalSendMail', 'App\Http\Controllers\Avaliation@htmlModalSendMail')->name('app.avaliation.htmlModalSendMail')->middleware('avaliation.send.link.feature');
-            Route::post('/doModalSendMail', 'App\Http\Controllers\Avaliation@doModalSendMail')->name('app.avaliation.doModalSendMail')->middleware('avaliation.send.link.feature');
+            Route::get('/htmlModalEdit', 'App\Http\Controllers\Avaliation@htmlModalEdit')->name('app.avaliation.htmlModalEdit')->middleware('tenant.resource:avaliation,codedId,update');
+            Route::get('/photo/{fileName}', 'App\Http\Controllers\Avaliation@showPhoto')->name('app.avaliation.showPhoto')->middleware('tenant.resource:photo,fileName,view');
+            Route::get('/viewReport/{codedId}', 'App\Http\Controllers\Avaliation@viewReport')->name('app.avaliation.viewReport')->middleware('tenant.resource:avaliation,codedId,view');
+            Route::get('/viewReportPDF/{codedId}', 'App\Http\Controllers\Avaliation@viewReportPDF')->name('app.avaliation.viewReportPDF')->middleware('tenant.resource:avaliation,codedId,view');
+            Route::get('/htmlModalSendWhats', 'App\Http\Controllers\Avaliation@htmlModalSendWhats')->name('app.avaliation.htmlModalSendWhats')->middleware('avaliation.send.link.feature', 'tenant.resource:avaliation,cid,share');
+            Route::post('/doModalSendWhats', 'App\Http\Controllers\Avaliation@doModalSendWhats')->name('app.avaliation.doModalSendWhats')->middleware('avaliation.send.link.feature', 'tenant.resource:avaliation,cid,share');
+            Route::get('/htmlModalSendMail', 'App\Http\Controllers\Avaliation@htmlModalSendMail')->name('app.avaliation.htmlModalSendMail')->middleware('avaliation.send.link.feature', 'tenant.resource:avaliation,cid,share');
+            Route::post('/doModalSendMail', 'App\Http\Controllers\Avaliation@doModalSendMail')->name('app.avaliation.doModalSendMail')->middleware('avaliation.send.link.feature', 'tenant.resource:avaliation,cid,share');
         });
 
         Route::prefix('calendar')->group(function () {
@@ -121,10 +121,10 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
         });
 
         Route::prefix('checkin')->middleware('checkin.followup.feature')->group(function () {
-            Route::get('/config/{clientCodedId}', 'App\Http\Controllers\Checkin@config')->name('app.checkin.config');
-            Route::post('/doSaveConfig', 'App\Http\Controllers\Checkin@doSaveConfig')->name('app.checkin.doSaveConfig');
-            Route::post('/copyConfigFromClient', 'App\Http\Controllers\Checkin@copyConfigFromClient')->name('app.checkin.copyConfigFromClient');
-            Route::post('/sendNow/{clientCodedId}', 'App\Http\Controllers\Checkin@sendNow')->name('app.checkin.sendNow');
+            Route::get('/config/{clientCodedId}', 'App\Http\Controllers\Checkin@config')->name('app.checkin.config')->middleware('tenant.resource:client,clientCodedId,view');
+            Route::post('/doSaveConfig', 'App\Http\Controllers\Checkin@doSaveConfig')->name('app.checkin.doSaveConfig')->middleware('tenant.resource:client,f-cid,update');
+            Route::post('/copyConfigFromClient', 'App\Http\Controllers\Checkin@copyConfigFromClient')->name('app.checkin.copyConfigFromClient')->middleware('tenant.resource:client,f-target-cid,update,tenant.target-client', 'tenant.resource:client,f-source-cid,view,tenant.source-client');
+            Route::post('/sendNow/{clientCodedId}', 'App\Http\Controllers\Checkin@sendNow')->name('app.checkin.sendNow')->middleware('tenant.resource:client,clientCodedId,update');
         });
 
         Route::prefix('report')->group(function () {
@@ -139,8 +139,8 @@ Route::prefix(env('APP_PREFIX_FOLDER'))->group(function () {
             Route::get('/checkout', 'App\Http\Controllers\Subscription@checkout')->name('app.subscription.checkout')->middleware('is.already.premium');
             Route::get('/subscribe/{plan}', 'App\Http\Controllers\Subscription@subscribe')->name('app.subscription.subscribe')->middleware('is.already.premium');
             Route::get('/mercadoPagoCheckoutMessage', 'App\Http\Controllers\Subscription@mercadoPagoCheckoutMessage')->name('app.subscription.mercadoPagoCheckoutMessage');
-            Route::get('/details', 'App\Http\Controllers\Subscription@details')->name('app.subscription.details');
-            Route::post('/cancelSubscription', 'App\Http\Controllers\Subscription@cancelSubscription')->name('app.subscription.cancelSubscription');
+            Route::get('/details', 'App\Http\Controllers\Subscription@details')->name('app.subscription.details')->middleware('tenant.resource:user-plan,codedId,view');
+            Route::post('/cancelSubscription', 'App\Http\Controllers\Subscription@cancelSubscription')->name('app.subscription.cancelSubscription')->middleware('tenant.resource:user-plan,codedId,update');
         });
 
         Route::prefix('support')->group(function () {

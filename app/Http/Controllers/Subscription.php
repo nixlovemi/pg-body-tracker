@@ -9,6 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Helpers\Payments\MercadoPago;
 use Illuminate\Support\Facades\Log;
 use App\Models\UserPlans;
+use App\Helpers\SysUtils;
 use Symfony\Component\HttpFoundation\Response;
 
 class Subscription extends Controller
@@ -93,10 +94,7 @@ class Subscription extends Controller
         $codedId = $request->input('codedId');
         $json = $request->input('json', '1');
 
-        $UserPlan = $this->getUserPlanOrRedirect($codedId);
-        if (($UserPlan instanceof UserPlans) === false) {
-            return $UserPlan;
-        }
+        $UserPlan = $request->attributes->get('tenant.user-plan');
 
         $paymentClass = $UserPlan->getPaymentClass() ?? '';
         $PaymentGateway = new ($paymentClass)();
@@ -141,10 +139,9 @@ class Subscription extends Controller
     public function pauseSubscription(Request $request)
     {
         $codedId = $request->input('codedId');
-        $UserPlan = $this->getUserPlanOrRedirect($codedId);
-        if (($UserPlan instanceof UserPlans) === false) {
-            return $UserPlan;
-        }
+        $UserPlan = app(\App\Support\TenantResourceResolver::class)->resolve(
+            'user-plan', (string) $codedId, SysUtils::getLoggedInUser(), 'update'
+        );
 
         $ret = $UserPlan->pauseSubscription();
         if ($ret->isError()) {
@@ -157,10 +154,7 @@ class Subscription extends Controller
     public function cancelSubscription(Request $request)
     {
         $codedId = $request->input('codedId');
-        $UserPlan = $this->getUserPlanOrRedirect($codedId);
-        if (($UserPlan instanceof UserPlans) === false) {
-            return $UserPlan;
-        }
+        $UserPlan = $request->attributes->get('tenant.user-plan');
 
         $ret = $UserPlan->cancelSubscription();
         if ($ret->isError()) {
@@ -170,18 +164,4 @@ class Subscription extends Controller
         return $this->returnResponse(false, $ret->getMessage(), [], Response::HTTP_OK);
     }
 
-    private function getUserPlanOrRedirect(string $codedId)
-    {
-        $UserPlan = UserPlans::getModelByCodedId($codedId);
-        if (!$UserPlan || !UserPlans::fHasAccess($UserPlan)) {
-            return $this->returnResponse(
-                false,
-                __('messages.modelErrorNoAccess'),
-                [],
-                Response::HTTP_UNAUTHORIZED
-            );
-        }
-
-        return $UserPlan;
-    }
 }

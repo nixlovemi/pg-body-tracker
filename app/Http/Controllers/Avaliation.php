@@ -84,7 +84,7 @@ class Avaliation extends Controller
 
     public function htmlModalView(Request $request)
     {
-        $Avaliation = mAvaliation::getModelByCodedId($request->input('codedId'));
+        $Avaliation = $request->attributes->get('tenant.avaliation');
         $view = view('app.avaliation.modalRegister', [
             'CUID' => $Avaliation?->client->codedId,
             'CEDIT' => 0,
@@ -108,7 +108,7 @@ class Avaliation extends Controller
 
     public function htmlModalEdit(Request $request)
     {
-        $Avaliation = mAvaliation::getModelByCodedId($request->input('codedId'));
+        $Avaliation = $request->attributes->get('tenant.avaliation');
         $view = view('app.avaliation.modalRegister', [
             'CUID' => $Avaliation?->client->codedId,
             'CEDIT' => 1,
@@ -148,9 +148,8 @@ class Avaliation extends Controller
         return $view;
     }
 
-    public function showPhoto(string $fileName)
+    public function showPhoto(Request $request, string $fileName)
     {
-        // TODO: similar to Avaliation->getPhotoBase64(string $fieldName)???
         $path = storage_path(mAvaliation::fGetOsPhotosFolder(mAvaliation::BASE_PHOTOS_FOLDER) . DIRECTORY_SEPARATOR . $fileName);
 
         if (!file_exists($path)) {
@@ -160,12 +159,9 @@ class Avaliation extends Controller
         return response()->file($path);
     }
 
-    public function viewReport(string $codedId)
+    public function viewReport(Request $request, string $codedId)
     {
-        $Avaliation = mAvaliation::getModelByCodedId($codedId);
-        if (null === $Avaliation) {
-            return $this->redirectWithError('app.client.index', __('messages.modelErrorNoAccess'));
-        }
+        $Avaliation = $request->attributes->get('tenant.avaliation');
 
         return view('app.avaliation.viewReport', [
             'PAGE_TITLE' => __('messages.pages.avaliation.index.title'),
@@ -175,10 +171,13 @@ class Avaliation extends Controller
 
     public function viewReportPDF(Request $request, string $codedId)
     {
-        $Avaliation = mAvaliation::getModelByCodedId($codedId);
-        if (null === $Avaliation) {
-            return $this->redirectWithError('app.client.index', __('messages.modelErrorNoAccess'));
-        }
+        $Avaliation = $request->attributes->get('tenant.avaliation');
+
+        return $this->renderReportPDF($request, $Avaliation);
+    }
+
+    private function renderReportPDF(Request $request, mAvaliation $Avaliation)
+    {
 
         $includeGraphs = filter_var($request->query('graphs', '1'), FILTER_VALIDATE_BOOLEAN);
         $includePictures = filter_var($request->query('pictures', '1'), FILTER_VALIDATE_BOOLEAN);
@@ -231,10 +230,7 @@ class Avaliation extends Controller
 
     public function htmlModalSendWhats(Request $request)
     {
-        $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
-        if (null === $Avaliation) {
-            return $this->redirectWithError('app.avaliation.index', __('messages.modelErrorNoAccess'));
-        }
+        $Avaliation = $request->attributes->get('tenant.avaliation');
 
         $view = view('app.avaliation.modalSendWhats', [
             'AVALIATION' => $Avaliation,
@@ -256,10 +252,7 @@ class Avaliation extends Controller
 
     public function doModalSendWhats(Request $request)
     {
-        $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
-        if (!$Avaliation) {
-            return $this->modelNotFoundResponse();
-        }
+        $Avaliation = $request->attributes->get('tenant.avaliation');
 
         $code = $request->input('country_code', '');
         $phone = preg_replace('/[^0-9]/', '', $code . $request->input('phone', ''));
@@ -282,10 +275,7 @@ class Avaliation extends Controller
 
     public function htmlModalSendMail(Request $request)
     {
-        $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
-        if (null === $Avaliation) {
-            return $this->redirectWithError('app.avaliation.index', __('messages.modelErrorNoAccess'));
-        }
+        $Avaliation = $request->attributes->get('tenant.avaliation');
 
         $view = view('app.avaliation.modalSendMail', [
             'AVALIATION' => $Avaliation,
@@ -307,10 +297,7 @@ class Avaliation extends Controller
 
     public function doModalSendMail(Request $request)
     {
-        $Avaliation = mAvaliation::getModelByCodedId($request->input('cid', ''));
-        if (!$Avaliation) {
-            return $this->modelNotFoundResponse();
-        }
+        $Avaliation = $request->attributes->get('tenant.avaliation');
 
         $email = $request->input('email', '');
         $link = $this->getCachedAvaliationLink($Avaliation, 'mail', $email, self::SEND_MAIL_HOURS);
@@ -331,7 +318,11 @@ class Avaliation extends Controller
     /** signed route */
     public function showMyAvaliation(string $codedId)
     {
-        return $this->viewReportPDF(request(), $codedId);
+        // The route is protected by Laravel's signed middleware; it has no professional session.
+        $Avaliation = mAvaliation::getModelByCodedId($codedId);
+        abort_unless($Avaliation, 404);
+
+        return $this->renderReportPDF(request(), $Avaliation);
     }
 
     private function formatSaveRequest(Request $request): array
