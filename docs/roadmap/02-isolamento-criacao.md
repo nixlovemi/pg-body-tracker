@@ -1,7 +1,7 @@
 # Isolamento na criação de avaliações e metas
 
 - **Prioridade:** P0
-- **Estado:** planejado
+- **Estado:** concluído
 - **Esforço relativo:** M
 - **Dependências:** 01.
 
@@ -24,11 +24,18 @@ Impedir que gravações vinculem avaliação ou meta ao cliente de outra conta.
 
 ## Critérios de aceite
 
-- [ ] Criação e edição cruzadas retornam erro sem alterar linhas.
-- [ ] Criação válida do próprio cliente continua funcionando.
-- [ ] Operação rejeitada não envia email nem enfileira PDF.
+- [x] Criação e edição cruzadas retornam erro sem alterar linhas.
+- [x] Criação válida do próprio cliente continua funcionando.
+- [x] Operação rejeitada não envia email nem enfileira PDF.
 
 ## Verificação
 
 - Teste com duas contas para criar, editar e tentar transferir registros.
 - Verificar contagem e `client_id` no banco de teste.
+
+## Implementado
+
+- `BaseModelTrait::fSave()` verifica acesso antes da alteração de registros existentes e novamente após `fill()`, antes de qualquer hook de domínio.
+- Avaliações, metas e configurações de check-in confirmam o `client_id` com `Client::visibleTo($user)`.
+- Os controllers de avaliações e metas recebem o cliente já autorizado pelo middleware `tenant.resource`.
+- Os testes cobrem bloqueio pela rota, criação cruzada pelo serviço e tentativa de transferência de avaliação.

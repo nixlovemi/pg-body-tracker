@@ -130,17 +130,11 @@ class CheckinConfig extends Model implements \App\Contracts\TenantVisible
 
         $clientId = $model->client_id ?: $model->client?->id;
         if (!$clientId) {
-            // During first save via BaseModelTrait::fSave, access is checked before fill(),
-            // so client_id is still empty. Allow creation flow and enforce ownership later.
+            // A new model is checked again by BaseModelTrait after fill().
             return !$model->exists;
         }
 
-        $Client = Client::find($clientId);
-        if (!$Client || $Client->user_id !== $user?->id) {
-            return false;
-        }
-
-        return true;
+        return Client::visibleTo($user)->whereKey($clientId)->exists();
     }
 
     public static function fSaveBeforeValidate(Model &$model, array $form): ?ApiResponse
