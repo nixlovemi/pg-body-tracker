@@ -30,14 +30,9 @@ class Checkin extends Controller
 {
     private const CHECKIN_ALREADY_SUBMITTED_CODE = '__CHECKIN_ALREADY_SUBMITTED__';
 
-    public function config(string $clientCodedId)
+    public function config(Request $request, string $clientCodedId)
     {
-        $Client = Client::getModelByCodedId($clientCodedId);
-        if (!$Client || !Client::fHasAccess($Client)) {
-            return redirect()
-                ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.saveModelNotFound', ['modelName' => __('messages.models.Client.name')])]);
-        }
+        $Client = $request->attributes->get('tenant.client');
 
         $CheckinConfig = $Client->checkinConfig;
         $fieldsConfig = $CheckinConfig?->getFieldsConfig();
@@ -60,12 +55,7 @@ class Checkin extends Controller
     public function doSaveConfig(Request $request): RedirectResponse
     {
         $clientCodedId = (string) $request->input('f-cid', '');
-        $Client = Client::getModelByCodedId($clientCodedId);
-        if (!$Client || !Client::fHasAccess($Client)) {
-            return redirect()
-                ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.saveModelNotFound', ['modelName' => __('messages.models.Client.name')])]);
-        }
+        $Client = $request->attributes->get('tenant.client');
 
         $rawFields = $request->input('f-fields', []);
         if (!is_array($rawFields)) {
@@ -105,17 +95,8 @@ class Checkin extends Controller
         $targetClientCodedId = (string) $request->input('f-target-cid', '');
         $sourceClientCodedId = (string) $request->input('f-source-cid', '');
 
-        $TargetClient = Client::getModelByCodedId($targetClientCodedId);
-        if (!$TargetClient || !Client::fHasAccess($TargetClient)) {
-            return redirect()
-                ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.saveModelNotFound', ['modelName' => __('messages.models.Client.name')])]);
-        }
-
-        $SourceClient = Client::getModelByCodedId($sourceClientCodedId);
-        if (!$SourceClient || !Client::fHasAccess($SourceClient)) {
-            return $this->redirectConfigError($TargetClient, __('messages.pages.checkin.config.copySourceNotFound'));
-        }
+        $TargetClient = $request->attributes->get('tenant.target-client');
+        $SourceClient = $request->attributes->get('tenant.source-client');
 
         if ($SourceClient->id === $TargetClient->id) {
             return $this->redirectConfigError($TargetClient, __('messages.pages.checkin.config.copySourceSameClient'));
@@ -157,14 +138,9 @@ class Checkin extends Controller
             ->withSuccess($successMsg);
     }
 
-    public function sendNow(string $clientCodedId): RedirectResponse
+    public function sendNow(Request $request, string $clientCodedId): RedirectResponse
     {
-        $Client = Client::getModelByCodedId($clientCodedId);
-        if (!$Client || !Client::fHasAccess($Client)) {
-            return redirect()
-                ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.saveModelNotFound', ['modelName' => __('messages.models.Client.name')])]);
-        }
+        $Client = $request->attributes->get('tenant.client');
 
         $CheckinConfig = $Client->checkinConfig;
         if (!$CheckinConfig) {

@@ -86,28 +86,11 @@ class Client extends Controller
             ->withSuccess($response->getMessage());
     }
 
-    public function edit(string $codedId, PatientInsightsSnapshotService $insightsSnapshotService)
+    public function edit(Request $request, string $codedId, PatientInsightsSnapshotService $insightsSnapshotService)
     {
         $loggedUser = SysUtils::getLoggedInUser();
+        $Client = $request->attributes->get('tenant.client');
         $isPremiumPlan = $loggedUser?->hasPremiumPlan() ?? false;
-        $Client = mClient::getModelByCodedId($codedId);
-        if (null === $Client) {
-            return redirect()
-                ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.saveModelNotFound', [
-                    'modelName' => __('messages.models.Client.name')
-                ])]);
-
-        }
-
-        // if its not your client, redirect to index
-        if (!mClient::fHasAccess($Client)) {
-            return redirect()
-                ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.saveModelErrorSavingOther', [
-                    'modelName' => __('messages.models.Client.name')
-                ])]);
-        }
 
         $insightsCard = $isPremiumPlan
             ? $insightsSnapshotService->buildPremiumCard($Client)
@@ -127,28 +110,11 @@ class Client extends Controller
         ]);
     }
 
-    public function view(string $codedId, PatientInsightsSnapshotService $insightsSnapshotService)
+    public function view(Request $request, string $codedId, PatientInsightsSnapshotService $insightsSnapshotService)
     {
         $loggedUser = SysUtils::getLoggedInUser();
+        $Client = $request->attributes->get('tenant.client');
         $isPremiumPlan = $loggedUser?->hasPremiumPlan() ?? false;
-        $Client = mClient::getModelByCodedId($codedId);
-        if (null === $Client) {
-            return redirect()
-                ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.saveModelNotFound', [
-                    'modelName' => __('messages.models.Client.name')
-                ])]);
-
-        }
-
-        // if its not your client, redirect to index
-        if (!mClient::fHasAccess($Client)) {
-            return redirect()
-                ->route('app.client.index')
-                ->withErrors(['msg' => __('messages.saveModelErrorSavingOther', [
-                    'modelName' => __('messages.models.Client.name')
-                ])]);
-        }
 
         $insightsCard = $isPremiumPlan
             ? $insightsSnapshotService->buildPremiumCard($Client)

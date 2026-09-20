@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'checkin.followup.feature' => \App\Http\Middleware\CheckinFollowUp::class,
         'is.already.premium' => \App\Http\Middleware\IsAlreadyPremium::class,
         'authWeb.expire.at' => \App\Http\Middleware\AuthenticateWebExpireAt::class,
+        'tenant.resource' => \App\Http\Middleware\ResolveTenantResource::class,
     ];
 }

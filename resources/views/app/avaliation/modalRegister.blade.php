@@ -21,7 +21,7 @@ $AVALIATION = $AVALIATION ?? null;
 $CUID = $CUID ?? '';
 $ACTION = $ACTION ?? '';
 $canEdit = (1 == $CEDIT) ? true: false;
-$Client = $mClient::getModelByCodedId($CUID);
+$Client = app(\App\Support\TenantResourceResolver::class)->resolve('client', $CUID, $SysUtils::getLoggedInUser());
 $UserEvaluationMode = $SysUtils::getLoggedInUser()?->info?->evaluation_mode ?? $mUserInfo::EVALUATION_MODE_PERSONAL;
 $isPremiumPlan = $SysUtils::getLoggedInUser()?->hasPremiumPlan() ?? false;
 $canManageCheckin = $canEdit && $Permissions::checkPermission($Permissions::ACL_CHECKIN_EDIT);

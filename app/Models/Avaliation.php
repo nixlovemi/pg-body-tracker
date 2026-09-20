@@ -7,6 +7,7 @@ use App\Helpers\ApiResponse;
 use App\Helpers\ModelValidation;
 use App\Helpers\SysUtils;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\UploadedFile;
@@ -34,6 +35,17 @@ class Avaliation extends Model
     public const SKIN_FOLDS_FORMULA_4_FOLDS_DURNIN_WOMERSLEY = '4_FOLDS_DURNIN_WOMERSLEY';
 
     public const BASE_PHOTOS_FOLDER = '/avaliations/photos/';
+
+    public function scopeVisibleTo(Builder $query, User $user): Builder
+    {
+        if (!$user->isRoot()) {
+            $query->whereHas('client', function ($clientQuery) use ($user) {
+                $clientQuery->where('user_id', $user->id);
+            });
+        }
+
+        return $query;
+    }
 
     private const BCI_ADIPOSITY_WEIGHTS = [
         'bmi' => 0.30,

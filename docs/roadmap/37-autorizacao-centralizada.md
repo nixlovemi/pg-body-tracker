@@ -1,7 +1,7 @@
 # Autorização centralizada
 
-- **Prioridade:** P3
-- **Estado:** planejado
+- **Prioridade:** P1
+- **Estado:** em andamento
 - **Esforço relativo:** M
 - **Dependências:** 01, 02 e 21.
 
@@ -33,3 +33,7 @@ Ter uma fonte explícita de regra por recurso e operação sem perder proteção
 
 - Testes de matriz por papel, tenant e operação.
 - Revisão de todas as rotas após migração.
+
+## Progresso em 20/09/2026
+
+Scopes `visibleTo`, policies e middleware `tenant.resource` foram aplicados às rotas autenticadas de leitura e às operações de compartilhamento, exclusão de meta e plano. `TenantResourceResolver` atende componentes fora das rotas. A matriz e a convenção estão em `docs/architecture/authorization.md`. O restante do item depende da proteção de criação e alteração do item 02 e da migração das regras de escrita ainda presentes em `BaseModelTrait::fHasAccessCustom`.

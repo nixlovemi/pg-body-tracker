@@ -356,7 +356,6 @@ class CheckinRegressionTest extends TestCase
     public function testCopyConfigFromAnotherClientOverwritesConfigAndPreservesOperationalDates(): void
     {
         [$user, $targetClient] = $this->createManagerAndClient();
-        $this->withoutMiddleware();
         $this->grantPremiumPlan($user);
         $this->actingAs($user, 'web');
 
@@ -431,7 +430,6 @@ class CheckinRegressionTest extends TestCase
     public function testCopyConfigFromAnotherClientRejectsSourceWithoutConfig(): void
     {
         [$user, $targetClient] = $this->createManagerAndClient();
-        $this->withoutMiddleware();
         $this->grantPremiumPlan($user);
         $this->actingAs($user, 'web');
 

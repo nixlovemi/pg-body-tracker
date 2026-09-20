@@ -54,6 +54,11 @@ class Goal extends Controller
 
     public function doModalRemove(Request $request)
     {
+        abort_unless(
+            $request->attributes->get('tenant.goal')->client_id === $request->attributes->get('tenant.client')->id,
+            404
+        );
+
         $response = mGoal::fRemove($request->input('f-gcid') ?? '');
         if ($response->isError()) {
             return $this->returnResponse(true, $response->getMessage(), [], Response::HTTP_OK);
@@ -90,7 +95,7 @@ class Goal extends Controller
 
     private function getCardGoalContent(Request $request): string
     {
-        $Client = Client::getModelByCodedId($request->input('f-cid'));
+        $Client = $request->attributes->get('tenant.client');
         $canEdit = (1 == $request->input('f-cedit')) ? true: false;
 
         $view = view('app.client.partials.cardGoalsContent', [
