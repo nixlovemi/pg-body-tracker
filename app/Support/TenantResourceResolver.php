@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Avaliation;
+use App\Contracts\TenantVisible;
 use App\Models\Client;
 use App\Models\Goal;
 use App\Models\CheckinConfig;
@@ -22,6 +23,14 @@ class TenantResourceResolver
         'user-plan' => UserPlans::class,
     ];
 
+    /**
+     * @return array<string, class-string<TenantVisible>>
+     */
+    public static function supportedResources(): array
+    {
+        return self::MODELS;
+    }
+
     public function resolve(string $resource, string $codedId, ?User $user, string $ability = 'view'): Model
     {
         if (!$user || !isset(self::MODELS[$resource])) {
@@ -34,6 +43,14 @@ class TenantResourceResolver
         }
 
         $modelClass = self::MODELS[$resource];
+        if (!is_a($modelClass, TenantVisible::class, true)) {
+            throw new \LogicException(sprintf(
+                'The tenant resource "%s" must implement %s.',
+                $resource,
+                TenantVisible::class
+            ));
+        }
+
         $model = $modelClass::visibleTo($user)->findOrFail($id);
         if (!Gate::forUser($user)->allows($ability, $model)) {
             throw (new ModelNotFoundException())->setModel($modelClass, [$id]);

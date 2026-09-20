@@ -19,7 +19,7 @@
 - php artisan storage:link --relative
 
 [TESTS]
-    - php artisan migrat:fresh --seed --database=mysql_test
+    - php artisan migrate:fresh --seed --database=mysql_test
     - php artisan test
 
 [TABLE]

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 
-class CheckinConfig extends Model
+class CheckinConfig extends Model implements \App\Contracts\TenantVisible
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;

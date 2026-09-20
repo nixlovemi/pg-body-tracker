@@ -9,6 +9,7 @@ use App\Models\Goal;
 use App\Models\CheckinConfig;
 use App\Models\UserPlans;
 use App\Models\User;
+use App\Contracts\TenantVisible;
 use App\Services\AvaliationPdfCacheService;
 use App\Support\TenantResourceResolver;
 use Illuminate\Support\Facades\Gate;
@@ -123,6 +124,20 @@ class TenantReadIsolationTest extends TestCase
         $this->assertSame([], Goal::visibleTo($this->owner)->pluck('id')->all());
         $this->assertSame([], CheckinConfig::visibleTo($this->owner)->pluck('id')->all());
         $this->assertSame([], UserPlans::visibleTo($this->owner)->pluck('id')->all());
+    }
+
+    public function testEveryRegisteredTenantResourceImplementsTheRequiredScopeContract(): void
+    {
+        foreach (TenantResourceResolver::supportedResources() as $resource => $modelClass) {
+            $this->assertTrue(
+                is_a($modelClass, TenantVisible::class, true),
+                sprintf('%s must implement TenantVisible.', $resource)
+            );
+            $this->assertTrue(
+                method_exists($modelClass, 'scopeVisibleTo'),
+                sprintf('%s must define scopeVisibleTo.', $resource)
+            );
+        }
     }
 
     public function testOtherTenantCannotOpenClientOrEvaluationReadRoutes(): void

@@ -20,7 +20,7 @@ use App\Helpers\Feature\AvaliationPictures;
 use App\Helpers\Feature\RevaluationDate;
 use App\Helpers\Avaliation\EstimatedIdealWeight;
 
-class Avaliation extends Model
+class Avaliation extends Model implements \App\Contracts\TenantVisible
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;

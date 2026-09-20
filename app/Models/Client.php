@@ -13,7 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Avaliation;
 
-class Client extends Model
+class Client extends Model implements \App\Contracts\TenantVisible
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;

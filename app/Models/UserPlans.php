@@ -17,7 +17,7 @@ use App\Mail\SubscriptionUpdate;
 use Illuminate\Support\Facades\Cache;
 use \Carbon\Carbon;
 
-class UserPlans extends Model
+class UserPlans extends Model implements \App\Contracts\TenantVisible
 {
     use HasFactory, Notifiable;
     use \App\Traits\BaseModelTrait;

@@ -9,7 +9,7 @@
 
 Exemplo: `tenant.resource:avaliation,codedId,view` entrega a avaliação em `tenant.avaliation`. O quarto argumento permite uma chave diferente quando a mesma requisição usa dois clientes, como a cópia da configuração de check-in.
 
-O resolvedor aceita somente os recursos da sua lista explícita. Adicionar um recurso exige um scope `visibleTo`, uma policy registrada em `AuthServiceProvider` e testes com duas contas.
+O resolvedor aceita somente os recursos da sua lista explícita. Cada classe registrada deve implementar `App\Contracts\TenantVisible`, que exige `scopeVisibleTo(Builder $query, User $user): Builder`. O PHP falha ao carregar um model que declara esse contrato sem implementar o scope; o resolvedor também rejeita, com erro de programação, uma classe registrada fora do contrato. Adicionar um recurso exige a interface, uma policy registrada em `AuthServiceProvider` e testes com duas contas.
 
 ## Atores e operações
 

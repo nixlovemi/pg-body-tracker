@@ -36,4 +36,4 @@ Ter uma fonte explícita de regra por recurso e operação sem perder proteção
 
 ## Progresso em 20/09/2026
 
-Scopes `visibleTo`, policies e middleware `tenant.resource` foram aplicados às rotas autenticadas de leitura e às operações de compartilhamento, exclusão de meta e plano. `TenantResourceResolver` atende componentes fora das rotas. A matriz e a convenção estão em `docs/architecture/authorization.md`. O restante do item depende da proteção de criação e alteração do item 02 e da migração das regras de escrita ainda presentes em `BaseModelTrait::fHasAccessCustom`.
+Scopes `visibleTo`, policies e middleware `tenant.resource` foram aplicados às rotas autenticadas de leitura e às operações de compartilhamento, exclusão de meta e plano. `TenantResourceResolver` atende componentes fora das rotas. Todo recurso registrado implementa `TenantVisible`, que exige o scope de tenant. A matriz e a convenção estão em `docs/architecture/authorization.md`. O restante do item depende da proteção de criação e alteração do item 02 e da migração das regras de escrita ainda presentes em `BaseModelTrait::fHasAccessCustom`.
