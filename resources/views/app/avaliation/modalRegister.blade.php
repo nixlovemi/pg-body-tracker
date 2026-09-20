@@ -1467,7 +1467,7 @@ $hasCheckinAnswers = count($checkinAnswers) > 0;
                 }
 
                 function displayInputs(formulaKey) {
-                    let clientGender = '{!! $Client?->gender !!}';
+                    let clientGender = @json($Client?->gender);
                     clientGender = clientGender[0].toLowerCase();
 
                     // get json data

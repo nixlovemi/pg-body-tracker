@@ -14,7 +14,7 @@ abstract class ReportColumns
             ->title(__('messages.models.Client.name'))
             ->format(function(Model $Model) {
                 return $Model->getName();
-            });
+            }, true);
     }
 
     public static function clientCreatedAt(): Column
@@ -50,7 +50,7 @@ abstract class ReportColumns
             ->title(__('messages.pages.client.table.colEmail'))
             ->format(function(Model $Model) {
                 return $Model->email;
-            });
+            }, true);
     }
 
     public static function clientPhone(): Column
@@ -59,7 +59,7 @@ abstract class ReportColumns
             ->title(__('messages.pages.client.table.colPhone'))
             ->format(function(Model $Model) {
                 return $Model->phone;
-            });
+            }, true);
     }
 
     public static function clientHeight(): Column

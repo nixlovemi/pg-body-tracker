@@ -132,7 +132,8 @@ class ModelValidation
         $message = $error ? __('messages.helpers.modelValidation.verifyBeforeSave'): __('messages.helpers.modelValidation.validateSuccess');
         $data = [
             'validator' => $validator,
-            'messages' => __('messages.helpers.modelValidation.verifyBeforeSave') . '<br />* ' . implode('<br />* ', $validator->errors()->all()),
+            'messages' => __('messages.helpers.modelValidation.verifyBeforeSave') . "\n* " . implode("\n* ", $validator->errors()->all()),
+            'errors' => $validator->errors()->all(),
         ];
 
         return new ApiResponse(

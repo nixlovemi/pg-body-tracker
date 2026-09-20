@@ -1,7 +1,7 @@
 # Escape de notas e mensagens
 
 - **Prioridade:** P0
-- **Estado:** planejado
+- **Estado:** concluído
 - **Esforço relativo:** P
 - **Dependências:** Nenhuma.
 
@@ -24,11 +24,20 @@ Texto inserido por usuários aparece como texto, preservando quebras, sem execut
 
 ## Critérios de aceite
 
-- [ ] Tags digitadas nas notas são exibidas literalmente no web e PDF.
-- [ ] Mensagens especiais não executam conteúdo.
-- [ ] Ícones estáticos continuam corretos.
+- [x] Tags digitadas nas notas são exibidas literalmente no web e PDF.
+- [x] Mensagens especiais não executam conteúdo.
+- [x] Ícones estáticos continuam corretos.
 
 ## Verificação
 
 - Testes com `<script>`, `<img onerror>` e acentos.
 - Inspeção do HTML no relatório, modal e alertas.
+
+## Convenção e inventário de saída HTML
+
+- Campos de usuário, mensagens de sessão, erros de validação e traduções interpoladas com configuração devem ser escapados ao renderizar. Para texto com várias linhas, usar `nl2br(e($texto))`.
+- `ModelValidation` fornece mensagens em texto com quebras de linha e a lista estruturada em `errors`; componentes decidem como apresentar as linhas.
+- HTML gerado pelo servidor permanece explícito: ícones estáticos, componentes de gráfico/progresso, traduções estáticas com marcação e a tabela de relatório. Seus valores variáveis agora são escapados na composição.
+- Nos gráficos, apenas os marcadores coloridos criados por `getTableRowLabel()` são `HtmlString`; títulos e dados comuns continuam escapados. Isso preserva a tabela no relatório web e no PDF.
+- O valor de gênero inserido em JavaScript no modal usa serialização JSON do Blade.
+- Verificação: `HtmlOutputSafetyTest` cobre nota compartilhada entre web/PDF, alertas e mensagens de validação. `git diff --check` e lint PHP passaram.

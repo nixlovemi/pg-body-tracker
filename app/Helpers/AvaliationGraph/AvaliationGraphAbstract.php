@@ -4,6 +4,7 @@ namespace App\Helpers\AvaliationGraph;
 
 use App\Models\Avaliation;
 use App\Helpers\Constants;
+use Illuminate\Support\HtmlString;
 
 abstract class AvaliationGraphAbstract
 {
@@ -41,12 +42,12 @@ abstract class AvaliationGraphAbstract
         return $this->getClassName() . '-' . $this->getAvaliation()->codedId;
     }
 
-    protected final function addHeadItem(string $string): void
+    protected final function addHeadItem(string|HtmlString $string): void
     {
         $this->tableData['head'][] = $string;
     }
 
-    protected final function addBodyItem(string ...$string): void
+    protected final function addBodyItem(string|HtmlString ...$string): void
     {
         $this->tableData['body'][] = $string;
     }
@@ -69,7 +70,7 @@ abstract class AvaliationGraphAbstract
             ->get();
     }
 
-    protected final function getTableRowLabel(string $label, string $color): string
+    protected final function getTableRowLabel(string $label, string $color): HtmlString
     {
         if ($this->isForPdf) {
             $str = '<div style="position:relative; top-8px; padding-bottom:2px; border-bottom:solid 6px; ';
@@ -79,12 +80,12 @@ abstract class AvaliationGraphAbstract
             $str .= ' width:18px; height:18px; background-color:%s; border-color:%s;">&nbsp;</a>%s';
         }
 
-        return sprintf(
+        return new HtmlString(sprintf(
             $str,
-            $color,
-            $color,
-            $label
-        );
+            e($color),
+            e($color),
+            e($label)
+        ));
     }
 
     private function getDataTableHtml(): string
@@ -92,13 +93,13 @@ abstract class AvaliationGraphAbstract
         $html = '<table class="table table-borderless" style="font-size:80%;">';
         $html .= '<thead class="font-weight-bold"><tr class="table-light border-top border-bottom">';
         foreach ($this->tableData['head'] as $item) {
-            $html .= '<th class="align-middle" scope="col"><span class="ms-2">' . $item . '</span></th>';
+            $html .= '<th class="align-middle" scope="col"><span class="ms-2">' . e($item) . '</span></th>';
         }
         $html .= '</tr></thead><tbody>';
         foreach ($this->tableData['body'] as $row) {
             $html .= '<tr class="border-bottom">';
             foreach ($row as $item) {
-                $html .= '<td class="align-middle" scope="row">' . $item . '</td>';
+                $html .= '<td class="align-middle" scope="row">' . e($item) . '</td>';
             }
             $html .= '</tr>';
         }

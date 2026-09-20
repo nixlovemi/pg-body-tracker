@@ -28,7 +28,7 @@
                     <div class="col-xxl-6 col-xl-7 col-lg-9 col-md-10">
                         <div class="section-title text-center mb-60">
                             <p class="text-muted">
-                                {!! __('messages.pages.siteFaq.description', ['email' => env('SUPPORT_EMAIL')]) !!}
+                                {!! __('messages.pages.siteFaq.description', ['email' => e(env('SUPPORT_EMAIL'))]) !!}
                             </p>
                         </div>
                     </div>

@@ -132,7 +132,7 @@
                         <div class="row content-line">
                             <h3>{{ __('messages.pages.sitePrivacy.section10Title') }}</h3>
                             <p class="text-muted">
-                                {!! __('messages.pages.sitePrivacy.section10Text', ['email' => env('SUPPORT_EMAIL')]) !!}
+                                {!! __('messages.pages.sitePrivacy.section10Text', ['email' => e(env('SUPPORT_EMAIL'))]) !!}
                             </p>
                         </div>
                     </div>

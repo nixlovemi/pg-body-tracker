@@ -27,7 +27,7 @@ abstract class ReportAbstract
         $html = '<table class="table table-borderless">';
         $html .= '<thead><tr>';
         foreach ($columns as $column) {
-            $html .= '<th>' . $column->getTitle() . '</th>';
+            $html .= '<th>' . e($column->getTitle()) . '</th>';
         }
         $html .= '</tr></thead>';
         $html .= '<tbody>';
@@ -38,7 +38,7 @@ abstract class ReportAbstract
         foreach ($results as $result) {
             $html .= '<tr>';
             foreach ($columns as $column) {
-                $html .= '<td>' . $column->getValue($result, []) . '</td>';
+                $html .= '<td>' . e($column->getValue($result, [])) . '</td>';
             }
             $html .= '</tr>';
         }

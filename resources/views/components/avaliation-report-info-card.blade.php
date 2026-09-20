@@ -23,7 +23,7 @@ $IS_PDF = isset($IS_PDF) ? $IS_PDF : false;
 
                 <div class="h6 mb-1 text-gray-800">
                     <span class="font-weight-bold">{{ __('messages.components.avaliationReport.result') }}:</span>
-                    {!! $RESULT ?? '' !!}
+                    {{ $RESULT ?? '' }}
                 </div>
 
                 <div class="h6 mb-1 text-gray-800">

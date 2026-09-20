@@ -27,7 +27,7 @@ View variables:
                             </div>
 
                             <p>
-                                {!! nl2br($Avaliation->client_notes) !!}
+                                {!! nl2br(e($Avaliation->client_notes)) !!}
                             </p>
                         </div>
                     </div>

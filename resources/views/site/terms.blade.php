@@ -44,8 +44,8 @@
                                 <h3>{{ __('messages.pages.siteTerms.section1Title') }}</h3>
                                 <p>
                                     {!! __('messages.pages.siteTerms.section1Text', [
-                                        'app' => env('APP_NAME'),
-                                        'privacyUrl' => route('site.privacy')
+                                        'app' => e(env('APP_NAME')),
+                                        'privacyUrl' => e(route('site.privacy'))
                                     ]) !!}
                                 </p>
                             </div>
@@ -108,7 +108,7 @@
                             <div class="row content-line">
                                 <h3>{{ __('messages.pages.siteTerms.section11Title') }}</h3>
                                 <p>
-                                    {!! __('messages.pages.siteTerms.section11Text', ['email' => env('SUPPORT_EMAIL')]) !!}
+                                    {!! __('messages.pages.siteTerms.section11Text', ['email' => e(env('SUPPORT_EMAIL'))]) !!}
                                 </p>
                             </div>
                         </div>
