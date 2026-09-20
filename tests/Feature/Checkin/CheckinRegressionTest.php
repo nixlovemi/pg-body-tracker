@@ -12,6 +12,7 @@ use App\Models\Avaliation;
 use App\Models\AvaliationCheckinField;
 use App\Models\CheckinConfig;
 use App\Models\Client;
+use App\Models\Goal;
 use App\Models\User;
 use App\Models\UserPlans;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -110,6 +111,67 @@ class CheckinRegressionTest extends TestCase
 
         $config->refresh();
         $this->assertSame($scheduledOnCreate, optional($config->next_checkin_date)->format('Y-m-d'));
+    }
+
+    public function testServiceRejectsForeignClientOnCreateAndClientTransfer(): void
+    {
+        [$owner, $ownedClient] = $this->createManagerAndClient();
+        [, $foreignClient] = $this->createManagerAndClient();
+        $this->actingAs($owner, 'web');
+
+        $foreignCreate = Avaliation::fSave([
+            'client_id' => $foreignClient->id,
+            'date' => '2026-05-27',
+            'weight_kg' => 82.3,
+            'calculate_perc_fat_by' => Avaliation::CALCULATE_PERC_FAT_BY_BIOIMPEDANCE,
+        ]);
+
+        $this->assertTrue($foreignCreate->isError());
+        $this->assertDatabaseMissing('avaliations', [
+            'client_id' => $foreignClient->id,
+            'date' => '2026-05-27',
+        ]);
+
+        $ownedCreate = Avaliation::fSave([
+            'client_id' => $ownedClient->id,
+            'date' => '2026-05-28',
+            'weight_kg' => 82.3,
+            'calculate_perc_fat_by' => Avaliation::CALCULATE_PERC_FAT_BY_BIOIMPEDANCE,
+        ]);
+        $this->assertFalse($ownedCreate->isError(), $ownedCreate->getMessage());
+
+        /** @var Avaliation $ownedAvaliation */
+        $ownedAvaliation = $ownedCreate->getValueFromResponse('Avaliation');
+        $transfer = Avaliation::fSave([
+            'client_id' => $foreignClient->id,
+            'date' => $ownedAvaliation->date,
+            'weight_kg' => $ownedAvaliation->weight_kg,
+            'calculate_perc_fat_by' => $ownedAvaliation->calculate_perc_fat_by,
+        ], $ownedAvaliation->codedId);
+
+        $this->assertTrue($transfer->isError());
+        $this->assertSame($ownedClient->id, $ownedAvaliation->fresh()->client_id);
+    }
+
+    public function testServiceRejectsGoalForForeignClientAndAcceptsOwnedClient(): void
+    {
+        [$owner, $ownedClient] = $this->createManagerAndClient();
+        [, $foreignClient] = $this->createManagerAndClient();
+        $this->actingAs($owner, 'web');
+
+        $form = [
+            'objective' => Goal::OBJECTIVE_WEIGHT_LOSS,
+            'target_weight_kg' => 70,
+            'deadline' => now()->addDays(30)->format('Y-m-d'),
+        ];
+
+        $foreignGoal = Goal::fSave(array_merge($form, ['client_id' => $foreignClient->id]));
+        $this->assertTrue($foreignGoal->isError());
+        $this->assertDatabaseMissing('goals', ['client_id' => $foreignClient->id]);
+
+        $ownedGoal = Goal::fSave(array_merge($form, ['client_id' => $ownedClient->id]));
+        $this->assertFalse($ownedGoal->isError(), $ownedGoal->getMessage());
+        $this->assertDatabaseHas('goals', ['client_id' => $ownedClient->id]);
     }
 
     public function testFollowupSubmitIsAcceptedOnceAndBlocksSecondSubmission(): void

@@ -114,8 +114,8 @@ class Goal extends Controller
         $form['target_weight_kg'] = $request->input('f-weight') ?? 0;
         $form['deadline'] = $request->input('f-deadline') ?? null;
 
-        // get Client
-        $Client = Client::getModelByCodedId($form['cid']);
+        // The route middleware resolved this client through the current tenant.
+        $Client = $request->attributes->get('tenant.client');
         $form['client_id'] = $Client?->id;
 
         // format deadline from d/m/Y to Y-m-d

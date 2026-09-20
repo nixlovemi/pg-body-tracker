@@ -99,8 +99,8 @@ trait BaseModelTrait {
         }
         $isEdit = ($Model->exists);
 
-        // check if user can save
-        if (!self::fHasAccess($Model)) {
+        // An existing record must belong to the actor before its attributes are changed.
+        if ($isEdit && !self::fHasAccess($Model)) {
             return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
                 'modelName' => $modelNameMsg,
             ]));
@@ -108,6 +108,15 @@ trait BaseModelTrait {
 
         // fill model
         $Model->fill($form);
+
+        // Validate again after fill(). This is required for models whose tenant
+        // ownership is defined by a foreign key such as client_id: a caller must
+        // not be able to create or move a record to another professional's client.
+        if (!self::fHasAccess($Model)) {
+            return new ApiResponse(true, __('messages.saveModelErrorSavingOther', [
+                'modelName' => $modelNameMsg,
+            ]));
+        }
 
         // BEFORE VALIDATE HOOK
         if (method_exists(static::class, 'fSaveBeforeValidate')) {

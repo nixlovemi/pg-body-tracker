@@ -396,8 +396,8 @@ class Avaliation extends Controller
             $form['revaluation_date'] = null;
         }
 
-        // get Client
-        $Client = Client::getModelByCodedId($form['cid']);
+        // The route middleware resolved this client through the current tenant.
+        $Client = $request->attributes->get('tenant.client');
         $form['client_id'] = $Client?->id;
 
         // format deadline from d/m/Y to Y-m-d

@@ -1517,11 +1517,17 @@ class Avaliation extends Model implements \App\Contracts\TenantVisible
 
     public static function fHasAccessCustom(Model $model, ?User $user = null): bool
     {
-        if ($model->id > 0 && $model->client->user_id !== $user?->id) {
+        if (!$user) {
             return false;
         }
 
-        return true;
+        $clientId = $model->client_id;
+        if (!$clientId) {
+            // fSave checks a new model once before fill(), then again afterwards.
+            return !$model->exists;
+        }
+
+        return Client::visibleTo($user)->whereKey($clientId)->exists();
     }
 
     public static function fGetDbPhotosFolder(): string

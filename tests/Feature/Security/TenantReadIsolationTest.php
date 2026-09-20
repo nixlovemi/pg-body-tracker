@@ -158,6 +158,8 @@ class TenantReadIsolationTest extends TestCase
         $this->get(route('app.goal.htmlModalPastGoals', ['cuid' => $this->otherClient->codedId, 'json' => 1]))->assertNotFound();
         $this->get(route('app.checkin.config', $this->otherClient->codedId))->assertNotFound();
         $this->get(route('app.subscription.details', ['codedId' => $this->otherPlan->codedId]))->assertNotFound();
+        $this->post(route('app.avaliation.doModalAdd'), ['f-cid' => $this->otherClient->codedId])->assertNotFound();
+        $this->post(route('app.goal.doModalAdd'), ['f-cid' => $this->otherClient->codedId])->assertNotFound();
         $this->post(route('app.goal.doModalRemove'), ['f-gcid' => $this->otherGoal->codedId])->assertNotFound();
     }
 
